@@ -1,0 +1,3 @@
+[submodule "DynamicFactory"]
+	path = DynamicFactory
+	url = https://github.com/dmcennis/DynamicFactory
