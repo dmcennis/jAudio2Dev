@@ -1,20 +1,21 @@
 package org.jaudio.dsp;
 
-import jAudioFeatureExtractor.ACE.XMLParsers.XMLDocumentParser;
-import jAudioFeatureExtractor.Aggregators.Aggregator;
-import jAudioFeatureExtractor.Aggregators.AggregatorContainer;
-import jAudioFeatureExtractor.Cancel;
-import jAudioFeatureExtractor.DataTypes.RecordingInfo;
-import jAudioFeatureExtractor.ModelListener;
-import jAudioFeatureExtractor.Updater;
 import jAudioFeatureExtractor.jAudioTools.AudioMethodsPlayback;
-import jAudioFeatureExtractor.jAudioTools.FeatureProcessor;
+import org.jaudio.Cancel;
+import org.jaudio.ModelListener;
+import org.jaudio.Updater;
+import org.jaudio.dsp.aggregators.Aggregator;
+import org.jaudio.dsp.aggregators.AggregatorContainer;
+import org.jaudio.dsp.aggregators.AggregatorFactory;
+import org.jaudio.dsp.aggregators.ZernikeMoments;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
-import org.jaudio.dsp.features.modules.MetaFeatureFactory;
+import org.jaudio.dsp.features.FeatureFactory;
+import org.jaudio.dsp.features.MetaFeatureFactory;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -175,24 +176,21 @@ public class DataModel {
 		// extractors.add(new ZeroCrossings());
 		// def.add(true);
 		try {
-
-			Object[] lists = (Object[]) XMLDocumentParser.parseXMLDocument(
-                    featureXMLLocation, "feature_list");
-			extractors = (LinkedList<FeatureExtractor>) lists[0];
-			def = (LinkedList<Boolean>) lists[1];
-			Aggregator[] aggArray = ((LinkedList<Aggregator>) lists[2])
-					.toArray(new Aggregator[] {});
-
-			for (int i = 0; i < aggArray.length; ++i) {
-				aggregatorMap.put(aggArray[i].getAggregatorDefinition().name,
-						aggArray[i]);
-			}
+			// replaced by the Factory object...
+			Collection<String> types = FeatureFactory.getInstance().getKnownTypes();
+            extractors = new LinkedList<FeatureExtractor>();
+            for(String type : types){
+                extractors.add(FeatureFactory.getInstance().create(type));
+            }
+			Collection<String> aggArray = AggregatorFactory.getInstance().getKnownTypes();
+            for(String type : aggArray){
+                aggregatorMap.put(type,AggregatorFactory.getInstance().create(type));
+            }
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.exit(1);
 		}
 		populateMetaFeatures(metaExtractors, extractors, def);
-
 	}
 
 	void populateMetaFeatures(LinkedList<MetaFeatureFactory> listMFF,
@@ -299,7 +297,7 @@ public class DataModel {
 		container = new AggregatorContainer();
 		if((aggregators==null)||(aggregators.length==0)){
 			aggregators = new Aggregator[1];
-			aggregators[0]=new jAudioFeatureExtractor.Aggregators.ZernikeMoments();
+			aggregators[0]=new ZernikeMoments();
 			aggregators[0].setParameters(new String[]{"ConstantQ"},new String[]{"0.5"});
 		}
 		container.add(aggregators);

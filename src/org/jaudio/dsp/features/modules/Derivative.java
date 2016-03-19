@@ -3,6 +3,7 @@ package org.jaudio.dsp.features.modules;
 import org.dynamicfactory.descriptors.Properties;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
+import org.jaudio.dsp.features.MetaFeatureFactory;
 
 import java.util.ResourceBundle;
 import java.util.logging.Level;
