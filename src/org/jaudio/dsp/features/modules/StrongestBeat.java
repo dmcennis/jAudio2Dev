@@ -55,14 +55,8 @@ public class StrongestBeat
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions );
-
-		dependencies = new String[2];
-		dependencies[0] = "Beat Histogram";
-		dependencies[1] = "Beat Histogram Bin Labels";
-		
-		offsets = new int[2];
-		offsets[0] = 0;
-		offsets[1] = 0;
+		definition.setDependency("Beat Histogram");
+		definition.addDependency("Beat Histogram Bin Labels");
 	}
 
 

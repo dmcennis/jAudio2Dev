@@ -5,6 +5,7 @@ import jAudioFeatureExtractor.DataTypes.RecordingInfo;
 import jAudioFeatureExtractor.jAudioTools.AudioMethods;
 import jAudioFeatureExtractor.jAudioTools.AudioMethodsPlayback;
 import jAudioFeatureExtractor.jAudioTools.AudioSamples;
+import org.jaudio.gui.DataModelLinked;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.SourceDataLine;
@@ -34,6 +35,10 @@ public class PlaySamplesAction extends AbstractAction {
 	public PlaySamplesAction(Controller c) {
 		super("Play Samples...");
 		controller = c;
+	}
+
+	public PlaySamplesAction() {
+        super("PlaySamples...");
 	}
 
 	/**
@@ -85,10 +90,10 @@ public class PlaySamplesAction extends AbstractAction {
 						.getSourceDataLine(audio_input_stream.getFormat(), null);
 
 				// Stop any previous playback
-				controller.stopPlayBackAction.stopPlayback();
+				((StopPlayBackAction)(ControllerFactory.get("StopPlayBack"))).stopPlayback();
 
 				// Begin playback
-				controller.dm_.playback_thread = AudioMethodsPlayback
+                ((DataModelLinked)(e.getSource())).getDataModel().playback_thread = AudioMethodsPlayback
 						.playAudioInputStreamInterruptible(audio_input_stream,
 								source_data_line);
 			} catch (UnsupportedAudioFileException ex) {

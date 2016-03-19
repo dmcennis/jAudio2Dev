@@ -37,6 +37,10 @@ public class PlayNowAction extends AbstractAction {
 		controller = c;
 	}
 
+	public PlayNowAction() {
+
+	}
+
 	/**
 	 * Sets references to the recording table. Needed to find out which
 	 * recording to play.
@@ -73,7 +77,7 @@ public class PlayNowAction extends AbstractAction {
 						.getSourceDataLine(audio_input_stream.getFormat(), null);
 
 				// Stop any previous playback
-				controller.stopPlayBackAction.stopPlayback();
+				((StopPlayBackAction)(ControllerFactory.get("StopPlayBack"))).stopPlayback();
 
 				// Begin playback
 				controller.dm_.playback_thread = AudioMethodsPlayback

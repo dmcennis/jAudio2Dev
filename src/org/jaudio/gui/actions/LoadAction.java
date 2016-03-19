@@ -55,6 +55,10 @@ public class LoadAction extends AbstractAction {
 		controller = c;
 	}
 
+	public LoadAction() {
+
+	}
+
 	/**
 	 * Loads settings into the application. Settings include which features are
 	 * selected, whether to extract globally or per window, the attributes for

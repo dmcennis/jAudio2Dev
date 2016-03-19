@@ -1,7 +1,7 @@
 package org.jaudio.dsp.features.modules;
 
-import jAudioFeatureExtractor.DataModel;
 import org.dynamicfactory.descriptors.Properties;
+import org.jaudio.dsp.DataModel;
 import org.jaudio.dsp.features.FeatureExtractor;
 
 import java.util.List;

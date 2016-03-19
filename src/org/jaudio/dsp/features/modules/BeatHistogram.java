@@ -64,13 +64,7 @@ public class BeatHistogram extends FeatureExtractor {
 
 		// int number_windows = 256;
 
-		dependencies = new String[number_windows];
-		for (int i = 0; i < dependencies.length; i++)
-			dependencies[i] = "Root Mean Square";
-
-		offsets = new int[number_windows];
-		for (int i = 0; i < offsets.length; i++)
-			offsets[i] = 0 - i;
+		definition.setDependency("Root Mean Square",0,number_windows);
 	}
 
 	/* PUBLIC METHODS ********************************************************* */
@@ -130,12 +124,7 @@ public class BeatHistogram extends FeatureExtractor {
 					bundle.getString("beathistogram.window.length.must.be.greater.than.1"));
 		} else {
 			number_windows = n;
-			dependencies = new String[number_windows];
-			offsets = new int[number_windows];
-			for (int i = 0; i < number_windows; ++i) {
-				dependencies[i] = "Root Mean Square";
-				offsets[i] = 0 - i;
-			}
+			definition.setDependency("Root Mean Square",0,number_windows);
 		}
 	}
 

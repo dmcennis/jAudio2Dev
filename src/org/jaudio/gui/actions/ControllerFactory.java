@@ -26,23 +26,23 @@ public class ControllerFactory {
         actionMap.put("Exit",new ExitAction());
         actionMap.put("GlobalWindowChange",new GlobalWindowChangeAction(null));
         actionMap.put("Load",new LoadAction());
-        actionMap.put("LoadBatch",);
-        actionMap.put("MultipleToggle",);
-        actionMap.put("OutputType",);
-        actionMap.put("Paste",);
-        actionMap.put("PlayMIDI",);
-        actionMap.put("PlayNow",);
-        actionMap.put("PlaySamples",);
-        actionMap.put("RecordFromMic",);
-        actionMap.put("RemoveBatch",);
-        actionMap.put("RemoveRecording",);
-        actionMap.put("SamplingRate",);
-        actionMap.put("Save",);
-        actionMap.put("SaveBatch",);
-        actionMap.put("StopPlayback",);
-        actionMap.put("Synthesize",);
-        actionMap.put("ViewBatch",);
-        actionMap.put("ViewFileInfo",);
+        actionMap.put("LoadBatch",new LoadBatchAction());
+        actionMap.put("MultipleToggle",new MultipleToggleAction());
+        actionMap.put("OutputType",new OutputTypeAction());
+        actionMap.put("Paste",new PasteAction());
+        actionMap.put("PlayMIDI",new PlayMIDIAction());
+        actionMap.put("PlayNow",new PlayNowAction());
+        actionMap.put("PlaySamples",new PlaySamplesAction());
+        actionMap.put("RecordFromMic",new RecordFromMicAction());
+        actionMap.put("RemoveBatch",new RemoveBatchAction());
+        actionMap.put("RemoveRecording",new RemoveRecordingAction());
+        actionMap.put("SamplingRate",new SamplingRateAction());
+        actionMap.put("Save",new SaveAction());
+        actionMap.put("SaveBatch",new SaveBatchAction());
+        actionMap.put("StopPlayback",new StopPlayBackAction());
+        actionMap.put("Synthesize",new SynthesizeAction());
+        actionMap.put("ViewBatch",new ViewBatchAction());
+        actionMap.put("ViewFileInfo",new ViewFileInfoAction());
 
     }
 

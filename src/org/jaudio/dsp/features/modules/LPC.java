@@ -49,8 +49,6 @@ public class LPC extends FeatureExtractor {
 				bundle.getString("number.of.coeffecients.to.calculate") };
 		definition = new FeatureDefinition(name, description, true, 10,
 				attributes);
-		dependencies = null;
-		offsets = null;
 	}
 
 	/**

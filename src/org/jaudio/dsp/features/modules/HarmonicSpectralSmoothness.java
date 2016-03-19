@@ -57,8 +57,7 @@ public class HarmonicSpectralSmoothness extends FeatureExtractor {
 		String name = "Peak Based Spectral Smoothness";
 		String description = bundle.getString("peak.based.spectral.smoothness.is.calculated.from.partials.not.frequency.bins.it.is.implemented.accortding.to.mcadams.99.n.nmcadams.s.1999");
 		definition = new FeatureDefinition(name, description, true, 1);
-		dependencies = new String[] { "Peak Detection" };
-		offsets = new int[] { 0 };
+		definition.setDependency( "Peak Detection");
 	}
 
 	/**

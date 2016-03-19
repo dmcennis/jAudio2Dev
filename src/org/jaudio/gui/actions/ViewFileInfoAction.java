@@ -29,7 +29,11 @@ public class ViewFileInfoAction extends AbstractAction {
 		super("View File Info...");
 		controller = c;
 	}
-	
+
+	public ViewFileInfoAction() {
+
+	}
+
 	/**
 	 * Sets reference to the table containing references to files to be analyzed.
 	 * @param jt sets the sister jTable

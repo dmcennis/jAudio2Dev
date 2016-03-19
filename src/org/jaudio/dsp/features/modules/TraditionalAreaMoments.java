@@ -61,15 +61,7 @@ public class TraditionalAreaMoments extends FeatureExtractor {
 
 		definition = new FeatureDefinition(name, description, true, 10,
 				attributes);
-		dependencies = new String[lengthOfWindow];
-		for (int i = 0; i < dependencies.length; ++i) {
-			dependencies[i] = "Magnitude Spectrum";
-		}
-		offsets = new int[lengthOfWindow];
-		for (int i = 0; i < offsets.length; ++i) {
-			offsets[i] = 0 - i;
-		}
-
+definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
 	}
 
 	/**
@@ -149,12 +141,7 @@ public class TraditionalAreaMoments extends FeatureExtractor {
 					bundle.getString("area.method.of.moment.s.window.length.must.be.two.or.greater"));
 		} else {
 			lengthOfWindow = n;
-			dependencies = new String[lengthOfWindow];
-			offsets = new int[lengthOfWindow];
-			for (int i = 0; i < lengthOfWindow; ++i) {
-				dependencies[i] = "Magnitude Spectrum";
-				offsets[i] = 0 - i;
-			}
+			definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
 		}
 	}
 

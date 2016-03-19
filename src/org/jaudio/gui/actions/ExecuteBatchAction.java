@@ -31,7 +31,11 @@ public class ExecuteBatchAction extends AbstractAction {
 		controller = c;
 		outerFrame = of;
 	}
-	
+
+	public ExecuteBatchAction() {
+
+	}
+
 	/**
 	 * Executes all currently defined batches.
 	 */

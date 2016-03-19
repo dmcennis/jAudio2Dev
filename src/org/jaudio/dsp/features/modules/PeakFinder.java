@@ -41,8 +41,7 @@ public class PeakFinder extends FeatureExtractor {
 		String description = bundle.getString("all.peaks.that.are.within.an.order.of.magnitude.of.the.highest.point");
 		definition = new FeatureDefinition(name, description, true, 0,
 				new String[] {bundle.getString("threshold.for.peak.detection") });
-		dependencies = new String[] { "Magnitude Spectrum" };
-		offsets = new int[] { 0 };
+		definition.setDependency("Magnitude Spectrum");
 	}
 
 	/**

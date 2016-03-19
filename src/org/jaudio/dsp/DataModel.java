@@ -1,16 +1,17 @@
 package org.jaudio.dsp;
 
-import jAudioFeatureExtractor.ACE.DataTypes.FeatureDefinition;
 import jAudioFeatureExtractor.ACE.XMLParsers.XMLDocumentParser;
 import jAudioFeatureExtractor.Aggregators.Aggregator;
 import jAudioFeatureExtractor.Aggregators.AggregatorContainer;
-import jAudioFeatureExtractor.AudioFeatures.*;
 import jAudioFeatureExtractor.Cancel;
 import jAudioFeatureExtractor.DataTypes.RecordingInfo;
 import jAudioFeatureExtractor.ModelListener;
 import jAudioFeatureExtractor.Updater;
 import jAudioFeatureExtractor.jAudioTools.AudioMethodsPlayback;
 import jAudioFeatureExtractor.jAudioTools.FeatureProcessor;
+import org.jaudio.dsp.features.FeatureDefinition;
+import org.jaudio.dsp.features.FeatureExtractor;
+import org.jaudio.dsp.features.modules.MetaFeatureFactory;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -104,12 +105,12 @@ public class DataModel {
 		cancel_ = new Cancel();
 		LinkedList<MetaFeatureFactory> metaExtractors = new LinkedList<MetaFeatureFactory>();
 
-		metaExtractors.add(new Derivative());
-		metaExtractors.add(new Mean());
-		metaExtractors.add(new StandardDeviation());
-		metaExtractors.add(new Derivative(new Mean()));
-		metaExtractors.add(new Derivative(new StandardDeviation()));
-		metaExtractors.add(new AutocorrelationHistogram());
+//		metaExtractors.add(new Derivative());
+//		metaExtractors.add(new Mean());
+//		metaExtractors.add(new StandardDeviation());
+//		metaExtractors.add(new Derivative(new Mean()));
+//		metaExtractors.add(new Derivative(new StandardDeviation()));
+//		metaExtractors.add(new AutocorrelationHistogram());
 
 		LinkedList<FeatureExtractor> extractors = new LinkedList<FeatureExtractor>();
 		LinkedList<Boolean> def = new LinkedList<Boolean>();
@@ -208,7 +209,7 @@ public class DataModel {
 			tmpDefaults.add(tmpB);
 			isPrimaryList.add(new Boolean(true));
 			tmpF.setParent(this);
-			if (tmpF.getFeatureDefinition().dimensions != 0) {
+			if (tmpF.getFeatureDefinition().getDimensions() != 0) {
 				Iterator<MetaFeatureFactory> lM = listMFF.iterator();
 				while (lM.hasNext()) {
 					MetaFeatureFactory tmpMFF = lM.next();
@@ -302,28 +303,29 @@ public class DataModel {
 			aggregators[0].setParameters(new String[]{"ConstantQ"},new String[]{"0.5"});
 		}
 		container.add(aggregators);
-		container.add(features,defaults);
-		// Prepare to extract features
-		FeatureProcessor processor = new FeatureProcessor(window_size,
-				window_overlap, sampling_rate, normalise, this.features,
-				this.defaults, save_features_for_each_window,
-				save_overall_recording_features, featureValue, featureKey,
-				outputType, cancel_, container);
-
-		// Extract features from recordings one by one and save them in XML
-		// files
-//		AudioSamples recording_content;
-		for (int i = 0; i < recordings.length; i++) {
-			File load_file = new File(recordings[i].file_path);
-			if (updater != null) {
-				updater.announceUpdate(i, 0);
-			}
-			processor.extractFeatures(load_file, updater);
-		}
+        //FIXME: Finish propogating changes through processing stacks
+//		container.add(features,defaults);
+//		// Prepare to extract features
+//		FeatureProcessor processor = new FeatureProcessor(window_size,
+//				window_overlap, sampling_rate, normalise, this.features,
+//				this.defaults, save_features_for_each_window,
+//				save_overall_recording_features, featureValue, featureKey,
+//				outputType, cancel_, container);
+//
+//		// Extract features from recordings one by one and save them in XML
+//		// files
+////		AudioSamples recording_content;
+//		for (int i = 0; i < recordings.length; i++) {
+//			File load_file = new File(recordings[i].file_path);
+//			if (updater != null) {
+//				updater.announceUpdate(i, 0);
+//			}
+//			processor.extractFeatures(load_file, updater);
+//		}
 
 		// Finalize saved XML files
 
-		processor.finalize();
+//		processor.finalize();
 
 		// JOptionPane.showMessageDialog(null,
 		// "Features successfully extracted and saved.", "DONE",

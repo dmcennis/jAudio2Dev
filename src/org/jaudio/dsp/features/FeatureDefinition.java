@@ -13,6 +13,8 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
@@ -129,6 +131,14 @@ public class FeatureDefinition extends PropertiesImplementation implements Seria
 		String info = String.format(bundle.getString("name.s.ndescription.s.nis.sequential.b.ndimensions.d.n.n"), getName(), getDescription(), is_sequential(), getDimensions());
 		return info;
 	}
+
+    public List<FeatureDependency> getDependencies(){
+        if(quickCheck("Dependency",FeatureDependency.class)){
+            return (List<FeatureDependency>)get("Dependency").getValue();
+        }else{
+            return new LinkedList<FeatureDependency>();
+        }
+    }
 
 	/**
 	 * Returns a formatted text description of the given FeatureDescription
@@ -351,6 +361,58 @@ public class FeatureDefinition extends PropertiesImplementation implements Seria
     }
 
     public void setAttributes(String[] attributes) {
-        add("Attrbutes",attributes);
+        add("Attributes",attributes);
+    }
+
+    public void setDependency(String name, int start, int length){
+        setDependency(name,start);
+        for(int i=start+1; i<start+length;++i){
+            addDependency(name,i);
+        }
+    }
+    public void addDependency(String name, int offset){
+        add("Dependency",new FeatureDependency(name,0-offset));
+    }
+
+    public void addDependency(String name){
+        setDependency(name,0);
+    }
+
+    public void addDependency(String name, int start, int length){
+        for(int i=start; i<start+length;++i){
+            addDependency(name,i);
+        }
+    }
+
+    public void setDependency(String name, int offset){
+        set("Dependency",new FeatureDependency(name,0-offset));
+    }
+
+    public void setDependency(String name){
+        setDependency(name,0);
+    }
+
+    public void setDependency(FeatureDependency dep){
+        set("Dependency",dep);
+    }
+
+    public void setDependency(List<FeatureDependency> dsp){
+        set("Dependency",dsp);
+    }
+
+    public void addDependency(List<FeatureDependency> dsp){
+        add("Dependency",dsp);
+    }
+
+    public void addDependency(FeatureDependency dep){
+        add("Dependency",dep);
+    }
+
+    public List<FeatureDependency> getDependency(){
+        if(quickCheck("Depedency",FeatureDependency.class)){
+            return (List<FeatureDependency>)(get("Dependency").getValue());
+        }else{
+            return new LinkedList<FeatureDependency>();
+        }
     }
 }

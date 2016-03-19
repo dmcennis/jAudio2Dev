@@ -60,13 +60,7 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 		definition = new FeatureDefinition(name, description, is_sequential,
 				dimensions);
 
-		dependencies = new String[number_windows];
-		for (int i = 0; i < dependencies.length; i++)
-			dependencies[i] = "Root Mean Square";
-
-		offsets = new int[number_windows];
-		for (int i = 0; i < offsets.length; i++)
-			offsets[i] = 0 - i;
+		definition.setDependency("Root Mean Square",0,number_windows);
 	}
 
 	/* PUBLIC METHODS ********************************************************* */
@@ -126,12 +120,7 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 					bundle.getString("fraction.of.low.energy.frames.s.window.length.must.be.2.or.greater"));
 		} else {
 			number_windows = n;
-			dependencies = new String[number_windows];
-			offsets = new int[number_windows];
-			for (int i = 0; i < number_windows; ++i) {
-				dependencies[i] = "Root Mean Square";
-				offsets[i] = 0 - i;
-			}
+            definition.setDependency("Root Mean Square",0,number_windows);
 		}
 	}
 

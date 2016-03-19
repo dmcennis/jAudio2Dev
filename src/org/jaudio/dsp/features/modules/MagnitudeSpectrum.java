@@ -66,9 +66,6 @@ public class MagnitudeSpectrum
 		                                    is_sequential,
 		                                    dimensions );
 
-		dependencies = null;
-		
-		offsets = null;
 	}
 
 

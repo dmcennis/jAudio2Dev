@@ -58,8 +58,7 @@ public class HarmonicSpectralCentroid extends FeatureExtractor {
 		String name = "Partial Based Spectral Centroid";
 		String description = bundle.getString("spectral.centroid.calculated.based.on.the.center.of.mass.of.partials.instead.of.center.of.mass.of.bins");
 		definition = new FeatureDefinition(name, description, true, 1);
-		dependencies = new String[] { "Peak Detection" };
-		offsets = new int[] { 0 };
+		definition.setDependency("Peak Detection");
 	}
 
 	/**

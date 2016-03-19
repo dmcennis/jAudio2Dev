@@ -60,14 +60,7 @@ public class StrongestFrequencyVariability
 		                                    dimensions );
 
 		int number_windows = 100;
-		
-		dependencies = new String[number_windows];
-		for (int i = 0; i < dependencies.length; i++)
-			dependencies[i] = "Strongest Frequency Via FFT Maximum";
-		
-		offsets = new int[number_windows];
-		for (int i = 0; i < offsets.length; i++)
-			offsets[i] = 0 - i;
+		definition.setDependency("Strongest Frequency Via FFT Maximum",0,number_windows);
 	}
 
 

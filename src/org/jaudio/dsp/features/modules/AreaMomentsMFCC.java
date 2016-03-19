@@ -50,15 +50,7 @@ public class AreaMomentsMFCC extends FeatureExtractor {
 
 		definition = new FeatureDefinition(name, description, true, 0,
 				attributes);
-		dependencies = new String[lengthOfWindow];
-		for (int i = 0; i < dependencies.length; ++i) {
-			dependencies[i] = "MFCC";
-		}
-		offsets = new int[lengthOfWindow];
-		for (int i = 0; i < offsets.length; ++i) {
-			offsets[i] = 0 - i;
-		}
-
+definition.setDependency("MFCC",0,lengthOfWindow);
 	}
 
 	/**
@@ -118,12 +110,7 @@ public class AreaMomentsMFCC extends FeatureExtractor {
 					"Area Method of Moment's Window length must be two or greater");
 		} else {
 			lengthOfWindow = n;
-			dependencies = new String[lengthOfWindow];
-			offsets = new int[lengthOfWindow];
-			for (int i = 0; i < lengthOfWindow; ++i) {
-				dependencies[i] = "MFCC";
-				offsets[i] = 0 - i;
-			}
+			definition.setDependency("MFCC",0,lengthOfWindow);
 		}
 	}
 

@@ -58,16 +58,7 @@ public class AreaPolynomialApproximationLogConstantQ extends FeatureExtractor {
 
 		definition = new FeatureDefinition(name, description, true, 0,
 				attributes);
-
-		dependencies = new String[windowLength];
-		for (int i = 0; i < dependencies.length; ++i) {
-			dependencies[i] = "Log of ConstantQ";
-		}
-
-		offsets = new int[windowLength];
-		for (int i = 0; i < offsets.length; ++i) {
-			offsets[i] = 0 - i;
-		}
+		definition.setDependency("Log of ConstantQ",0,windowLength);
 
 		terms = new DenseDoubleMatrix2D(windowLength*featureLength,k*l);
 		z = new DenseDoubleMatrix2D(featureLength*windowLength,1);
@@ -126,12 +117,7 @@ public class AreaPolynomialApproximationLogConstantQ extends FeatureExtractor {
 					bundle.getString("area.polynomial.approximation.window.length.must.be.positive"));
 		} else {
 			windowLength = n;
-			dependencies = new String[windowLength];
-			offsets = new int[windowLength];
-			for (int i = 0; i < windowLength; ++i) {
-				dependencies[i] = "Magnitude Spectrum";
-				offsets[i] = 0 - i;
-			}
+			definition.setDependency("Magnitude Spectrum",0,windowLength);
 			terms = new DenseDoubleMatrix2D(windowLength*featureLength,k*l);
 			z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
 			calcTerms(terms);
@@ -194,12 +180,7 @@ public class AreaPolynomialApproximationLogConstantQ extends FeatureExtractor {
 							bundle.getString("area.polynomial.approximation.window.length.must.be.positive"));
 				} else {
 					windowLength = val;
-					dependencies = new String[windowLength];
-					offsets = new int[windowLength];
-					for (int i = 0; i < windowLength; ++i) {
-						dependencies[i] = "Magnitude Spectrum";
-						offsets[i] = 0 - i;
-					}
+                    definition.setDependency("Magnitude Spectrum",0,windowLength);
 					terms = new DenseDoubleMatrix2D(windowLength*featureLength,k*l);
 					z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
 					calcTerms(terms);

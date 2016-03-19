@@ -45,7 +45,7 @@ public class SaveAction extends AbstractAction {
 	/**
 	 * Constructor that sets the menu text and stores a reference to the
 	 * controller and feature table model
-	 * 
+	 *
 	 * @param c
 	 *            near global controller
 	 * @param fstm
@@ -55,6 +55,10 @@ public class SaveAction extends AbstractAction {
 		super("Save Settings...");
 		fstm_ = fstm;
 		controller = c;
+	}
+
+	public SaveAction() {
+
 	}
 
 	/**

@@ -65,9 +65,6 @@ public class PowerSpectrum
 		                                    is_sequential,
 		                                    dimensions );
 
-		dependencies = null;
-		
-		offsets = null;
 	}
 
 

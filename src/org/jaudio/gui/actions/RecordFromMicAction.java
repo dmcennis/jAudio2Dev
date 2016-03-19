@@ -31,6 +31,10 @@ public class RecordFromMicAction extends AbstractAction {
 		parent = c;
 	}
 
+	public RecordFromMicAction() {
+
+	}
+
 	/**
 	 * Creates and displays the RecordingFrame frame.
 	 */

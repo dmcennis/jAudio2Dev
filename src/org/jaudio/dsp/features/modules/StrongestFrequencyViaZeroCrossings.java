@@ -56,12 +56,7 @@ public class StrongestFrequencyViaZeroCrossings
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions );
-
-		dependencies = new String[1];
-		dependencies[0] = "Zero Crossings";
-		
-		offsets = new int[1];
-		offsets[0] = 0;
+		definition.setDependency("Zero Crossings");
 	}
 
 

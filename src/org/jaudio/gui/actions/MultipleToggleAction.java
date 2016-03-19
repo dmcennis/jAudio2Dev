@@ -23,6 +23,10 @@ public class MultipleToggleAction extends AbstractAction {
 		features = f;
 	}
 
+	public MultipleToggleAction() {
+
+	}
+
 	/**
 	 * Group select or deselect on all selected rows.
 	 */

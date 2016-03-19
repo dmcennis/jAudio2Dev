@@ -52,12 +52,7 @@ public class SpectralRolloffPoint extends FeatureExtractor {
 		int dimensions = 1;
 		definition = new FeatureDefinition(name, description, is_sequential,
 				dimensions, new String[] {bundle.getString("cutoff.point.0.1") });
-
-		dependencies = new String[1];
-		dependencies[0] = "Power Spectrum";
-
-		offsets = new int[1];
-		offsets[0] = 0;
+		definition.setDependency("Power Spectrum");
 	}
 
 	/* PUBLIC METHODS ********************************************************* */

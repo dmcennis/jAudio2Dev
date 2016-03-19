@@ -58,11 +58,7 @@ public class ConstantQMFCC extends FeatureExtractor
 		                                    is_sequential,
 		                                    dimensions,
 											attributes );
-
-		dependencies = new String[]{"Log of ConstantQ"};
-		
-		offsets = new int[]{0};
-		
+		definition.setDependency("Log of ConstantQ");
 	}
 
 

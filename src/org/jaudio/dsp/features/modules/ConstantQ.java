@@ -65,10 +65,7 @@ public class ConstantQ extends FeatureExtractor
 		                                    dimensions,
 											attributes );
 
-		dependencies = null;
-		
-		offsets = null;
-		
+
 		alpha=1.0;
 
 		calculated = false;

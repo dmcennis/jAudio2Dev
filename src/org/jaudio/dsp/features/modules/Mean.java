@@ -83,12 +83,7 @@ public class Mean extends MetaFeatureFactory {
 
 			tmp.definition = new FeatureDefinition(name, description, true, fe
 					.getFeatureDefinition().getDimensions(), myAttributes);
-			tmp.dependencies = new String[runningAverage];
-			tmp.offsets = new int[runningAverage];
-			for (int i = 0; i < runningAverage; ++i) {
-				tmp.dependencies[i] = fe.getFeatureDefinition().getName();
-				tmp.offsets[i] = 0 - i;
-			}
+            tmp.definition.setDependency(fe.getDepenedencies());
 			return tmp;
 	}
 
@@ -133,15 +128,7 @@ public class Mean extends MetaFeatureFactory {
 			runningAverage = n;
 			if (fe_ != null) {
 				String tmp = fe_.getFeatureDefinition().getName();
-				dependencies = new String[runningAverage];
-				offsets = new int[runningAverage];
-				for (int i = 0; i < runningAverage; ++i) {
-					dependencies[i] = tmp;
-					offsets[i] = 0 - i;
-				}
-			} else {
-				dependencies = null;
-				offsets = null;
+                definition.setDependency(tmp,0,runningAverage);
 			}
 
 		}
@@ -233,8 +220,8 @@ public class Mean extends MetaFeatureFactory {
 			String[] attributes = definition.getAttributes();
 			int dim = definition.getDimensions();
 			ret.definition = new FeatureDefinition(name,description,true,dim,attributes);
-			ret.dependencies = this.dependencies.clone();
-			ret.offsets = this.offsets.clone();
+			ret.definition.setDependency(definition.getDependency());
+
 			try{
 				ret.setWindow(runningAverage);
 			}catch(Exception e){

@@ -58,17 +58,8 @@ public class AreaPolynomialApproximationConstantQMFCC extends FeatureExtractor {
 
 		definition = new FeatureDefinition(name, description, true, 0,
 				attributes);
-				
-		dependencies = new String[windowLength];
-		for (int i = 0; i < dependencies.length; ++i) {
-			dependencies[i] = "ConstantQ derived MFCCs";
-		}
-		
-		offsets = new int[windowLength];
-		for (int i = 0; i < offsets.length; ++i) {
-			offsets[i] = 0 - i;
-		}
-		
+        definition.setDependency("ConstantQ derived MFCCs",0,windowLength);
+
 		terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
 		z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
 		calcTerms(terms);
@@ -126,12 +117,7 @@ public class AreaPolynomialApproximationConstantQMFCC extends FeatureExtractor {
                     bundle.getString("area.polynomial.approximation.window.length.must.be.positive"));
 		} else {
 			windowLength = n;
-			dependencies = new String[windowLength];
-			offsets = new int[windowLength];
-			for (int i = 0; i < windowLength; ++i) {
-				dependencies[i] = "Magnitude Spectrum";
-				offsets[i] = 0 - i;
-			}
+            definition.setDependency( "Magnitude Spectrum",0,windowLength);
 			terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
 			z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
 			calcTerms(terms);
@@ -193,12 +179,7 @@ public class AreaPolynomialApproximationConstantQMFCC extends FeatureExtractor {
 						"Area Polynomial Approximation window length must be positive");
 				} else {
 					windowLength = val;
-					dependencies = new String[windowLength];
-					offsets = new int[windowLength];
-					for (int i = 0; i < windowLength; ++i) {
-						dependencies[i] = "Magnitude Spectrum";
-						offsets[i] = 0 - i;
-					}
+					definition.setDependency("Magnitude Spectrum",0,windowLength);
 					terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
 					z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
 					calcTerms(terms);

@@ -34,8 +34,7 @@ public class RelativeDifferenceFunction extends FeatureExtractor {
 		String name = "Relative Difference Function";
 		String decsription = bundle.getString("log.of.the.derivative.of.rms.used.for.onset.detection");
 		definition = new FeatureDefinition(name, decsription, true, 1);
-		dependencies = new String[] { "Root Mean Square", "Root Mean Square" };
-		offsets = new int[] { 0, -1 };
+        definition.setDependency("Root Mean Square",0,2);
 	}
 
 	/**

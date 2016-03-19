@@ -204,12 +204,7 @@ public class AutocorrelationHistogram
 
         tmp.definition = new FeatureDefinition(name, description, true, fe
                 .getFeatureDefinition().getDimensions(), myAttributes);
-        tmp.dependencies = new String[rmsWindowLength];
-        tmp.offsets = new int[rmsWindowLength];
-        for (int i = 0; i < rmsWindowLength; ++i) {
-            tmp.dependencies[i] = fe.getFeatureDefinition().getName();
-            tmp.offsets[i] = 0 - i;
-        }
+        tmp.definition.setDependency(fe.getFeatureDefinition().getName(),0,rmsWindowLength);
         return tmp;
     }
 
@@ -231,15 +226,7 @@ public class AutocorrelationHistogram
             rmsWindowLength = n;
             if (fe_ != null) {
                 String tmp = fe_.getFeatureDefinition().getName();
-                dependencies = new String[rmsWindowLength];
-                offsets = new int[rmsWindowLength];
-                for (int i = 0; i < rmsWindowLength; ++i) {
-                    dependencies[i] = tmp;
-                    offsets[i] = 0 - i;
-                }
-            } else {
-                dependencies = null;
-                offsets = null;
+                definition.setDependency(tmp,0,rmsWindowLength);
             }
 
         }
@@ -295,8 +282,9 @@ public class AutocorrelationHistogram
             String[] attributes = definition.getAttributes();
             int dim = definition.getDimensions();
             ret.definition = new FeatureDefinition(name,description,true,dim,attributes);
-            ret.dependencies = this.dependencies.clone();
-            ret.offsets = this.offsets.clone();
+
+            ret.definition.setDependency(definition.getDependency());
+
             try{
                 ret.setWindow(windowLength);
             }catch(Exception e){

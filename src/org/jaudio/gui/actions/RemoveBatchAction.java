@@ -5,6 +5,7 @@ import jAudioFeatureExtractor.Controller;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
 
 /**
  * Removes the selected batch from the set of batch files currently loaded. Can
@@ -23,8 +24,12 @@ public class RemoveBatchAction extends AbstractAction {
 	 * @param c near global controller.
 	 */
 	public RemoveBatchAction(Controller c) {
-		super("Remove Batch...");
+		super(ResourceBundle.getBundle("Translations").getString("remove.batch"));
 		controller = c;
+	}
+
+	public RemoveBatchAction() {
+
 	}
 
 	/**
@@ -33,7 +38,7 @@ public class RemoveBatchAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		int count = 0;
 
-		Component src = controller.removeBatch.getMenuComponent(count);
+		Component src = ((JMenu)(e.getSource())).getMenuComponent(count);
 		String action = "";
 		if (src instanceof JMenuItem) {
 			action = ((JMenuItem) src).getActionCommand();

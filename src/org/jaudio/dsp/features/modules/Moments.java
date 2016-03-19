@@ -39,8 +39,7 @@ public class Moments extends FeatureExtractor {
 		String description = bundle.getString("statistical.method.of.moments.of.the.magnitude.spectrum");
 
 		definition = new FeatureDefinition(name, description, true, 5);
-		dependencies = new String[] { "Magnitude Spectrum" };
-		offsets = new int[] { 0 };
+		definition.setDependency("Magnitude Spectrum");
 	}
 
 	/**

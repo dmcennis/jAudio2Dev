@@ -45,6 +45,10 @@ public class ViewBatchAction extends AbstractAction {
 		controller = c;
 	}
 
+	public ViewBatchAction() {
+
+	}
+
 	/**
 	 * Sets references to gui elements so it can set them to the designated
 	 * values when executed.

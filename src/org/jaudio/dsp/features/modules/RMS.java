@@ -58,10 +58,6 @@ public class RMS
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions );
-
-		dependencies = null;
-		
-		offsets = null;
 	}
 
 

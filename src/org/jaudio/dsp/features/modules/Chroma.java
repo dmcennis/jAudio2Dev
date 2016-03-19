@@ -1,7 +1,7 @@
 package org.jaudio.dsp.features.modules;
 
-import jAudioFeatureExtractor.DataModel;
 import org.dynamicfactory.descriptors.Properties;
+import org.jaudio.dsp.DataModel;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -41,9 +41,7 @@ public class Chroma extends FeatureExtractor {
                 dimensions,
                 attributes );
 
-        dependencies = new String[]{"ConstantQ"};
-
-        offsets = new int[]{0};
+        definition.addDependency("ConstantQ");
 
     }
 

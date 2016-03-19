@@ -60,11 +60,7 @@ public FeatureExtractor prototype() {
 		                                    is_sequential,
 		                                    dimensions );
 
-		dependencies = new String[1];
-		dependencies[0] = "Power Spectrum";
-		
-		offsets = new int[1];
-		offsets[0] = 0;
+		definition.setDependency("Poswer Spectrum",0);
 	}
 
 

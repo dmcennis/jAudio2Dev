@@ -85,12 +85,7 @@ public class StandardDeviation extends MetaFeatureFactory {
 
 		ret.definition = new FeatureDefinition(name, description, true, ret.fe_
 				.getFeatureDefinition().getDimensions(), myAttributes);
-		ret.dependencies = new String[sampleWidth];
-		ret.offsets = new int[sampleWidth];
-		for (int i = 0; i < sampleWidth; ++i) {
-			ret.dependencies[i] = ret.fe_.getFeatureDefinition().getName();
-			ret.offsets[i] = 0 - i;
-		}
+        ret.definition.setDependency(ret.fe_.getFeatureDefinition().getName(),0,sampleWidth);
 		return ret;
 	}
 
@@ -143,15 +138,7 @@ public class StandardDeviation extends MetaFeatureFactory {
 			String tmp;
 			if (fe_ != null) {
 				tmp = fe_.getFeatureDefinition().getName();
-				dependencies = new String[sampleWidth];
-				offsets = new int[sampleWidth];
-				for (int i = 0; i < sampleWidth; ++i) {
-					dependencies[i] = tmp;
-					offsets[i] = 0 - i;
-				}
-			} else {
-				dependencies = null;
-				offsets = null;
+                definition.setDependency(tmp,0,sampleWidth);
 			}
 		}
 	}

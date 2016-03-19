@@ -36,8 +36,6 @@ public class LPCRemoved extends FeatureExtractor {
 		definition = new FeatureDefinition(name, description, true,
 				num_dimensions,
 				new String[] {bundle.getString("number.of.lpc.coeffecients.to.calculate") });
-		dependencies = null;
-		offsets = null;
 	}
 
 	/**

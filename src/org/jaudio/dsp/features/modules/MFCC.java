@@ -39,8 +39,7 @@ public class MFCC extends FeatureExtractor {
 		String description = bundle.getString("mfcc.calculations.based.upon.orange.cow.code");
 		String[] attributes = new String[]{bundle.getString("number.of.coeffecients")};
 		definition = new FeatureDefinition(name, description, true, 13,attributes);
-		dependencies = new String[] { "Magnitude Spectrum" };
-		offsets = new int[] { 0 };
+		definition.setDependency("Magnitude Spectrum");
 		fe = new featureExtraction();
 	}
 

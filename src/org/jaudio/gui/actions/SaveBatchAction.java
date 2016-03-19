@@ -31,6 +31,10 @@ public class SaveBatchAction extends AbstractAction {
 		controller = c;
 	}
 
+	public SaveBatchAction() {
+
+	}
+
 	/**
 	 * Saves the current set of batches to file.
 	 */

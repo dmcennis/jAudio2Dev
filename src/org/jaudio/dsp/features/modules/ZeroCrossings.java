@@ -58,9 +58,6 @@ public class ZeroCrossings
 		                                    is_sequential,
 		                                    dimensions );
 
-		dependencies = null;
-		
-		offsets = null;
 	}
 
 

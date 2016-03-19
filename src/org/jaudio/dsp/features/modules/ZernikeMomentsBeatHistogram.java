@@ -31,14 +31,7 @@ public class ZernikeMomentsBeatHistogram extends FeatureExtractor {
 
 		definition = new FeatureDefinition(name, description, true, 0,
 				attributes);
-		dependencies = new String[lengthOfWindow];
-		for (int i = 0; i < dependencies.length; ++i) {
-			dependencies[i] = "Beat Histogram";
-		}
-		offsets = new int[lengthOfWindow];
-		for (int i = 0; i < offsets.length; ++i) {
-			offsets[i] = 0 - i;
-		}
+definition.setDependency("Beat Histogram",0,lengthOfWindow);
 		return definition;
 	}
 
@@ -50,19 +43,10 @@ public class ZernikeMomentsBeatHistogram extends FeatureExtractor {
 					bundle.getString("zernike.moment.beat.histogram.s.window.length.must.be.two.or.greater"));
 		} else {
 			lengthOfWindow = n;
-			dependencies = new String[lengthOfWindow];
-			offsets = new int[lengthOfWindow];
-			for (int i = 0; i < lengthOfWindow; ++i) {
-				dependencies[i] = "Beat Histogram";
-				offsets[i] = 0 - i;
-			}
+			definition.setDependency("Beat Histogram",0,lengthOfWindow);
 		}
 	}
 
-	@Override
-	public int[] getDepenedencyOffsets() {
-		return super.getDepenedencyOffsets();
-	}
 
 	@Override
 	public String getElement(int index) throws Exception {

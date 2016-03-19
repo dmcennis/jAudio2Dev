@@ -52,14 +52,7 @@ public class AreaMomentsConstantQMFCC extends FeatureExtractor {
 
         definition = new FeatureDefinition(name, description, true, 0,
                 attributes);
-        dependencies = new String[lengthOfWindow];
-        for (int i = 0; i < dependencies.length; ++i) {
-            dependencies[i] = "ConstantQ derived MFCCs";
-        }
-        offsets = new int[lengthOfWindow];
-        for (int i = 0; i < offsets.length; ++i) {
-            offsets[i] = 0 - i;
-        }
+        definition.setDependency("ConstantQ derived MFCCs",0, lengthOfWindow);
 
     }
 
@@ -122,12 +115,7 @@ public class AreaMomentsConstantQMFCC extends FeatureExtractor {
                     bundle.getString("area.method.of.moment.constantq.mfcc.s.window.length.must.be.two.or.greater"));
         } else {
             lengthOfWindow = n;
-            dependencies = new String[lengthOfWindow];
-            offsets = new int[lengthOfWindow];
-            for (int i = 0; i < lengthOfWindow; ++i) {
-                dependencies[i] = bundle.getString("constantq.derived.mfccs");
-                offsets[i] = 0 - i;
-            }
+definition.setDependency("ConstantQ Derived MFCCs",0,lengthOfWindow);
         }
     }
 

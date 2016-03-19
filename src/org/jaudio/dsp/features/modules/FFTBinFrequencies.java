@@ -57,9 +57,6 @@ public class FFTBinFrequencies
 		                                    is_sequential,
 		                                    dimensions );
 
-		dependencies = null;
-		
-		offsets = null;
 	}
 
 

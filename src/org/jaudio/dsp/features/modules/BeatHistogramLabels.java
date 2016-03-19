@@ -60,12 +60,7 @@ public class BeatHistogramLabels
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions );
-
-		dependencies = new String[1];
-		dependencies[0] = "Beat Histogram";
-		
-		offsets = new int[1];
-		offsets[0] = 0;
+		definition.setDependency("Beat Histogram");
 	}
 
 

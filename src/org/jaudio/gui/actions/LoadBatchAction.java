@@ -29,6 +29,10 @@ public class LoadBatchAction extends AbstractAction {
 		controller = c;
 	}
 
+	public LoadBatchAction() {
+
+	}
+
 	/**
 	 * Loads the contents of a saved batch file into batches in the application
 	 */

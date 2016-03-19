@@ -6,10 +6,11 @@
 
 package org.jaudio.dsp.features;
 
-import jAudioFeatureExtractor.DataModel;
 import org.dynamicfactory.Creatable;
 import org.dynamicfactory.descriptors.PropertiesInternal;
+import org.jaudio.dsp.DataModel;
 
+import java.util.List;
 import java.util.ResourceBundle;
 
 /**
@@ -42,7 +43,7 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	 * The names of other features that are needed in order for a feature to be
 	 * calculated. Will be null if there are no dependencies.
 	 */
-	protected String[] dependencies;
+//	protected String[] dependencies;
 
 	/**
 	 * The offset in windows of each of the features named in the dependencies
@@ -53,7 +54,7 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	 * dependencies. This must be null, 0 or a negative number. Positive numbers
 	 * are not allowed.
 	 */
-	protected int[] offsets;
+//	protected int[] offsets;
 
 	/**
 	 * If a feature alters its number of dimensions, it needs to be able to
@@ -78,8 +79,8 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	 * Returns the names of other features that are needed in order to extract
 	 * this feature. Will return null if no other features are needed.
 	 */
-	public String[] getDepenedencies() {
-		return dependencies;
+	public List<FeatureDependency> getDepenedencies() {
+		return getFeatureDefinition().getDependencies();
 	}
 
 	/**
@@ -93,9 +94,9 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	 * extractFeature method with a value that corresponds to the window prior
 	 * to the window corresponding to this feature.
 	 */
-	public int[] getDepenedencyOffsets() {
-		return offsets;
-	}
+//	public int[] getDepenedencyOffsets() {
+//		return offsets;
+//	}
 
 	/**
 	 * The prototype function that classes extending this class will override in

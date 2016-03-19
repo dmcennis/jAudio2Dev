@@ -32,15 +32,7 @@ public class ZernikeMoments extends FeatureExtractor {
 
 		definition = new FeatureDefinition(name, description, true, 0,
 				attributes);
-		dependencies = new String[lengthOfWindow];
-		for (int i = 0; i < dependencies.length; ++i) {
-			dependencies[i] = "MFCC";
-		}
-		offsets = new int[lengthOfWindow];
-		for (int i = 0; i < offsets.length; ++i) {
-			offsets[i] = 0 - i;
-		}
-		return definition;
+definition.setDependency("MFCC",0,lengthOfWindow);		return definition;
 	}
 
 	@Override
@@ -51,19 +43,10 @@ public class ZernikeMoments extends FeatureExtractor {
 					bundle.getString("zernike.moment.s.window.length.must.be.two.or.greater"));
 		} else {
 			lengthOfWindow = n;
-			dependencies = new String[lengthOfWindow];
-			offsets = new int[lengthOfWindow];
-			for (int i = 0; i < lengthOfWindow; ++i) {
-				dependencies[i] = "MFCC";
-				offsets[i] = 0 - i;
-			}
+            definition.setDependency("MFCC",0,lengthOfWindow);
 		}
 	}
 	
-	@Override
-	public int[] getDepenedencyOffsets() {
-		return super.getDepenedencyOffsets();
-	}
 
 	@Override
 	public String getElement(int index) throws Exception {

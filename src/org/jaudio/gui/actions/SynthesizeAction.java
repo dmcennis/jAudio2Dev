@@ -28,7 +28,11 @@ public class SynthesizeAction extends AbstractAction {
 		super("Synthesize Audio...");
 		controller = c;
 	}
-	
+
+	public SynthesizeAction() {
+
+	}
+
 	/**
 	 * Creates and shows the SynthesizeFrame.
 	 */

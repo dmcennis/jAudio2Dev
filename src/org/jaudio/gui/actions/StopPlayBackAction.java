@@ -25,7 +25,11 @@ public class StopPlayBackAction extends AbstractAction {
 //		setEnabled(false);
 		controller = c;
 	}
-	
+
+	public StopPlayBackAction() {
+
+	}
+
 	/**
 	 * Tries to stop the playback.
 	 */

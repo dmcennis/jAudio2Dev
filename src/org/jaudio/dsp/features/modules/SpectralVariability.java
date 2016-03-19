@@ -53,12 +53,7 @@ public class SpectralVariability
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions );
-
-		dependencies = new String[1];
-		dependencies[0] = "Magnitude Spectrum";
-		
-		offsets = new int[1];
-		offsets[0] = 0;
+		definition.setDependency("Magnitude Spectrum");
 	}
 
 

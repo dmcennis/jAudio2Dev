@@ -57,11 +57,7 @@ public class LogConstantQ extends FeatureExtractor
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions);
-
-		dependencies = new String[]{"ConstantQ"};
-		
-		offsets = new int[]{0};
-		
+		definition.setDependency("ConstantQ");
 	}
 
 

@@ -1,6 +1,7 @@
 package org.jaudio.dsp.features.modules;
 
 import org.dynamicfactory.descriptors.Properties;
+import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
 import java.util.ResourceBundle;
@@ -66,21 +67,18 @@ public class Derivative extends MetaFeatureFactory {
 	 */
 	public MetaFeatureFactory defineFeature(FeatureExtractor fe) {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-		MetaFeatureFactory tmp = new Derivative();
+		Derivative tmp = new Derivative();
 		if ((fe_ != null) & (fe_ instanceof MetaFeatureFactory)) {
 			tmp.fe_ = ((MetaFeatureFactory) fe_).defineFeature(fe);
 		} else {
 			tmp.fe_ = fe;
 		}
-		String name = "Derivative of " + tmp.fe_.getFeatureDefinition().name;
-		String description = String.format(bundle.getString("derivative.of.s.s"), tmp.fe_.getFeatureDefinition().name, tmp.fe_.getFeatureDefinition().description);
+		String name = "Derivative of " + tmp.fe_.getFeatureDefinition().getName();
+		String description = String.format(bundle.getString("derivative.of.s.s"), tmp.fe_.getFeatureDefinition().getName(), tmp.fe_.getFeatureDefinition().getDescription());
 		String[] oldAttributes = tmp.fe_.getFeatureDefinition().getAttributes();
 		tmp.definition = new FeatureDefinition(name, description, true, tmp.fe_
 				.getFeatureDefinition().getDimensions(), oldAttributes);
-
-		tmp.dependencies = new String[] { tmp.fe_.getFeatureDefinition().name,
-				tmp.fe_.getFeatureDefinition().name };
-		tmp.offsets = new int[] { 0, -1 };
+		tmp.definition.setDependency(tmp.fe_.getFeatureDefinition().getName(),0,2);
 		return tmp;
 	}
 
@@ -160,15 +158,12 @@ public Object clone() {
 			Derivative ret = new Derivative();
 			ret.fe_ = (FeatureExtractor)fe_.clone();
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			String name = "Derivative of " + ret.fe_.getFeatureDefinition().name;
-			String description = String.format(bundle.getString("derivative.of.s.s"), ret.fe_.getFeatureDefinition().name, ret.fe_.getFeatureDefinition().description);
+			String name = "Derivative of " + ret.fe_.getFeatureDefinition().getName();
+			String description = String.format(bundle.getString("derivative.of.s.s"), ret.fe_.getFeatureDefinition().getName(), ret.fe_.getFeatureDefinition().getDescription());
 			String[] oldAttributes = ret.fe_.getFeatureDefinition().getAttributes();
 			ret.definition = new FeatureDefinition(name, description, true, ret.fe_
 					.getFeatureDefinition().getDimensions(), oldAttributes);
-
-			ret.dependencies = new String[] { ret.fe_.getFeatureDefinition().name,
-					ret.fe_.getFeatureDefinition().name };
-			ret.offsets = new int[] { 0, -1 };
+			ret.definition.setDependency(ret.fe_.getFeatureDefinition().getName(),0,2);
 			return ret;
 		}else{
 			return (new Derivative()).defineFeature((FeatureExtractor)fe_.clone());
@@ -184,11 +179,11 @@ public Object clone() {
 	public FeatureDefinition getFeatureDefinition() {
 		if ((fe_ != null)&&(fe_ instanceof MetaFeatureFactory)) {
 			String[] oldAttributes = fe_.getFeatureDefinition().getAttributes();
-			definition = new FeatureDefinition(definition.name, definition.description, true, fe_
+			definition = new FeatureDefinition(definition.getName(), definition.getDescription(), true, fe_
 					.getFeatureDefinition().getDimensions(), oldAttributes);
 		} else if (fe_ != null) {
 			String[] oldAttributes = fe_.getFeatureDefinition().getAttributes();
-			definition = new FeatureDefinition(definition.name, definition.description, true, fe_
+			definition = new FeatureDefinition(definition.getName(), definition.getDescription(), true, fe_
 					.getFeatureDefinition().getDimensions(), oldAttributes);
 		} 
 		return definition;

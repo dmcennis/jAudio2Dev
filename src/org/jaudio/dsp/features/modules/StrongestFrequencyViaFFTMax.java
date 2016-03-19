@@ -55,14 +55,8 @@ public class StrongestFrequencyViaFFTMax
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions );
-
-		dependencies = new String[2];
-		dependencies[0] = "Power Spectrum";
-		dependencies[1] = "FFT Bin Frequency Labels";
-		
-		offsets = new int[2];
-		offsets[0] = 0;
-		offsets[1] = 0;
+		definition.setDependency("Power Spectrum");
+		definition.addDependency("FFT Bin Frequency Labels");
 	}
 
 

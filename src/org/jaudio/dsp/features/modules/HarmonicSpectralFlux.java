@@ -60,8 +60,7 @@ public class HarmonicSpectralFlux extends FeatureExtractor {
 		String description = new String(
 				bundle.getString("cacluate.the.correlation.bettween.adjacent.frames.based.peaks.instead.of.spectral.bins.peak.tracking.is.primitive.whe.the.number.of.bins.changes.the.bottom.bins.are.matched.sequentially.and.the.extra.unmatched.bins.are.ignored"));
 		definition = new FeatureDefinition(name, description, true, 1);
-		dependencies = new String[] { "Peak Detection", "Peak Detection" };
-		offsets = new int[] { 0, -1 };
+		definition.setDependency("Peak Detection",0,2);
 	}
 
 	/**
