@@ -64,7 +64,9 @@ public class ConstantQ extends FeatureExtractor
 		                                    is_sequential,
 		                                    dimensions,
 											attributes );
-
+		definition.set("SizeOfBins",Double.class,1.0,"Percent of a semitone (where 1.0 is 100%) for each bin of the output",
+                "ConstantQ provides a vector (ordered list of fixed length) numbers. Each number represents a 'bin'. Inside each bin, all frequencies in that range in this windows of the signal are collected into a single number. This parameter describes how 'wide' this 'band' of frequencies is on a logarithimic scale. For example, 12.0 represents bands of all frequencies of one octave, collecting together for instance middle c (c) to the next c (c1) or 261Hz to 522Hz, while 1.0 collects frequencies corresponding to a single semitone like c to d (261 to 294 ~Hz).");
+		definition.get("SizeOfBins").setDescription("Percent of a semitone (where 1.0 is 100%) for each bin of the output");
 
 		alpha=1.0;
 
@@ -113,11 +115,13 @@ public class ConstantQ extends FeatureExtractor
 		double[] ret = new double[2*nk.length];
 		java.util.Arrays.fill(ret,0.0);
 		for(int bankCounter=0;bankCounter<(ret.length/2);++bankCounter){
+            //FIXME: Should be window length, not nk[bankCounter]
 			for(int i=0;i<nk[bankCounter];++i){
 				ret[bankCounter] += kernelReal[bankCounter][i]*samples[i];
 				ret[bankCounter+nk.length] += kernelImaginary[bankCounter][i]*samples[i];
 			}
 		}
+        // FIXME: requires a scaling factor ((passband width ret[0]) / (passband width bin[i]))
 		for(int i=0;i<nk.length;++i){
                 	returnValue[i] = Math.sqrt(ret[i]*ret[i]+ret[i+nk.length]*ret[i+nk.length]);
 		}
@@ -160,6 +164,9 @@ public class ConstantQ extends FeatureExtractor
 		}
 	}
 
+    /**
+     * FIXME: Restore scaling factors (scaling energy per bin by bin size) and calculation of frequencies over the entire window, not just the first nk[i] elemnts
+     */
 	private void calcKernels(){
 		kernelReal = new double[nk.length][];
 		kernelImaginary = new double[nk.length][];
@@ -168,6 +175,7 @@ public class ConstantQ extends FeatureExtractor
 		for(int i=0;i<kernelReal.length;++i){
 			kernelReal[i] = new double[nk[i]];
 			kernelImaginary[i] = new double[nk[i]];
+            //FIXME: scaling by 2*pi should be changed by the actual length of the window in Pi : 2Pi * (windowlength / nk[i])
 			for(int j=0;j<kernelReal[i].length;++j){
 				kernelReal[i][j] = hammingFactor + (1-hammingFactor)*Math.cos(2.0*Math.PI*((double)j)/((double)nk[i]));
 				kernelReal[i][j] /= ((double)nk[i]);

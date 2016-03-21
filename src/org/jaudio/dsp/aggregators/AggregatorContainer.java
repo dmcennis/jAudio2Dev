@@ -5,8 +5,9 @@
  */
 package org.jaudio.dsp.aggregators;
 
-import jAudioFeatureExtractor.ACE.DataTypes.FeatureDefinition;
-import jAudioFeatureExtractor.AudioFeatures.FeatureExtractor;
+
+import org.jaudio.dsp.features.FeatureDefinition;
+import org.jaudio.dsp.features.FeatureExtractor;
 
 import java.io.DataOutputStream;
 import java.io.Writer;
@@ -205,7 +206,7 @@ public class AggregatorContainer {
 				for(int j=0;j<list.length;++j){
 					good = false;
 					for(int k=0;k<featureList.size();++k){
-						if(featureList.get(k).getFeatureDefinition().name.compareTo(list[j])==0){
+						if(featureList.get(k).getFeatureDefinition().getName().compareTo(list[j])==0){
 							good = true;
 							indeci[j] = featureIndecis2FeatureListMapping.get(k);
 							break;
