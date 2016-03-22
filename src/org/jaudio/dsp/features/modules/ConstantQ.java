@@ -184,7 +184,8 @@ public class ConstantQ extends FeatureExtractor
 			kernelReal[i] = new double[nk[i]];
 			kernelImaginary[i] = new double[nk[i]];
 			for(int j=0;j<kernelReal[i].length;++j){
-				kernelReal[i][j] = hammingFactor + (1-hammingFactor)*Math.cos(2.0*Math.PI*((double)j)/((double)nk[i]));
+				// Hamming window needs to be adjusted to reflect that this window exceeds 2 Pi in length.
+				kernelReal[i][j] = hammingFactor + (1-hammingFactor)*Math.cos(2.0*(((double)nk[i])/((double)windowLength))*Math.PI*((double)j)/((double)nk[i]));
 				kernelReal[i][j] /= ((double)nk[i]);
 				kernelImaginary[i][j] = kernelReal[i][j];
 //				kernelReal[i][j] *= Math.cos(-2.0*Math.PI*q*((double)j)/((double)nk[i]));
