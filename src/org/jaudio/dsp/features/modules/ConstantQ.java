@@ -18,7 +18,11 @@ import java.util.ResourceBundle;
 /*
  * Constant Q
  * 
- * Transform from the time domain to the frequency domain that uses logarithmic bins. 
+ * Transform from the time domain to the frequency domain that uses logarithmic bins. This algorithm is derived from an earlier paper
+ * from 2004 that has been significantly modified from the original [reference]. The higher bins are now calculated across
+ * the entire window, not just the first few elements, and the bins are scaled such that white noise has a perfectly even chroma.
+ * These modifications are useful for removing a constantly increasing bin value that was an artifact of bin size and bin length,
+ * making the features more useful for chord identification and polyphonic transcription.
  * 
  * @author Daniel McEnnis
  */
@@ -28,6 +32,7 @@ public class ConstantQ extends FeatureExtractor
 	int n;
 	double alpha = 1.0;
 	int nk[];
+	int windowLength;
 	double[] freq;
 	double[][] kernelReal;
 	double[][] kernelImaginary;
@@ -106,6 +111,7 @@ public class ConstantQ extends FeatureExtractor
 		throws Exception
 	{
 		if(!calculated){
+			windowLength = samples.length;
 			calcFreq(samples,sampling_rate);
 			calcNk(samples);
 			calcKernels();
@@ -115,15 +121,17 @@ public class ConstantQ extends FeatureExtractor
 		double[] ret = new double[2*nk.length];
 		java.util.Arrays.fill(ret,0.0);
 		for(int bankCounter=0;bankCounter<(ret.length/2);++bankCounter){
-            //FIXME: Should be window length, not nk[bankCounter]
-			for(int i=0;i<nk[bankCounter];++i){
+            //FIXED: Should be window length, not nk[bankCounter]
+//			for(int i=0;i<nk[bankCounter];++i){
+			for(int i=0;i<samples.length;++i){
 				ret[bankCounter] += kernelReal[bankCounter][i]*samples[i];
 				ret[bankCounter+nk.length] += kernelImaginary[bankCounter][i]*samples[i];
 			}
 		}
-        // FIXME: requires a scaling factor ((passband width ret[0]) / (passband width bin[i]))
+        // FIXED: requires a scaling factor ((passband width ret[0]) / (passband width bin[i]))
 		for(int i=0;i<nk.length;++i){
-                	returnValue[i] = Math.sqrt(ret[i]*ret[i]+ret[i+nk.length]*ret[i+nk.length]);
+            // Scale results so that pure white noise has a flat chroma
+			returnValue[i] = Math.sqrt(ret[i]*ret[i]+ret[i+nk.length]*ret[i+nk.length])/Math.pow(2,((double)i)*alpha/12);
 		}
 		return returnValue;
 	}
@@ -165,7 +173,7 @@ public class ConstantQ extends FeatureExtractor
 	}
 
     /**
-     * FIXME: Restore scaling factors (scaling energy per bin by bin size) and calculation of frequencies over the entire window, not just the first nk[i] elemnts
+     * FIXED: Restore scaling factors (scaling energy per bin by bin size) and calculation of frequencies over the entire window, not just the first nk[i] elements
      */
 	private void calcKernels(){
 		kernelReal = new double[nk.length][];
@@ -175,13 +183,15 @@ public class ConstantQ extends FeatureExtractor
 		for(int i=0;i<kernelReal.length;++i){
 			kernelReal[i] = new double[nk[i]];
 			kernelImaginary[i] = new double[nk[i]];
-            //FIXME: scaling by 2*pi should be changed by the actual length of the window in Pi : 2Pi * (windowlength / nk[i])
 			for(int j=0;j<kernelReal[i].length;++j){
 				kernelReal[i][j] = hammingFactor + (1-hammingFactor)*Math.cos(2.0*Math.PI*((double)j)/((double)nk[i]));
 				kernelReal[i][j] /= ((double)nk[i]);
 				kernelImaginary[i][j] = kernelReal[i][j];
-				kernelReal[i][j] *= Math.cos(-2.0*Math.PI*q*((double)j)/((double)nk[i]));
-				kernelImaginary[i][j] *= Math.sin(-2.0*Math.PI*q*((double)j)/((double)nk[i]));
+//				kernelReal[i][j] *= Math.cos(-2.0*Math.PI*q*((double)j)/((double)nk[i]));
+//				kernelImaginary[i][j] *= Math.sin(-2.0*Math.PI*q*((double)j)/((double)nk[i]));
+				// calculating FFT on a window greater than 2PI in length requires some scaling of the result
+				kernelReal[i][j] *= Math.cos(-2.0*Math.PI*(((double)nk[i])/((double)windowLength))*q*((double)j)/((double)nk[i]));
+				kernelImaginary[i][j] *= Math.sin(-2.0*Math.PI*(((double)nk[i])/((double)windowLength))*q*((double)j)/((double)nk[i]));
 			}
 		}
 	}
