@@ -75,9 +75,6 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 		return definition.is_sequential();
 	}
 
-	public List<FeatureDependency> getDependencies() {
-		return definition.getDependencies();
-	}
 
 	public void addDependency(FeatureDependency dep) {
 		definition.addDependency(dep);
@@ -162,11 +159,6 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	public void setDimensions(int dimensions) {
 		definition.setDimensions(dimensions);
 	}
-
-	public List<FeatureDependency> getDependency() {
-		return definition.getDependency();
-	}
-
 
     public int compareTo(Properties o) {
         return definition.compareTo(o);
@@ -314,9 +306,10 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	 * Returns the names of other features that are needed in order to extract
 	 * this feature. Will return null if no other features are needed.
 	 */
-	public List<FeatureDependency> getDepenedencies() {
+	public List<FeatureDependency> getDependencies() {
 		return getFeatureDefinition().getDependencies();
 	}
+
 
 	/**
 	 * Returns the offsets of other features that are needed in order to extract

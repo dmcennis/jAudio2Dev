@@ -1,7 +1,6 @@
 package org.jaudio.dsp;
 
 import jAudioFeatureExtractor.jAudioTools.AudioMethodsPlayback;
-import jAudioFeatureExtractor.jAudioTools.FeatureProcessor;
 import org.dynamicfactory.descriptors.*;
 import org.dynamicfactory.descriptors.Properties;
 import org.dynamicfactory.property.Property;
@@ -11,11 +10,9 @@ import org.jaudio.Updater;
 import org.jaudio.dsp.aggregators.Aggregator;
 import org.jaudio.dsp.aggregators.AggregatorContainer;
 import org.jaudio.dsp.aggregators.AggregatorFactory;
-import org.jaudio.dsp.aggregators.ZernikeMoments;
 import org.jaudio.dsp.features.*;
 
 import java.io.File;
-import java.io.OutputStream;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,6 +43,7 @@ public class DataModel {
 	 * list of which features are enabled by default
 	 */
 //	public boolean[] defaults
+            // equality is defined by *both* algorithm and properties
     private HashSet<FeatureExtractor> featuresToExtract = new HashSet<FeatureExtractor>();
 
 
@@ -71,7 +69,7 @@ public class DataModel {
 	/**
 	 * wrapper object for the aggregators.  This reference is null until a file extraction has been performed.
 	 */
-	public AggregatorContainer container;
+	private AggregatorContainer container;
 
 	/**
 	 * whether or a feature is a derived feature or not
@@ -95,13 +93,62 @@ public class DataModel {
 
 	Updater updater = null;
 
+    private double[][][][] windowData = null;
+
+    private double[][][] aggData = null;
+
 //	public OutputStream featureKey = null;
 
 //	public OutputStream featureValue = null;
 
 	private TreeMap<Integer,HashSet<FeatureExtractor>> mapping = new TreeMap<Integer,HashSet<FeatureExtractor>>();
 
+    public double[][][][] getWindowData(){return windowData;}
 
+    public double[][][] getAggData(){return aggData;}
+
+    public void addFeature(FeatureExtractor f){
+        featuresToExtract.add(f);
+    }
+
+    public void addFeature(Collection<FeatureExtractor> list){
+        featuresToExtract.addAll(list);
+    }
+
+    public void setFeature(FeatureExtractor f){
+        featuresToExtract.clear();
+        featuresToExtract.add(f);
+    }
+
+    public void setFeature(Collection<FeatureExtractor> list){
+        featuresToExtract.clear();
+        featuresToExtract.addAll(list);
+    }
+
+    public void clearFeatures(){
+        featuresToExtract.clear();
+    }
+
+    public void addAggregator(Aggregator f) throws Exception{
+        container.add(f);
+    }
+
+    public void addAggregator(Collection<Aggregator> list) throws Exception{
+        container.add(list.toArray(new Aggregator[]{}));
+    }
+
+    public void setAggregator(Aggregator f)throws Exception{
+        container.clear();
+        container.add(f);
+    }
+
+    public void setAggregator(Collection<Aggregator> list)throws Exception{
+        container.add(list.toArray(new Aggregator[]{}));
+    }
+
+    public void clearAggregator(){
+        container.clear();
+    }
     public void add(ParameterInternal parameter) {
         properties.add(parameter);
     }
@@ -457,18 +504,80 @@ public class DataModel {
 			updater.setNumberOfFiles(recordings.length);
 		}
 
-        LinkedList<FeatureExtractor> list = orderFeatureExtraction();
+        HashMap<FeatureExtractor,Integer> offsets = new HashMap<FeatureExtractor,Integer>();
+
+        HashMap<FeatureExtractor,Integer> indexInExtraction = new HashMap<FeatureExtractor, Integer>();
+
+        HashMap<FeatureExtractor,HashMap<FeatureDependency,FeatureExtractor>> dependencyMap = new HashMap<FeatureExtractor, HashMap<FeatureDependency, FeatureExtractor>>();
+
+        HashMap<FeatureExtractor,HashMap<Integer,Integer>> depOffsetList = new HashMap<FeatureExtractor,HashMap<Integer, Integer>>();
+
+
+        FeatureExtractor[] list = orderFeatureExtraction(offsets,indexInExtraction,dependencyMap,depOffsetList);
 
         if(!checks()){
             throw new Exception("There was an unknown error during validation the audio data.");
         }
 
-        if(save_overall_recording_features){
-            container.process(info,samplingRate);
-        }else{
-            extract(info, list, samplingRate, windowSize, windowOverlap);
-        }
+
         //FIXME: Finish propogating changes through processing stacks
+        HashMap<FeatureExtractor,double[][]> output = new HashMap<>();
+
+        // recording - window index - feature index - feature dimension
+        windowData = new double[recordings.length][][][];
+        // recording  feature index - feature dimension
+        aggData = new double[recordings.length][][];
+
+        int recordingIndex=0;
+        for(RecordingInfo rec : recordings){
+            double[] samples = pad(rec.samples.samples,window_size,window_overlap);
+            int increment = (int)((double)window_size*(1.0-window_overlap));
+            double[][][] allData = new double[(samples.length-window_size)/increment][list.length][];
+            int windowIndex=0;
+            for(int current_index=0;current_index<samples.length-window_size;current_index+=increment){
+                double[] window = new double[window_size];
+                double[][] windowResults = new double[featuresToExtract.size()][];
+                for(int i=0;i<window_size;++i){
+                    window[i]=samples[current_index+i];
+                }
+                int outputIndex=0;
+                for(int i=0;i<list.length;++i){
+                    if(offsets.get(list[i])>=current_index) {
+
+                        // create this feature's dependencies
+                        List<FeatureDependency> deps = list[i].getDependencies();
+                        double[][] dependecies = new double[deps.size()][];
+                        int depList = 0;
+                        for (FeatureDependency d : deps) {
+                            dependecies[depList] = allData[windowIndex - offsets.get(dependencyMap.get(list[i]).get(d))][indexInExtraction.get(dependencyMap.get(list[i]).get(d))];
+                        }
+
+                        // process this feature
+                        double[] ret = list[i].extractFeature(window,sampling_rate,dependecies);
+                        allData[windowIndex][i] = ret;
+                        if(featuresToExtract.contains(list[i])){
+                            windowResults[outputIndex] = ret;
+                            outputIndex++;
+                        }
+
+                    }else{
+                        allData[windowIndex][i] = new double[]{Double.NaN};
+                        if(featuresToExtract.contains(list[i])){
+                            windowResults[outputIndex] = new double[]{Double.NaN};
+                            outputIndex++;
+                        }
+                    }
+                }
+                windowData[recordingIndex][current_index] = windowResults;
+                windowIndex++;
+            }
+            if(save_overall_recording_features){
+                //FIXME: complete aggregator processing with new FeatureLists
+//                container.process(windowData[recordingIndex],samplingRate,indexInExtraction);
+                aggData[recordingIndex]=container.getResults();
+            }
+            recordingIndex++;
+        }
 //		container.add(features,defaults);
 //		// Prepare to extract features
 //		FeatureProcessor processor = new FeatureProcessor(window_size,
@@ -497,10 +606,14 @@ public class DataModel {
 		// JOptionPane.INFORMATION_MESSAGE);
 	}
 
-
-
-    protected void extract(RecordingInfo[] info, LinkedList<FeatureExtractor> features, double samplingRate, int windowSize, double windowOverlap){
-        //FIXME: Complete extraction Code
+    private double[] pad(double[] samples, int window_size, double window_overlap) {
+        int retLength = window_size+window_size*(int)Math.ceil(((double)samples.length - window_size)/((double)window_size*(1.0-window_overlap)));
+        double[] ret = new double[retLength];
+        Arrays.fill(ret,0.0);
+        for(int i=0;i<samples.length;++i){
+            ret[i]=samples[i];
+        }
+        return ret;
     }
 
     protected boolean checks() throws Exception{
@@ -532,9 +645,123 @@ public class DataModel {
         return true;
     }
 
-    protected LinkedList<FeatureExtractor> orderFeatureExtraction(){
-        //FIXME: Complete Ordering code
-        return null;
+    /**
+     * While used to create an ordered list, this system defines a dependency graph guaranteeing features at the same
+     * level and lower have no dependencies on this feature by any path.
+     *
+     * @return
+     */
+    protected FeatureExtractor[] orderFeatureExtraction(HashMap<FeatureExtractor,Integer> offsets,
+                                                        HashMap<FeatureExtractor,Integer> indexInExtraction,
+                                                        HashMap<FeatureExtractor,HashMap<FeatureDependency,FeatureExtractor>> dependencyMap,
+                                                        HashMap<FeatureExtractor,HashMap<Integer,Integer>> depOffsetList){
+        // Generate dependencies and merge
+
+        // newest set of dependencies
+        HashSet<FeatureExtractor> expanded = new HashSet<FeatureExtractor>();
+
+        // set of all features to extract
+        HashSet<FeatureExtractor> current = new HashSet<FeatureExtractor>();
+        current.addAll(featuresToExtract);
+
+        // set of all features without dependencies (leaves)
+        HashSet<FeatureExtractor> baseFeatures = new HashSet<FeatureExtractor>();
+        baseFeatures.addAll(featuresToExtract);
+
+        // set of features known not to be base features (branches)
+        HashSet<FeatureExtractor> nonBase = new HashSet<FeatureExtractor>();
+
+        HashMap<FeatureExtractor,HashMap<FeatureExtractor,Integer>> dependencyGraph = new HashMap<FeatureExtractor,HashMap<FeatureExtractor,Integer>>();
+
+        HashMap<FeatureExtractor,HashMap<FeatureExtractor,Integer>> inverseDependencyGraph = new HashMap<FeatureExtractor,HashMap<FeatureExtractor,Integer>>();
+
+        HashMap<FeatureExtractor,HashMap<FeatureExtractor,Integer>> offsetSet = new HashMap<FeatureExtractor,HashMap<FeatureExtractor, Integer>>();
+
+        do{
+            current.addAll(expanded);
+            expanded.clear();
+            for(FeatureExtractor f : featuresToExtract){
+                if(f.getDependencies().size()>0){
+                    dependencyMap.put(f,new HashMap<FeatureDependency, FeatureExtractor>());
+                    dependencyGraph.put(f, new HashMap<FeatureExtractor,Integer>());
+                    offsetSet.put(f,new HashMap<FeatureExtractor,Integer>());
+                    baseFeatures.remove(f);
+                }
+                for(FeatureDependency d : f.getDependencies()){
+                    FeatureExtractor next = d.get();
+                    dependencyMap.get(f).put(d,next);
+
+                    expanded.add(next);
+                    if(dependencyGraph.get(f).containsKey(next)){
+                        dependencyGraph.get(f).put(next,Math.max(d.getOffset(),dependencyGraph.get(f).get(next)));
+                    }else{
+                        dependencyGraph.get(f).put(next,dependencyGraph.get(f).get(next));
+                    }
+                    if(!inverseDependencyGraph.containsKey(next)){
+                        inverseDependencyGraph.put(next,new HashMap<FeatureExtractor,Integer>());
+                    }
+                    inverseDependencyGraph.get(next).put(f,d.getOffset());
+                    if(!nonBase.contains(next)){
+                        baseFeatures.add(next);
+                    }
+                }
+            }
+        }while(expanded.size()>0);
+
+        HashMap<FeatureExtractor,HashSet<FeatureExtractor>> copyOfDependencyGraph = new HashMap<FeatureExtractor,HashSet<FeatureExtractor>>();
+        for(FeatureExtractor f: dependencyGraph.keySet()){
+            copyOfDependencyGraph.put(f,new HashSet<FeatureExtractor>());
+            for(FeatureExtractor g: dependencyGraph.get(f).keySet()){
+                copyOfDependencyGraph.get(f).add(g);
+            }
+        }
+
+        LinkedList<FeatureExtractor> ret = new LinkedList<FeatureExtractor>();
+
+        // populate the offset table
+        for(FeatureExtractor f : current){
+            offsets.put(f,0);
+        }
+
+        // Create an ordered list of these features and a map of dependencies
+        int dependencyCount=0;
+        while(ret.size()<current.size()){
+            mapping.put(dependencyCount,new HashSet<FeatureExtractor>());
+            HashSet<FeatureExtractor> nextBases = new HashSet<FeatureExtractor>();
+            for(FeatureExtractor f : baseFeatures){
+                ret.add(f);
+                mapping.get(dependencyCount).add(f);
+                current.remove(f);
+                if(inverseDependencyGraph.containsKey(f)) {
+                    for (FeatureExtractor parent : inverseDependencyGraph.get(f).keySet()) {
+                        if(dependencyGraph.get(parent).get(f)+offsets.get(f) > offsets.get(parent)){
+                            offsets.put(parent,dependencyGraph.get(parent).get(f)+offsets.get(f));
+                        }
+                        copyOfDependencyGraph.get(parent).remove(f);
+                        if(copyOfDependencyGraph.get(parent).isEmpty()){
+                            nextBases.add(parent);
+                        }
+                    }
+                }
+            }
+            baseFeatures.clear();
+            baseFeatures.addAll(nextBases);
+            nextBases.clear();
+            dependencyCount++;
+        }
+        for(FeatureExtractor f : ret) {
+            depOffsetList.put(f, new HashMap<Integer, Integer>());
+        }
+        int index=0;
+        for(FeatureExtractor f : ret){
+            indexInExtraction.put(f,index);
+            for(FeatureExtractor parent : inverseDependencyGraph.get(f).keySet()){
+                depOffsetList.get(parent).put(index,dependencyGraph.get(parent).get(f));
+            }
+            index++;
+        }
+
+        return ret.toArray(new FeatureExtractor[]{});
     }
 
 	/**

@@ -7,6 +7,7 @@
 package org.jaudio.dsp.features;
 
 import jAudioFeatureExtractor.ACE.XMLParsers.XMLDocumentParser;
+import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.PropertiesImplementation;
 
 import java.io.DataOutputStream;
@@ -334,7 +335,7 @@ public class FeatureDefinition extends PropertiesImplementation implements Seria
      * of false means that only one feature value may be extracted per data set.
      */
     public boolean is_sequential() {
-        return (boolean)quickGet("isSequental");
+        return (boolean)quickGet("isSequential");
     }
 
     public void setIs_sequential(boolean is_sequential) {
@@ -415,4 +416,20 @@ public class FeatureDefinition extends PropertiesImplementation implements Seria
             return new LinkedList<FeatureDependency>();
         }
     }
-}
+
+	public List<Parameter> getParameters() {
+		LinkedList<Parameter> ret = new LinkedList<Parameter>();
+		for(Parameter p : this.get()){
+            if((p.getType().compareTo("Description")!=0) &&
+                    (p.getType().compareTo("Dependency")!=0) &&
+                    (p.getType().compareTo("isSequential")!=0) &&
+                    (p.getType().compareTo("LongDescription")!=0) &&
+                    (p.getType().compareTo("Name")!=0)){
+                ret.add(p);
+            }
+
+        }
+        return ret;
+	}
+
+	}
