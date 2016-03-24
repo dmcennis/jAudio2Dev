@@ -24,7 +24,7 @@ public class AudioInputFactory extends AbstractFactory<AudioInput> {
     }
 
     @Override
-    public AudioSamples create(Properties props) {
+    public AudioInput create(Properties props) {
         if(props.quickCheck("ClassName",String.class)){
             if(map.containsKey((String)props.quickGet("ClassName"))){
                 return map.get("ClassName").prototype(props);
@@ -45,7 +45,12 @@ public class AudioInputFactory extends AbstractFactory<AudioInput> {
         return getInstance().map.get("Default").prototype(props);
     }
 
-//    @Override
+    @Override
+    public AbstractFactory<AudioInput> prototype() {
+        return getInstance();
+    }
+
+    //    @Override
 //    public Collection<String> getKnownTypes() {
 //
 //    }

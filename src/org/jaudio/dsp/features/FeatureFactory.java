@@ -52,6 +52,11 @@ public class FeatureFactory extends AbstractFactory<FeatureExtractor> {
     }
 
     @Override
+    public AbstractFactory<FeatureExtractor> prototype() {
+        return getInstance();
+    }
+
+    @Override
     public FeatureExtractor create(Properties props) {
 
         if(props == null){

@@ -7,9 +7,11 @@
 package org.jaudio.dsp.features;
 
 import org.dynamicfactory.Creatable;
-import org.dynamicfactory.descriptors.PropertiesInternal;
+import org.dynamicfactory.descriptors.*;
+import org.dynamicfactory.property.Property;
 import org.jaudio.dsp.DataModel;
 
+import java.io.File;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -37,8 +39,6 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	 */
 	protected FeatureDefinition definition;
 
-	protected PropertiesInternal properties;
-
 	/**
 	 * The names of other features that are needed in order for a feature to be
 	 * calculated. Will be null if there are no dependencies.
@@ -61,8 +61,243 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	 * notify the holding object that a visible change has occured.
 	 */
 	protected DataModel parent;
+/* PUBLIC METHODS ********************************************************* */
 
-	/* PUBLIC METHODS ********************************************************* */
+	public String getFeatureDescription() {
+		return definition.getFeatureDescription();
+	}
+
+	public void setIs_sequential(boolean is_sequential) {
+		definition.setIs_sequential(is_sequential);
+	}
+
+	public boolean is_sequential() {
+		return definition.is_sequential();
+	}
+
+	public List<FeatureDependency> getDependencies() {
+		return definition.getDependencies();
+	}
+
+	public void addDependency(FeatureDependency dep) {
+		definition.addDependency(dep);
+	}
+
+	public static FeatureDefinition[] parseFeatureDefinitionsFile(String feature_key_file_path) throws Exception {
+		return FeatureDefinition.parseFeatureDefinitionsFile(feature_key_file_path);
+	}
+
+	public void setDependency(String name) {
+		definition.setDependency(name);
+	}
+
+	public String getName() {
+		return definition.getName();
+	}
+
+	public void setAttributes(String[] attributes) {
+		definition.setAttributes(attributes);
+	}
+
+	public void addDependency(List<FeatureDependency> dsp) {
+		definition.addDependency(dsp);
+	}
+
+	public void setDependency(FeatureDependency dep) {
+		definition.setDependency(dep);
+	}
+
+	public void setDescription(String description) {
+		definition.setDescription(description);
+	}
+
+	public void addDependency(String name, int offset) {
+		definition.addDependency(name, offset);
+	}
+
+	public void setDependency(List<FeatureDependency> dsp) {
+		definition.setDependency(dsp);
+	}
+
+	public static String verifyFeatureNameUniqueness(FeatureDefinition[] definitions) {
+		return FeatureDefinition.verifyFeatureNameUniqueness(definitions);
+	}
+
+	public String getDescription() {
+		return definition.getDescription();
+	}
+
+	public void setName(String name) {
+		definition.setName(name);
+	}
+
+	public static String getFeatureDescriptions(FeatureDefinition[] definitions) {
+		return FeatureDefinition.getFeatureDescriptions(definitions);
+	}
+
+	public int getDimensions() {
+		return definition.getDimensions();
+	}
+
+	public void addDependency(String name) {
+		definition.addDependency(name);
+	}
+
+	public String[] getAttributes() {
+		return definition.getAttributes();
+	}
+
+	public void setDependency(String name, int start, int length) {
+		definition.setDependency(name, start, length);
+	}
+
+	public void addDependency(String name, int start, int length) {
+		definition.addDependency(name, start, length);
+	}
+
+	public static void saveFeatureDefinitions(FeatureDefinition[] definitions, File to_save_to, String comments) throws Exception {
+		FeatureDefinition.saveFeatureDefinitions(definitions, to_save_to, comments);
+	}
+
+	public void setDimensions(int dimensions) {
+		definition.setDimensions(dimensions);
+	}
+
+	public List<FeatureDependency> getDependency() {
+		return definition.getDependency();
+	}
+
+
+    public int compareTo(Properties o) {
+        return definition.compareTo(o);
+    }
+
+
+    public void clear() {
+        definition.clear();
+    }
+
+    public ParameterInternal get(String string) {
+        return definition.get(string);
+    }
+
+
+    public void set(String type, List value, String description) {
+        definition.set(type, value, description);
+    }
+
+
+    public void set(String type, Class c, Object value, String description) {
+        definition.set(type, c, value, description);
+    }
+
+
+    public void add(String name, Class type, Object value) {
+        definition.add(name, type, value);
+    }
+
+    public void set(Property value) {
+        definition.set(value);
+    }
+
+    public void add(String type, Object value) {
+        definition.add(type, value);
+    }
+
+    public void add(ParameterInternal parameter) {
+        definition.add(parameter);
+    }
+
+    public void remove(String type) {
+        definition.remove(type);
+    }
+
+    public SyntaxObject getDefaultRestriction() {
+        return definition.getDefaultRestriction();
+    }
+
+    public void setDefaultRestriction(SyntaxObject restriction) {
+        definition.setDefaultRestriction(restriction);
+    }
+
+    public List<Parameter> get() {
+        return definition.get();
+    }
+
+    public boolean check(Parameter type) {
+        return definition.check(type);
+    }
+
+    public boolean check(Properties props) {
+        return definition.check(props);
+    }
+
+    public void replace(Parameter type) {
+        definition.replace(type);
+    }
+
+    public PropertiesInternal merge(Properties right) {
+        return definition.merge(right);
+    }
+
+    public void add(String type, List value) {
+        definition.add(type, value);
+    }
+
+
+    public void add(String type, Class c, List value) {
+        definition.add(type, c, value);
+    }
+
+    public void set(String type, Object value) {
+        definition.set(type, value);
+    }
+
+    public void set(String type, List value) {
+        definition.set(type, value);
+    }
+
+    public void set(String type, Class c, Object value) {
+        definition.set(type, c, value);
+    }
+
+    public void set(String type, Class c, List value) {
+        definition.set(type, c, value);
+    }
+
+
+    public void set(String type, Class c, List value, String description) {
+        definition.set(type, c, value, description);
+    }
+
+
+    public void set(String type, List value, String description, String longDescription) {
+        definition.set(type, value, description, longDescription);
+    }
+
+
+    public void set(String type, Class c, Object value, String description, String longDescription) {
+        definition.set(type, c, value, description, longDescription);
+    }
+
+
+    public void set(String type, Class c, List value, String description, String longDescription) {
+        definition.set(type, c, value, description, longDescription);
+    }
+
+
+    public Object quickGet(String s) {
+        return definition.quickGet(s);
+    }
+
+
+    public boolean quickCheck(String s, Class type) {
+        return definition.quickCheck(s, type);
+    }
+
+    public void setDependency(String name, int offset) {
+		definition.setDependency(name, offset);
+	}
 
 	/**
 	 * Returns meta-data describing this feature.

@@ -95,4 +95,5 @@ public class AggregatorDefinition extends PropertiesImplementation implements Se
         setGeneric(g);
         setParameters(p);
     }
+
 }

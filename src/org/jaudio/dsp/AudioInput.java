@@ -6,15 +6,16 @@
 
 package org.jaudio.dsp;
 
+import org.dynamicfactory.Creatable;
 import org.dynamicfactory.descriptors.Properties;
 
 /**
  * Default Description Interface AudioInput
  */
-public interface AudioInput {
-	AudioSamples prototype();
+public interface AudioInput extends Creatable<AudioInput>{
+	AudioInput prototype();
 
-	AudioSamples prototype(Properties props);
+	AudioInput prototype(Properties props);
 
 	String getRecordingInfo();
 

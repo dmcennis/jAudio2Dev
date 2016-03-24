@@ -31,10 +31,10 @@ public abstract class MetaFeatureFactory extends FeatureExtractor {
 	// Factory Methods
 
     protected FeatureExtractor buildChild(Properties props){
-        List features = (properties.get("Feature").getValue());
+        List features = (definition.get("Feature").getValue());
         FeatureExtractor child = (FeatureExtractor)features.get(0);
         features.remove(0);
-        properties.set("Feature",features);
+        definition.set("Feature",features);
         return child.prototype(props);
     }
 

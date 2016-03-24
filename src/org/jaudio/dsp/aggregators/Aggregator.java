@@ -4,11 +4,14 @@
 package org.jaudio.dsp.aggregators;
 
 import org.dynamicfactory.Creatable;
+import org.dynamicfactory.descriptors.*;
+import org.dynamicfactory.property.Property;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
 import java.io.DataOutputStream;
 import java.io.Writer;
+import java.util.List;
 
 /**
  * Aggregator is an interface for specifying the mechanism for collapsing
@@ -31,7 +34,144 @@ public abstract class Aggregator implements Creatable<Aggregator>{
 
 	FeatureDefinition definition;
 
-	/**
+    public void setName(String name) {
+        metadata.setName(name);
+    }
+
+    public int compareTo(Properties o) {
+        return metadata.compareTo(o);
+    }
+
+    public void clear() {
+        metadata.clear();
+    }
+
+    public ParameterInternal get(String string) {
+        return metadata.get(string);
+    }
+
+    public void set(String type, List value, String description) {
+        metadata.set(type, value, description);
+    }
+
+    public void set(String type, Class c, Object value, String description) {
+        metadata.set(type, c, value, description);
+    }
+
+   public void add(String name, Class type, Object value) {
+        metadata.add(name, type, value);
+    }
+
+    public void set(Property value) {
+        metadata.set(value);
+    }
+
+    public void add(String type, Object value) {
+        metadata.add(type, value);
+    }
+
+    public void add(ParameterInternal parameter) {
+        metadata.add(parameter);
+    }
+
+    public void remove(String type) {
+        metadata.remove(type);
+    }
+
+    public SyntaxObject getDefaultRestriction() {
+        return metadata.getDefaultRestriction();
+    }
+
+    public void setDefaultRestriction(SyntaxObject restriction) {
+        metadata.setDefaultRestriction(restriction);
+    }
+
+
+    public List<Parameter> get() {
+        return metadata.get();
+    }
+
+
+    public boolean check(Parameter type) {
+        return metadata.check(type);
+    }
+
+
+    public boolean check(Properties props) {
+        return metadata.check(props);
+    }
+
+
+    public void replace(Parameter type) {
+        metadata.replace(type);
+    }
+
+
+    public PropertiesInternal merge(Properties right) {
+        return metadata.merge(right);
+    }
+
+
+    public void add(String type, List value) {
+        metadata.add(type, value);
+    }
+
+
+    public void add(String type, Class c, List value) {
+        metadata.add(type, c, value);
+    }
+
+
+    public void set(String type, Object value) {
+        metadata.set(type, value);
+    }
+
+
+    public void set(String type, List value) {
+        metadata.set(type, value);
+    }
+
+
+    public void set(String type, Class c, Object value) {
+        metadata.set(type, c, value);
+    }
+
+
+    public void set(String type, Class c, List value) {
+        metadata.set(type, c, value);
+    }
+
+
+    public void set(String type, Class c, List value, String description) {
+        metadata.set(type, c, value, description);
+    }
+
+
+    public void set(String type, List value, String description, String longDescription) {
+        metadata.set(type, value, description, longDescription);
+    }
+
+
+    public void set(String type, Class c, Object value, String description, String longDescription) {
+        metadata.set(type, c, value, description, longDescription);
+    }
+
+
+    public void set(String type, Class c, List value, String description, String longDescription) {
+        metadata.set(type, c, value, description, longDescription);
+    }
+
+
+    public Object quickGet(String s) {
+        return metadata.quickGet(s);
+    }
+
+
+    public boolean quickCheck(String s, Class type) {
+        return metadata.quickCheck(s, type);
+    }
+
+    /**
 	 * Convenience variable containing the end of line characters for this
 	 * system.
 	 */

@@ -6,6 +6,7 @@
 package org.jaudio.dsp.aggregators;
 
 
+import org.jaudio.dsp.RecordingInfo;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -64,6 +65,36 @@ public class AggregatorContainer {
 			buildAggregatorList();
 		}
 	}
+
+    public void add(Aggregator agg) throws Exception{
+        aggregatorTemplate.add(agg);
+        if(featureList.size() > 0){
+            buildAggregatorList();
+        }
+    }
+
+    public void clear(){
+        aggregatorList.clear();
+        aggregatorTemplate.clear();
+        featureIndecis2FeatureListMapping.clear();
+        featureList.clear();
+    }
+
+    public void set(Aggregator[] aggs) throws Exception{
+        aggregatorTemplate.clear();
+        for (int i = 0; i < aggs.length; ++i) {
+            aggregatorTemplate.add(aggs[i]);
+        }
+        if(featureList.size() > 0){
+            buildAggregatorList();
+        }
+    }
+
+	public void remove(Aggregator agg){
+        if((agg != null)&&(aggregatorTemplate.contains(agg))){
+            aggregatorTemplate.remove(agg);
+        }
+    }
 
 	/**
 	 * Sets the feature set to use in extraction.  If the aggregators are already added, the final aggregator 
@@ -237,5 +268,8 @@ public class AggregatorContainer {
 		}
 		return ret.toArray(new double[][]{});
 	}
-	
+
+    public void process(RecordingInfo[] info, double samplingRate) {
+        //FIXME: Complete Extraction Code
+    }
 }

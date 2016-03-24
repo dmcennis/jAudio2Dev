@@ -45,7 +45,7 @@ import java.util.logging.Logger;
  *
  * @author	Cory McKay
  */
-public class AudioSamples implements Creatable<AudioSamples>,AudioInput {
+public class AudioSamples implements AudioInput {
     @Override
     public AudioSamples prototype() {
         return this;

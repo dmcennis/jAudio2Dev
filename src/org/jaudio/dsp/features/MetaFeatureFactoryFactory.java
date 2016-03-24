@@ -8,7 +8,7 @@ import org.dynamicfactory.descriptors.Properties;
  * <p/>
  * Copyright Daniel McEnnis 2015
  */
-public class MetaFeatureFactoryFactory extends AbstractFactory<MetaFeatureFactory> {
+public class MetaFeatureFactoryFactory extends AbstractFactory<FeatureExtractor> {
     private static MetaFeatureFactoryFactory ourInstance = new MetaFeatureFactoryFactory();
 
     public static MetaFeatureFactoryFactory getInstance() {
@@ -21,5 +21,10 @@ public class MetaFeatureFactoryFactory extends AbstractFactory<MetaFeatureFactor
     @Override
     public MetaFeatureFactory create(Properties props) {
         return null;
+    }
+
+    @Override
+    public AbstractFactory<FeatureExtractor> prototype() {
+        return getInstance();
     }
 }

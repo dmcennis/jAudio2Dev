@@ -1,6 +1,10 @@
 package org.jaudio.dsp;
 
 import jAudioFeatureExtractor.jAudioTools.AudioMethodsPlayback;
+import jAudioFeatureExtractor.jAudioTools.FeatureProcessor;
+import org.dynamicfactory.descriptors.*;
+import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.property.Property;
 import org.jaudio.Cancel;
 import org.jaudio.ModelListener;
 import org.jaudio.Updater;
@@ -8,16 +12,13 @@ import org.jaudio.dsp.aggregators.Aggregator;
 import org.jaudio.dsp.aggregators.AggregatorContainer;
 import org.jaudio.dsp.aggregators.AggregatorFactory;
 import org.jaudio.dsp.aggregators.ZernikeMoments;
-import org.jaudio.dsp.features.FeatureDefinition;
-import org.jaudio.dsp.features.FeatureExtractor;
-import org.jaudio.dsp.features.FeatureFactory;
-import org.jaudio.dsp.features.MetaFeatureFactory;
+import org.jaudio.dsp.features.*;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //import jAudioFeatureExtractor.jAudioTools.AudioSamples;
 
@@ -32,27 +33,31 @@ public class DataModel {
 	/**
 	 * Reference to use for piping progress updates
 	 */
-	public ModelListener ml_;
+	private ModelListener ml_;
 
 	/**
 	 * Handle for killing in-progress analysis
 	 */
-	public Cancel cancel_;
+	private Cancel cancel_;
+
+    PropertiesInternal properties = PropertiesFactory.newInstance().create();
 
 	/**
 	 * list of which features are enabled by default
 	 */
-	public boolean[] defaults;
+//	public boolean[] defaults
+    private HashSet<FeatureExtractor> featuresToExtract = new HashSet<FeatureExtractor>();
+
 
 	/**
 	 * list of all features available
 	 */
-	public FeatureExtractor[] features;
+//	public FeatureExtractor[] features;
 
 	/**
 	 * Mapping between aggregator names and aggregator prototypes
 	 */
-	public java.util.HashMap<String, Aggregator> aggregatorMap;
+//	public java.util.HashMap<String, Aggregator> aggregatorMap;
 
 	/**
 	 * List of aggreggators to apply
@@ -61,27 +66,27 @@ public class DataModel {
 	 * map) but each entry in the array must be fully initialized prior to
 	 * calling extract().
 	 */
-	public Aggregator[] aggregators;
+//	public Aggregator[] aggregators;
 	
 	/**
 	 * wrapper object for the aggregators.  This reference is null until a file extraction has been performed.
 	 */
-	public AggregatorContainer container = null;
+	public AggregatorContainer container;
 
 	/**
 	 * whether or a feature is a derived feature or not
 	 */
-	public boolean[] is_primary;
+//	public boolean[] is_primary;
 
 	/**
 	 * cached FeatureDefinitions for all available features
 	 */
-	public FeatureDefinition[] featureDefinitions;
+//	public FeatureDefinition[] featureDefinitions;
 
 	/**
 	 * info on all recordings that are made avaiable for feature extraction
 	 */
-	public RecordingInfo[] recordingInfo;
+//	public RecordingInfo[] recordingInfo;
 
 	/**
 	 * thread for playing back a recording
@@ -90,11 +95,162 @@ public class DataModel {
 
 	Updater updater = null;
 
-	public OutputStream featureKey = null;
+//	public OutputStream featureKey = null;
 
-	public OutputStream featureValue = null;
+//	public OutputStream featureValue = null;
 
-	/**
+	private TreeMap<Integer,HashSet<FeatureExtractor>> mapping = new TreeMap<Integer,HashSet<FeatureExtractor>>();
+
+
+    public void add(ParameterInternal parameter) {
+        properties.add(parameter);
+    }
+
+
+    public void add(String type, Object value) {
+        properties.add(type, value);
+    }
+
+
+    public void add(String name, Class type, Object value) {
+        properties.add(name, type, value);
+    }
+
+
+    public void remove(String type) {
+        properties.remove(type);
+    }
+
+
+    public void replace(Parameter type) {
+        properties.replace(type);
+    }
+
+
+    public void setDefaultRestriction(SyntaxObject restriction) {
+        properties.setDefaultRestriction(restriction);
+    }
+
+
+    public SyntaxObject getDefaultRestriction() {
+        return properties.getDefaultRestriction();
+    }
+
+
+    public PropertiesInternal prototype() {
+        return properties.prototype();
+    }
+
+
+    public ParameterInternal get(String string) {
+        return properties.get(string);
+    }
+
+
+    public PropertiesInternal merge(Properties right) {
+        return properties.merge(right);
+    }
+
+
+    public void clear() {
+        properties.clear();
+    }
+
+
+    public void add(String type, List value) {
+        properties.add(type, value);
+    }
+
+
+    public void add(String type, Class c, List value) {
+        properties.add(type, c, value);
+    }
+
+
+    public void set(String type, Object value) {
+        properties.set(type, value);
+    }
+
+
+    public void set(String type, List value) {
+        properties.set(type, value);
+    }
+
+
+    public void set(String type, Class c, Object value) {
+        properties.set(type, c, value);
+    }
+
+
+    public void set(String type, Class c, List value) {
+        properties.set(type, c, value);
+    }
+
+
+    public void set(String type, List value, String description) {
+        properties.set(type, value, description);
+    }
+
+
+    public void set(String type, Class c, Object value, String description) {
+        properties.set(type, c, value, description);
+    }
+
+
+    public void set(String type, Class c, List value, String description) {
+        properties.set(type, c, value, description);
+    }
+
+
+    public void set(String type, List value, String description, String longDescription) {
+        properties.set(type, value, description, longDescription);
+    }
+
+
+    public void set(String type, Class c, Object value, String description, String longDescription) {
+        properties.set(type, c, value, description, longDescription);
+    }
+
+
+    public void set(String type, Class c, List value, String description, String longDescription) {
+        properties.set(type, c, value, description, longDescription);
+    }
+
+
+    public List<Parameter> get() {
+        return properties.get();
+    }
+
+
+    public void set(Property value) {
+        properties.set(value);
+    }
+
+
+    public boolean check(Parameter type) {
+        return properties.check(type);
+    }
+
+
+    public boolean check(Properties props) {
+        return properties.check(props);
+    }
+
+
+    public boolean quickCheck(String s, Class type) {
+        return properties.quickCheck(s, type);
+    }
+
+
+    public Object quickGet(String s) {
+        return properties.quickGet(s);
+    }
+
+    public int compareTo(Properties o) {
+        return properties.compareTo(o);
+    }
+
+    /**
 	 * Initializes each of the arrays with all available efeatures. Place to add
 	 * new features.
 	 * 
@@ -102,21 +258,25 @@ public class DataModel {
 	 *            reference to a controller that will handle table updates.
 	 */
 	public DataModel(String featureXMLLocation, ModelListener ml) {
+        properties.set("SaveFeaturesPerFile",Boolean.class,true,"","");
+        properties.set("SaveFeaturesPerWindow",Boolean.class,true,"","");
+        properties.set("WindowSize",Integer.class,256,"","");
+        properties.set("WindowOverlap",Double.class,0.0,"","");
 		ml_ = ml;
 		cancel_ = new Cancel();
-		LinkedList<MetaFeatureFactory> metaExtractors = new LinkedList<MetaFeatureFactory>();
-
-//		metaExtractors.add(new Derivative());
-//		metaExtractors.add(new Mean());
-//		metaExtractors.add(new StandardDeviation());
-//		metaExtractors.add(new Derivative(new Mean()));
-//		metaExtractors.add(new Derivative(new StandardDeviation()));
-//		metaExtractors.add(new AutocorrelationHistogram());
+        container = new AggregatorContainer();
+        Aggregator zernike = AggregatorFactory.getInstance().create("Zernike");
+        FeatureExtractor feature = FeatureFactory.getInstance().create("ConstantQ");
+        feature.set("SizeOfBins",new Double(0.5));
+        zernike.set("Features",feature);
+        try {
+            container.add(zernike);
+        }catch (Exception e){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,String.format("INTERNAL: Adding default aggregators threw an exception i the DataModel constructor. %s",e.getLocalizedMessage()));
+        }
 
 		LinkedList<FeatureExtractor> extractors = new LinkedList<FeatureExtractor>();
 		LinkedList<Boolean> def = new LinkedList<Boolean>();
-		aggregatorMap = new java.util.HashMap<String, Aggregator>();
-
 		// extractors.add(new AreaMoments());
 		// def.add(false);
 		// extractors.add(new BeatHistogram());
@@ -175,22 +335,25 @@ public class DataModel {
 		// def.add(false);
 		// extractors.add(new ZeroCrossings());
 		// def.add(true);
-		try {
-			// replaced by the Factory object...
-			Collection<String> types = FeatureFactory.getInstance().getKnownTypes();
-            extractors = new LinkedList<FeatureExtractor>();
-            for(String type : types){
-                extractors.add(FeatureFactory.getInstance().create(type));
-            }
-			Collection<String> aggArray = AggregatorFactory.getInstance().getKnownTypes();
-            for(String type : aggArray){
-                aggregatorMap.put(type,AggregatorFactory.getInstance().create(type));
-            }
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
-		populateMetaFeatures(metaExtractors, extractors, def);
+//		try {
+//			// replaced by the Factory object...
+//			Collection<String> types = FeatureFactory.getInstance().getKnownTypes();
+//            Collection<String> metaTypes = MetaFeatureFactoryFactory.getInstance().getKnownTypes();
+//            for(String type : types){
+//                extractors.add(FeatureFactory.getInstance().create(type));
+//            }
+//            for(String type : metaTypes){
+//
+//            }
+//			Collection<String> aggArray = AggregatorFactory.getInstance().getKnownTypes();
+//            for(String type : aggArray){
+//                aggregatorMap.put(type,AggregatorFactory.getInstance().create(type));
+//		}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			System.exit(1);
+//		}
+//		populateMetaFeatures(metaExtractors, extractors, def);
 	}
 
 	void populateMetaFeatures(LinkedList<MetaFeatureFactory> listMFF,
@@ -220,19 +383,19 @@ public class DataModel {
 				}
 			}
 		}
-		this.features = tmpFeatures.toArray(new FeatureExtractor[1]);
-		Boolean[] defaults_temp = tmpDefaults.toArray(new Boolean[1]);
-		Boolean[] is_primary_temp = isPrimaryList.toArray(new Boolean[] {});
-		this.defaults = new boolean[defaults_temp.length];
-		is_primary = new boolean[defaults_temp.length];
-		for (int i = 0; i < this.defaults.length; i++) {
-			this.defaults[i] = defaults_temp[i].booleanValue();
-			is_primary[i] = is_primary_temp[i].booleanValue();
-		}
-		this.featureDefinitions = new FeatureDefinition[this.defaults.length];
-		for (int i = 0; i < this.featureDefinitions.length; ++i) {
-			this.featureDefinitions[i] = features[i].getFeatureDefinition();
-		}
+//		this.features = tmpFeatures.toArray(new FeatureExtractor[1]);
+//		Boolean[] defaults_temp = tmpDefaults.toArray(new Boolean[1]);
+//		Boolean[] is_primary_temp = isPrimaryList.toArray(new Boolean[] {});
+//		this.defaults = new boolean[defaults_temp.length];
+//		is_primary = new boolean[defaults_temp.length];
+//		for (int i = 0; i < this.defaults.length; i++) {
+//			this.defaults[i] = defaults_temp[i].booleanValue();
+//			is_primary[i] = is_primary_temp[i].booleanValue();
+//		}
+//		this.featureDefinitions = new FeatureDefinition[this.defaults.length];
+//		for (int i = 0; i < this.featureDefinitions.length; ++i) {
+//			this.featureDefinitions[i] = features[i].getFeatureDefinition();
+//		}
 
 	}
 
@@ -294,13 +457,17 @@ public class DataModel {
 			updater.setNumberOfFiles(recordings.length);
 		}
 
-		container = new AggregatorContainer();
-		if((aggregators==null)||(aggregators.length==0)){
-			aggregators = new Aggregator[1];
-			aggregators[0]=new ZernikeMoments();
-			aggregators[0].setParameters(new String[]{"ConstantQ"},new String[]{"0.5"});
-		}
-		container.add(aggregators);
+        LinkedList<FeatureExtractor> list = orderFeatureExtraction();
+
+        if(!checks()){
+            throw new Exception("There was an unknown error during validation the audio data.");
+        }
+
+        if(save_overall_recording_features){
+            container.process(info,samplingRate);
+        }else{
+            extract(info, list, samplingRate, windowSize, windowOverlap);
+        }
         //FIXME: Finish propogating changes through processing stacks
 //		container.add(features,defaults);
 //		// Prepare to extract features
@@ -329,6 +496,46 @@ public class DataModel {
 		// "Features successfully extracted and saved.", "DONE",
 		// JOptionPane.INFORMATION_MESSAGE);
 	}
+
+
+
+    protected void extract(RecordingInfo[] info, LinkedList<FeatureExtractor> features, double samplingRate, int windowSize, double windowOverlap){
+        //FIXME: Complete extraction Code
+    }
+
+    protected boolean checks() throws Exception{
+        if(container!=null){
+            if((container.getNumberOfAggregators()==0)&&((Boolean)properties.quickGet("SaveFeaturesPerWindow"))){
+                throw new Exception(
+                        "Saving aggregated values for each file without any aggregators specified");
+            }
+        }else if((Boolean)properties.quickGet("SaveFeaturesPerWindow")){
+                    throw new Exception("Saving aggregators for each file but executed without setting a non-null AggregatorContainer object");
+        }
+        // Throw an exception if the control parameters are invalid
+        if (!((Boolean)properties.quickGet("SaveFeaturesPerFile")) && !((Boolean)(properties.quickGet("SaveFeaturesPerWindow"))))
+            throw new Exception(
+                    "You must save at least one of the windows-based\n"
+                            + "features and the overall file-based features.");
+        // if (feature_values_save_path.equals(""))
+        // throw new Exception("No save path specified for feature values.");
+        // if (feature_definitions_save_path.equals(""))
+        // throw new Exception(
+        // "No save path specified for feature definitions.");
+        if (((Double)properties.quickGet("WindowOverlap")) < 0.0 || ((Double)properties.quickGet("WindowOverlap")) >= 1.0)
+            throw new Exception("Window overlap fraction is " + ((Double)properties.quickGet("WindowOverlap"))
+                    + ".\n"
+                    + "This value must be 0.0 or above and less than 1.0.");
+        if (((Integer)properties.quickGet("WindowSize")) < 3)
+            throw new Exception("Window size is " + ((Integer)properties.quickGet("WindowSize")) + ".\n"
+                    + "This value must be above 2.");
+        return true;
+    }
+
+    protected LinkedList<FeatureExtractor> orderFeatureExtraction(){
+        //FIXME: Complete Ordering code
+        return null;
+    }
 
 	/**
 	 * Establish a listener for periodic updates on the feature extraction
