@@ -1,6 +1,13 @@
 package org.jaudio.dsp.features.modules;
 
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxChecker;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.descriptors.SyntaxObject;
+import org.dynamicfactory.property.PropertyFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
+import org.dynamicfactory.propertyQuery.PropertyQuery;
+import org.dynamicfactory.propertyQuery.PropertyQueryFactory;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -17,10 +24,6 @@ import java.util.ResourceBundle;
  * 
  */
 public class AreaMoments extends FeatureExtractor {
-
-	int lengthOfWindow = 10;
-	
-	int order=10;
 
 	@Override
 	public FeatureExtractor prototype() {
@@ -42,10 +45,18 @@ public class AreaMoments extends FeatureExtractor {
 		String name = "Area Method of Moments";
 		String description = bundle.getString("2d.statistical.method.of.moments");
 		String[] attributes = new String[] {bundle.getString("area.method.of.moments.window.length"), bundle.getString("area.method.of.moments.max.order") };
-
-		definition = new FeatureDefinition(name, description, true, order*order,
+		int order = 10;
+		definition = new FeatureDefinition(name, description, true, 50,
 				attributes);
-		definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
+		definition.set("xOrder",Integer.class,order,"Largest degree (deepest statistical moment) of the exponent describing the horizontal direction","");
+		PropertyQuery onePositiveInteger = (new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT);
+        SyntaxObject syntax = SyntaxCheckerFactory.newInstance().create(1,1,onePositiveInteger,Integer.class);
+		definition.get("xOrder").setRestrictions(syntax);
+		definition.set("yOrder",Integer.class,order,"Largest degree (deepest statistical moment) of the exponent describing the vertical direction","");
+        definition.get("yOrder").set(syntax);
+		definition.set("WindowLength",Integer.class,100);
+        definition.get("WindowLength").setRestrictions(SyntaxCheckerFactory.newInstance().create(1,Integer.MAX_VALUE,onePositiveInteger,Integer.class));
+		definition.setDependency("Magnitude Spectrum",0,(int)definition.quickGet("WindowLength"));
 	}
 	
 	/**
@@ -71,16 +82,18 @@ public class AreaMoments extends FeatureExtractor {
 	 */
 	public double[] extractFeature(double[] samples, double sampling_rate,
 		double[][] other_feature_values) throws Exception {
-		double[] ret = new double[order*order];
+		int xOrder = (int)quickGet("xOrder");
+		int yOrder = (int)quickGet("yOrder");
+		double[] ret = new double[xOrder*yOrder];
 		for (int i = 0; i < other_feature_values.length; ++i) {
 			double row = (2.0*((double)i)/((double)(other_feature_values.length))) - 1.0;
 			for (int j = 0; j < other_feature_values[i].length; ++j) {
 				double column = (2.0*((double)j)/((double)(other_feature_values[0].length)))-1.0;
 				double xpow = 1.0;
-				for(int x=0;x<order;++x){
+				for(int x=0;x<xOrder;++x){
 					double ypow = 1.0;
-					for (int y=0;y<order;++y){
-						ret[order*x+y] = other_feature_values[i][j] * xpow * ypow;
+					for (int y=0;y<yOrder;++y){
+						ret[xOrder*x+y] = other_feature_values[i][j] * xpow * ypow;
 						ypow *= column;
 					}
 					xpow *= row;
@@ -105,8 +118,8 @@ public class AreaMoments extends FeatureExtractor {
 			throw new Exception(
                     bundle.getString("area.method.of.moment.s.window.length.must.be.two.or.greater"));
 		} else {
-			lengthOfWindow = n;
-            definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
+			set("WindowLength",n);
+            definition.setDependency("Magnitude Spectrum",0,n);
 		}
 	}
 
@@ -123,9 +136,9 @@ public class AreaMoments extends FeatureExtractor {
             ResourceBundle bundle = ResourceBundle.getBundle("Translations");
             throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.getelement2"),index));
 		} else if (index == 1){
-			return Integer.toString(order);
+			return "";//Integer.toString(order);
 		} else{
-			return Integer.toString(lengthOfWindow);
+			return "";//Integer.toString(lengthOfWindow);
 		}
 	}
 
@@ -147,7 +160,7 @@ public class AreaMoments extends FeatureExtractor {
 		} else if(index == 1){
 			try {
 				int type = Integer.parseInt(value);
-				order = type;
+				//order = type;
 			} catch (Exception e) {
                 ResourceBundle bundle = ResourceBundle.getBundle("Translations");
                 throw new Exception(
@@ -170,11 +183,11 @@ public class AreaMoments extends FeatureExtractor {
 	 * to use the prototype pattern to create new composite features using
 	 * metafeatures.
 	 */
-	public Object clone() {
-		AreaMoments ret = new AreaMoments();
-		ret.lengthOfWindow = lengthOfWindow;
-        ret.order = order;
-		return ret;
-	}
+//	public Object clone() {
+//		AreaMoments ret = new AreaMoments();
+//		ret.lengthOfWindow = lengthOfWindow;
+//        ret.order = order;
+//		return ret;
+//	}
 
 }

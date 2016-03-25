@@ -413,11 +413,5 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 		// System.out.println(this.getClass());
 	}
 
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public abstract Object clone();
 
 }
