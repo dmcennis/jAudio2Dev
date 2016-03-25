@@ -53,9 +53,9 @@ public class Mean extends Aggregator {
 	 * 
 	 * @return list of features to be used by this aggregator or null
 	 */
-	public String[] getFeaturesToApply() {
-		return null;
-	}
+//	public String[] getFeaturesToApply() {
+//		return null;
+//	}
 
 	/**
 	 * 

@@ -79,14 +79,14 @@ public class DummyAgg extends Aggregator {
 						.getFeatureDefinition().getDimensions());
 	}
 
-	@Override
-	public String[] getFeaturesToApply() {
-		String[] ret = new String[presetFeature.length];
-		for(int i=0;i<ret.length;++i){
-			ret[i] = presetFeature[i].getFeatureDefinition().getName();
-		}
-		return ret;
-	}
+//	@Override
+//	public String[] getFeaturesToApply() {
+//		String[] ret = new String[presetFeature.length];
+//		for(int i=0;i<ret.length;++i){
+//			ret[i] = presetFeature[i].getFeatureDefinition().getName();
+//		}
+//		return ret;
+//	}
 
 	@Override
 	public void outputACEFeatureKeyEntries(DataOutputStream output)

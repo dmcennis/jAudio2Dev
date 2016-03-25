@@ -504,6 +504,8 @@ public class DataModel {
 			updater.setNumberOfFiles(recordings.length);
 		}
 
+        container.add(featuresToExtract.toArray(new FeatureExtractor[]{}));
+
         HashMap<FeatureExtractor,Integer> offsets = new HashMap<FeatureExtractor,Integer>();
 
         HashMap<FeatureExtractor,Integer> indexInExtraction = new HashMap<FeatureExtractor, Integer>();
@@ -519,8 +521,6 @@ public class DataModel {
             throw new Exception("There was an unknown error during validation the audio data.");
         }
 
-
-        //FIXME: Finish propogating changes through processing stacks
         HashMap<FeatureExtractor,double[][]> output = new HashMap<>();
 
         // recording - window index - feature index - feature dimension
@@ -572,31 +572,18 @@ public class DataModel {
                 windowIndex++;
             }
             if(save_overall_recording_features){
-                //FIXME: complete aggregator processing with new FeatureLists
-//                container.process(windowData[recordingIndex],samplingRate,indexInExtraction);
+                container.aggregate(windowData[recordingIndex]);
                 aggData[recordingIndex]=container.getResults();
+            }
+            if(!save_features_for_each_window){
+                windowData[recordingIndex]=null;
             }
             recordingIndex++;
         }
-//		container.add(features,defaults);
-//		// Prepare to extract features
-//		FeatureProcessor processor = new FeatureProcessor(window_size,
-//				window_overlap, sampling_rate, normalise, this.features,
-//				this.defaults, save_features_for_each_window,
-//				save_overall_recording_features, featureValue, featureKey,
-//				outputType, cancel_, container);
-//
-//		// Extract features from recordings one by one and save them in XML
-//		// files
-////		AudioSamples recording_content;
-//		for (int i = 0; i < recordings.length; i++) {
-//			File load_file = new File(recordings[i].file_path);
-//			if (updater != null) {
-//				updater.announceUpdate(i, 0);
-//			}
-//			processor.extractFeatures(load_file, updater);
-//		}
 
+        if(!save_features_for_each_window){
+            windowData=null;
+        }
 		// Finalize saved XML files
 
 //		processor.finalize();

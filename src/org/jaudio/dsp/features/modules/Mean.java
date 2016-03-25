@@ -24,7 +24,7 @@ public class Mean extends MetaFeatureFactory {
 
 	@Override
 	public FeatureExtractor prototype(Properties props) {
-		if(properties.quickCheck("Feature",FeatureExtractor.class)){
+		if(quickCheck("Feature",FeatureExtractor.class)){
 			Mean m = new Mean();
 			m.child = buildChild(props);
 			return m;
@@ -82,7 +82,7 @@ public class Mean extends MetaFeatureFactory {
 
 			tmp.definition = new FeatureDefinition(name, description, true, fe
 					.getFeatureDefinition().getDimensions(), myAttributes);
-            tmp.definition.setDependency(fe.getDepenedencies());
+            tmp.definition.setDependency(getDependencies());
 			return tmp;
 	}
 

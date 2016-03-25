@@ -107,10 +107,10 @@ public class MultipleFeatureHistogram extends Aggregator {
 	/* (non-Javadoc)
 	 * @see jAudioFeatureExtractor.Aggregators.Aggregator#getParamaters()
 	 */
-	@Override
-	public String[] getParamaters() {
-		return new String[]{Integer.toString(binsPerDimension)};
-	}
+//	@Override
+//	public String[] getParamaters() {
+//		return new String[]{Integer.toString(binsPerDimension)};
+//	}
 
 	@Override
 	public void setParameters(String[] features, String[] params)
@@ -198,11 +198,11 @@ public class MultipleFeatureHistogram extends Aggregator {
 		return definition;
 	}
 
-	@Override
-	public String[] getFeaturesToApply() {
-
-		return base;
-	}
+//	@Override
+//	public String[] getFeaturesToApply() {
+//
+//		return base;
+//	}
 
 	@Override
 	public void init(int[] featureIndecis) throws Exception {

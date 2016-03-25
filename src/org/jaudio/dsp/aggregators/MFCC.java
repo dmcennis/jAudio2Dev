@@ -113,10 +113,10 @@ public class MFCC extends Aggregator {
 		return new MFCC();
 	}
 
-	@Override
-	public String[] getFeaturesToApply() {
-		return null;
-	}
+//	@Override
+//	public String[] getFeaturesToApply() {
+//		return null;
+//	}
 
 	@Override
 	public void init(int[] featureIndecis) throws Exception {

@@ -326,6 +326,13 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 //		return offsets;
 //	}
 
+
+	public double[] extractFeature(double[] samples, double[][] channels, double sampling_rate,double[][] other_feature_values) throws Exception{
+        if(quickCheck("ChannelSwitch",Integer.class)){
+            return extractFeature(channels[(Integer)quickGet("ChannelSwitch")],sampling_rate,other_feature_values);
+        }
+        return extractFeature(samples,sampling_rate,other_feature_values);
+    }
 	/**
 	 * The prototype function that classes extending this class will override in
 	 * order to extract their feature from a window of audio.

@@ -25,7 +25,7 @@ public class StandardDeviation extends MetaFeatureFactory {
 
     @Override
     public FeatureExtractor prototype(Properties props) {
-        if(properties.quickCheck("Feature",FeatureExtractor.class)){
+        if(quickCheck("Feature",FeatureExtractor.class)){
             StandardDeviation ret = new StandardDeviation();
             ret.child = buildChild(props);
             return ret;

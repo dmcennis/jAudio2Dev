@@ -41,7 +41,7 @@ public class AutocorrelationHistogram
 
     @Override
     public FeatureExtractor prototype(Properties props) {
-        if(properties.quickCheck("Feature",FeatureExtractor.class)){
+        if(quickCheck("Feature",FeatureExtractor.class)){
             child = buildChild(props);
             return this;
         }else{

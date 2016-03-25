@@ -89,10 +89,10 @@ public class StandardDeviation extends Aggregator {
 		return definition;
 	}
 
-	@Override
-	public String[] getFeaturesToApply() {
-		return null;
-	}
+//	@Override
+//	public String[] getFeaturesToApply() {
+//		return null;
+//	}
 
 	@Override
 	public void init(int[] featureIndecis) throws Exception {

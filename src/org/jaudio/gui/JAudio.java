@@ -72,19 +72,19 @@ public class JAudio {
         fileMenu.addSeparator();
         fileMenu.add(ControllerFactory.get("AddBatch"));
         fileMenu.add(ControllerFactory.get("ExecuteBatch"));
-        JMenu removeBatch = MenuFactory.getInstance().create("RemoveBatch");
+        JMenu removeBatch = MenuFactory.getInstance().create("RemoveBatch").getContent();
         removeBatch.setEnabled(false);
         fileMenu.add(ControllerFactory.get("RemoveBatch"));
-        JMenu viewBatch = MenuFactory.getInstance().create("ViewBatch");
+        JMenu viewBatch = MenuFactory.getInstance().create("ViewBatch").getContent();
         viewBatch.setEnabled(false);
         fileMenu.add(ControllerFactory.get("ViewBatch"));
         fileMenu.addSeparator();
         fileMenu.add(ControllerFactory.get("ExitAction"));
-        JMenu editMenu = MenuFactory.getInstance().create("Edit");
+        JMenu editMenu = MenuFactory.getInstance().create("Edit").getContent();
         editMenu.add(ControllerFactory.get("CutAction"));
         editMenu.add(ControllerFactory.get("CopyAction"));
         editMenu.add(ControllerFactory.get("PasteAction"));
-        JMenu recordingMenu = MenuFactory.getInstance().create("Recording");
+        JMenu recordingMenu = MenuFactory.getInstance().create("Recording").getContent();
         recordingMenu.add(ControllerFactory.get("AddRecordingsAction"));
         recordingMenu.add(ControllerFactory.get("EditRecordingsAction"));
         recordingMenu.add(ControllerFactory.get("RemoveRecordingsAction"));
@@ -93,9 +93,9 @@ public class JAudio {
         recordingMenu.add(ControllerFactory.get("ViewFileInfoAction"));
         recordingMenu.add(ControllerFactory.get("StoreSamples"));
         recordingMenu.add(ControllerFactory.get("Validate"));
-        JMenu analysisMenu = MenuFactory.getInstance().create("Analysis");
+        JMenu analysisMenu = MenuFactory.getInstance().create("Analysis").getContent();
         analysisMenu.add(ControllerFactory.get("GlobalWindowChangeAction"));
-        JMenu outputType = MenuFactory.getInstance().create("OutputFormat");
+        JMenu outputType = MenuFactory.getInstance().create("OutputFormat").getContent();
         JRadioButtonMenuItem ace = new JRadioButtonMenuItem();
         ace.setSelected(true);
         ace.addActionListener(ControllerFactory.get("OutputType"));
@@ -104,7 +104,7 @@ public class JAudio {
         outputType.add(ace);
         outputType.add(arff);
         analysisMenu.add(outputType);
-        JMenu sampleRate = MenuFactory.getInstance().create("sampleRate");
+        JMenu sampleRate = MenuFactory.getInstance().create("sampleRate").getContent();
         JRadioButtonMenuItem sample8 = new JRadioButtonMenuItem("8");
         JRadioButtonMenuItem sample11 = new JRadioButtonMenuItem("11.025");
         JRadioButtonMenuItem sample16 = new JRadioButtonMenuItem("16");
@@ -137,7 +137,7 @@ public class JAudio {
         playbackMenu.add(ControllerFactory.get("PlaySamplesAction"));
         playbackMenu.add(ControllerFactory.get("StopPlayBackAction"));
         playbackMenu.add(ControllerFactory.get("PlayMIDIAction"));
-        JMenu helpMenu = MenuFactory.getInstance().create("Help");
+        JMenu helpMenu = MenuFactory.getInstance().create("Help").getContent();
         JMenuItem helpTopics = new JMenuItem(resourceBundle.getString("help.topics"));
         helpTopics.addActionListener(new AbstractAction(){
 

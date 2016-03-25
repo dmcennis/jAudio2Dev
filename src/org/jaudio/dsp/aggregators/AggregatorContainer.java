@@ -6,15 +6,14 @@
 package org.jaudio.dsp.aggregators;
 
 
+import org.dynamicfactory.descriptors.Parameter;
 import org.jaudio.dsp.RecordingInfo;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
 import java.io.DataOutputStream;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Container object that handles the creation of aggregators. Encapsulates the process of matching aggregators to feature 
@@ -223,21 +222,24 @@ public class AggregatorContainer {
     void buildAggregatorList() throws Exception{
 		aggregatorList.clear();
 		for(int i=0;i<aggregatorTemplate.size();++i){
-			String[] list = aggregatorTemplate.get(i).getFeaturesToApply();
+			List<FeatureExtractor> list = aggregatorTemplate.get(i).getFeaturesToApply();
 			if(list == null){
 				for(int j=0; j<featureList.size();++j){
-					Aggregator entry = ((Aggregator)aggregatorTemplate.get(i).clone());
+					Aggregator entry = ((Aggregator)aggregatorTemplate.get(i).prototype(aggregatorTemplate.get(i).getAggregatorDefinition()));
 					entry.setSource(featureList.get(j));
 					entry.init(new int[]{featureIndecis2FeatureListMapping.get(j)});
 					aggregatorList.add(entry);
 				}
 			}else{
 				boolean good = false;
-				int[] indeci = new int[list.length];
-				for(int j=0;j<list.length;++j){
+				int[] indeci = new int[list.size()];
+				Aggregator entry = ((Aggregator)aggregatorTemplate.get(i).prototype(aggregatorTemplate.get(i).getAggregatorDefinition()));
+				List<FeatureExtractor> features = entry.getFeaturesToApply();
+                int j=0;
+				for(FeatureExtractor f : list){
 					good = false;
 					for(int k=0;k<featureList.size();++k){
-						if(featureList.get(k).getFeatureDefinition().getName().compareTo(list[j])==0){
+						if(featureList.get(k).compareTo(f.getFeatureDefinition())==0){
 							good = true;
 							indeci[j] = featureIndecis2FeatureListMapping.get(k);
 							break;
@@ -246,6 +248,7 @@ public class AggregatorContainer {
 					if(!good){
 						break;
 					}
+                    ++j;
 				}
 				if(good){
 					aggregatorTemplate.get(i).init(indeci);

@@ -11,6 +11,8 @@ import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
 import org.dynamicfactory.descriptors.Parameter;
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
@@ -47,8 +49,22 @@ public class AreaPolynomialApproximation extends Aggregator {
 	int[] featureNameIndecis = null;
 	
 	public AreaPolynomialApproximation(){
+		LinkedList<Parameter> list = new LinkedList<Parameter>();
+
+		ParameterInternal x = ParameterFactory.newInstance().create();
+		LinkedList values = new LinkedList<Integer>();
+		values.add(20);
+		x.set("xDimension",Integer.class,true,values,"The largest exponent of the X variable in the approximating polynomial","");
+		list.add(x);
+
+		ParameterInternal y = ParameterFactory.newInstance().create();
+		values = new LinkedList<Integer>();
+		values.add(5);
+		y.set("yDimension",Integer.class,true,values,"The largest exponent of the Y variable in the approximating polynomial","");
+		list.add(y);
+
         ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-        metadata = new AggregatorDefinition("2D Polynomial Approximation of a signal", bundle.getString("calculates.the.coefficients.of.a.polynomial.that.approximates.the.signal"),false,new LinkedList<Parameter>());
+        metadata = new AggregatorDefinition("2D Polynomial Approximation of a signal", bundle.getString("calculates.the.coefficients.of.a.polynomial.that.approximates.the.signal"),false,list);
 	}
 
 	@Override
@@ -101,10 +117,10 @@ public class AreaPolynomialApproximation extends Aggregator {
 		return definition;
 	}
 
-	@Override
-	public String[] getFeaturesToApply() {
-		return featureNames;
-	}
+//	@Override
+//	public String[] getFeaturesToApply() {
+//		return featureNames;
+//	}
 
 	@Override
 	public void init(int[] featureIndecis) throws Exception {
@@ -118,10 +134,10 @@ public class AreaPolynomialApproximation extends Aggregator {
 	/* (non-Javadoc)
 	 * @see jAudioFeatureExtractor.Aggregators.Aggregator#getParamaters()
 	 */
-	@Override
-	public String[] getParamaters() {
-		return new String[]{Integer.toString(xDim),Integer.toString(yDim)};
-	}
+//	@Override
+//	public String[] getParamaters() {
+//		return new String[]{Integer.toString(xDim),Integer.toString(yDim)};
+//	}
 	
 	private void calcTerms(DoubleMatrix2D terms){
 		terms.assign(0.0);

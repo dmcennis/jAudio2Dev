@@ -8,9 +8,11 @@ import org.dynamicfactory.descriptors.*;
 import org.dynamicfactory.property.Property;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
+import org.jaudio.dsp.features.FeatureFactory;
 
 import java.io.DataOutputStream;
 import java.io.Writer;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -184,8 +186,16 @@ public abstract class Aggregator implements Creatable<Aggregator>{
 	 * 
 	 * @return list of features to be used by this aggregator or null
 	 */
-	public String[] getFeaturesToApply() {
-		return null;
+	public List<FeatureExtractor> getFeaturesToApply() {
+		if(quickCheck("Features",FeatureDefinition.class)){
+            LinkedList<FeatureExtractor> ret = new LinkedList<FeatureExtractor>();
+            for(FeatureDefinition fd : (List<FeatureDefinition>)get("Features").getValue()){
+                ret.add(FeatureFactory.getInstance().create(fd));
+            }
+            return ret;
+		}else{
+            return null;
+        }
 	}
 
 	/**
@@ -194,8 +204,8 @@ public abstract class Aggregator implements Creatable<Aggregator>{
 	 * 
 	 * @return list of the values of parmeters or null.
 	 */
-	public String[] getParamaters() {
-		return null;
+	public List<Parameter> getParamaters() {
+		return getAggregatorDefinition().getParameters();
 	}
 
 	/**
@@ -240,10 +250,14 @@ public abstract class Aggregator implements Creatable<Aggregator>{
 	}
 
 	public void setSource(FeatureExtractor feature) {
-
+        set("Features",FeatureDefinition.class,feature.getFeatureDefinition());
 	}
 
-	/**
+    public void addSource(FeatureExtractor feature) {
+        add("Features",FeatureDefinition.class,feature.getFeatureDefinition());
+    }
+
+    /**
 	 * Aggregates the values of the features specified by the init function
 	 * accross all windows of the data recieved.
 	 * 

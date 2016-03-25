@@ -175,10 +175,10 @@ public class ZernikeMoments extends Aggregator {
 		return definition;
 	}
 
-	@Override
-	public String[] getFeaturesToApply() {
-		return featureNames;
-	}
+//	@Override
+//	public String[] getFeaturesToApply() {
+//		return featureNames;
+//	}
 
 	@Override
 	public void init(int[] featureIndecis) throws Exception {
@@ -217,10 +217,10 @@ public class ZernikeMoments extends Aggregator {
      *
      * @return list of the values of parmeters or null.
      */
-    @Override
-    public String[] getParamaters() {
-        return new String[]{Integer.toString(order)};
-    }
+//    @Override
+//    public String[] getParamaters() {
+//        return new String[]{Integer.toString(order)};
+//    }
 
     @Override
     public Object clone() {

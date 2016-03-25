@@ -2,6 +2,7 @@ package org.jaudio.dsp.aggregators;
 
 import org.dynamicfactory.AbstractFactory;
 import org.dynamicfactory.FactoryFactory;
+import org.dynamicfactory.GenericCreatable;
 import org.dynamicfactory.descriptors.Properties;
 
 /**
@@ -17,7 +18,7 @@ public class AggregatorFactory extends AbstractFactory<Aggregator>{
     }
 
     private AggregatorFactory() {
-        FactoryFactory.newInstance().addType("AggregatorFactory",this);
+        FactoryFactory.newInstance().addType("AggregatorFactory",new GenericCreatable<AbstractFactory>(this));
     }
 
     @Override
