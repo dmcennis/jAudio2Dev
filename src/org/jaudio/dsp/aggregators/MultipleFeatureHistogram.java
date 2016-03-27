@@ -9,6 +9,8 @@ package org.jaudio.dsp.aggregators;
 import org.dynamicfactory.descriptors.BasicParameter;
 import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;
@@ -43,10 +45,15 @@ public class MultipleFeatureHistogram extends Aggregator {
 	 */
 	public MultipleFeatureHistogram() {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
+
 		BasicParameter param = new BasicParameter("BinsPerDimension",Integer.class);
 		param.setDescription("The number of histogram bins (groups of inputs) to divide the data from each dimension of the histogram into");
-        BasicParameter deps= new BasicParameter("Dependency",FeatureExtractor.class);
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+
+
+		BasicParameter deps= new BasicParameter("Dependency",FeatureExtractor.class);
         deps.setDescription("The list of features and the index ofthe dimension inside the feature to calculate histograms between");
+
 		LinkedList<Parameter> list = new LinkedList<Parameter>();
 		list.add(param);
         list.add(deps);

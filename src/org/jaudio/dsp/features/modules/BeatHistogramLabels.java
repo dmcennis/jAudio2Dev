@@ -6,7 +6,11 @@
 
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -56,10 +60,13 @@ public class BeatHistogramLabels
 		String description = bundle.getString("the.bin.label.in.beats.per.minute.of.each.beat.histogram.bin.not.useful.as.a.feature.in.itself.but.useful.for.calculating.other.features.from.the.beat.histogram");
 		boolean is_sequential = true;
 		int dimensions = 0;
+		ParameterInternal param = ParameterFactory.newInstance().create("NumberOfBins",Integer.class,description);
+        param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
 		definition = new FeatureDefinition( name,
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions );
+        definition.add(param);
 		definition.setDependency("Beat Histogram");
 	}
 

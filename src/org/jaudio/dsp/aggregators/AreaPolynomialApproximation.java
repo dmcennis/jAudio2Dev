@@ -10,10 +10,8 @@ package org.jaudio.dsp.aggregators;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
-import org.dynamicfactory.descriptors.Parameter;
-import org.dynamicfactory.descriptors.ParameterFactory;
-import org.dynamicfactory.descriptors.ParameterInternal;
-import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.*;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;
@@ -55,12 +53,14 @@ public class AreaPolynomialApproximation extends Aggregator {
 		LinkedList values = new LinkedList<Integer>();
 		values.add(20);
 		x.set("xDimension",Integer.class,true,values,"The largest exponent of the X variable in the approximating polynomial","");
+		x.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
 		list.add(x);
 
 		ParameterInternal y = ParameterFactory.newInstance().create();
 		values = new LinkedList<Integer>();
 		values.add(5);
 		y.set("yDimension",Integer.class,true,values,"The largest exponent of the Y variable in the approximating polynomial","");
+		y.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
 		list.add(y);
 
         ResourceBundle bundle = ResourceBundle.getBundle("Translations");

@@ -1,6 +1,10 @@
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -15,7 +19,7 @@ import java.util.ResourceBundle;
  */
 public class LPCRemoved extends FeatureExtractor {
 
-	private int num_dimensions = 10;
+//	private int (int)quickGet("Dimensions") = 10;
 
 	@Override
 	public FeatureExtractor prototype() {
@@ -32,9 +36,13 @@ public class LPCRemoved extends FeatureExtractor {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "LPC";
 		String description = bundle.getString("linear.predictive.encoding.implemented.from.numerical.recipes.in.c");
+		ParameterInternal param = ParameterFactory.newInstance().create("Dimensions",Integer.class,description);
+		param.setLongDescription("");
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+		param.set(10);
 
 		definition = new FeatureDefinition(name, description, true,
-				num_dimensions,
+				(int)quickGet("Dimensions"),
 				new String[] {bundle.getString("number.of.lpc.coeffecients.to.calculate") });
 	}
 
@@ -62,14 +70,14 @@ public class LPCRemoved extends FeatureExtractor {
 		double ret[] = new double[10];
 		double wk1[] = new double[samples.length];
 		double wk2[] = new double[samples.length];
-		double wkm[] = new double[num_dimensions];
+		double wkm[] = new double[(int)quickGet("Dimensions")];
 		wk1[0] = samples[0];
 		wk2[samples.length - 2] = samples[samples.length - 1];
 		for (int i = 1; i < samples.length - 1; ++i) {
 			wk1[i] = samples[i];
 			wk2[i - 1] = samples[i];
 		}
-		for (int i = 0; i < num_dimensions; ++i) {
+		for (int i = 0; i < (int)quickGet("Dimensions"); ++i) {
 			double num = 0.0;
 			double denom = 0.0;
 			for (int j = 0; j < (samples.length - i); ++j) {
@@ -108,8 +116,8 @@ public class LPCRemoved extends FeatureExtractor {
             ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(bundle.getString("lpc.must.have.at.least.1.dimension"));
 		} else {
-			num_dimensions = n;
-			definition.setDimensions(num_dimensions);
+			set("Dimensions",n);
+			definition.setDimensions((int)quickGet("Dimensions"));
 			parent.updateTable();
 			// System.out.println("Updating Table");
 		}
@@ -128,7 +136,7 @@ public class LPCRemoved extends FeatureExtractor {
             ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.getelement1"),index));
 		} else {
-			return Integer.toString(num_dimensions);
+			return Integer.toString((int)quickGet("Dimensions"));
 		}
 	}
 

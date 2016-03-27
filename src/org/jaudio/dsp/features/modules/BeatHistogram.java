@@ -6,7 +6,11 @@
 
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -59,9 +63,11 @@ public class BeatHistogram extends FeatureExtractor {
 		String description = bundle.getString("a.histogram.showing.the.relative.strength.of.different.rhythmic.periodicities.tempi.in.a.signal.found.by.calculating.the.auto.correlation.of.the.rms");
 		boolean is_sequential = true;
 		int dimensions = 0;
+		ParameterInternal param = ParameterFactory.newInstance().create("NumberOfWindows",Integer.class,bundle.getString("a.histogram.showing.the.relative.strength.of.different.rhythmic.periodicities.tempi.in.a.signal.found.by.calculating.the.auto.correlation.of.the.rms"));
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
 		definition = new FeatureDefinition(name, description, is_sequential,
 				dimensions);
-
+		definition.add(param);
 		// int number_windows = 256;
 
 		definition.setDependency("Root Mean Square",0,number_windows);

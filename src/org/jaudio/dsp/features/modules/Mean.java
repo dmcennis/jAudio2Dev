@@ -1,6 +1,7 @@
 package org.jaudio.dsp.features.modules;
 
-import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.*;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 import org.jaudio.dsp.features.MetaFeatureFactory;
@@ -14,7 +15,7 @@ import java.util.ResourceBundle;
  */
 public class Mean extends MetaFeatureFactory {
 
-	protected int runningAverage = 100;
+//	protected int runningAverage = 100;
 
 	FeatureExtractor child;
 	@Override
@@ -24,10 +25,20 @@ public class Mean extends MetaFeatureFactory {
 
 	@Override
 	public FeatureExtractor prototype(Properties props) {
-		if(quickCheck("Feature",FeatureExtractor.class)){
+        ParameterInternal param = ParameterFactory.newInstance().create("RunningAverage",Integer.class,"The number of windows to calculate a mean across.");
+        param.setLongDescription("");
+        param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+        param.set(100);
+        if(quickCheck("Feature",FeatureExtractor.class)){
 			Mean m = new Mean();
 			m.child = buildChild(props);
-			return m;
+            for(Parameter p: this.definition.getParameters()){
+                if(props.quickCheck(p.getType(),p.getParameterClass())){
+                    m.definition.set(p.getType(),p.getValue());
+                }
+            }
+
+            return m;
 		}else{
 			return this;
 		}
@@ -40,6 +51,7 @@ public class Mean extends MetaFeatureFactory {
 	 */
 	public Mean() {
 		super();
+
 	}
 
 	/**
@@ -124,10 +136,10 @@ public class Mean extends MetaFeatureFactory {
 			throw new Exception(
 					bundle.getString("new.value.for.running.average.must.be.greater.than.one"));
 		} else {
-			runningAverage = n;
+            set("RunningAverage",n);
 			if (fe_ != null) {
 				String tmp = fe_.getFeatureDefinition().getName();
-                definition.setDependency(tmp,0,runningAverage);
+                definition.setDependency(tmp,0,(int)quickGet("RunningAverage"));
 			}
 
 		}
@@ -149,7 +161,7 @@ public class Mean extends MetaFeatureFactory {
 		if ((index >= definition.getAttributes().length) || (index < 0)) {
 			throw new Exception(String.format(bundle.getString("internal.error.request.for.an.invalid.index.d3"),index));
 		} else if (index == definition.getAttributes().length - 1) {
-			return Integer.toString(runningAverage);
+			return Integer.toString((int)quickGet("RunningAverage"));
 		} else if (fe_ != null) {
 			return fe_.getElement(index);
 		} else {
@@ -202,41 +214,41 @@ public class Mean extends MetaFeatureFactory {
 	 * to use the prototype pattern to create new composite features using
 	 * metafeatures.
 	 */
-	public Object clone() {
-		if(fe_ == null){
-			return new Mean();
-		}
-		if (this.fe_ instanceof MetaFeatureFactory) {
-			Mean ret = new Mean();
-			ret.fe_ = (FeatureExtractor)fe_.clone();
-			try {
-				ret.setWindow(runningAverage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			String name = definition.getName();
-			String description = definition.getDescription();
-			String[] attributes = definition.getAttributes();
-			int dim = definition.getDimensions();
-			ret.definition = new FeatureDefinition(name,description,true,dim,attributes);
-			ret.definition.setDependency(definition.getDependency());
-
-			try{
-				ret.setWindow(runningAverage);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			return ret;
-		} else {
-			Mean ret = (Mean)defineFeature((FeatureExtractor) fe_.clone());
-			try {
-				ret.setWindow(runningAverage);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return ret;
-		}
-	}
+//	public Object clone() {
+//		if(fe_ == null){
+//			return new Mean();
+//		}
+//		if (this.fe_ instanceof MetaFeatureFactory) {
+//			Mean ret = new Mean();
+//			ret.fe_ = fe_.prototype();
+//			try {
+//				ret.setWindow(runningAverage);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			String name = definition.getName();
+//			String description = definition.getDescription();
+//			String[] attributes = definition.getAttributes();
+//			int dim = definition.getDimensions();
+//			ret.definition = new FeatureDefinition(name,description,true,dim,attributes);
+//			ret.definition.setDependency(definition.getDependency());
+//
+//			try{
+//				ret.setWindow(runningAverage);
+//			}catch(Exception e){
+//				e.printStackTrace();
+//			}
+//			return ret;
+//		} else {
+//			Mean ret = (Mean)defineFeature(fe_.prototype());
+//			try {
+//				ret.setWindow(runningAverage);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			return ret;
+//		}
+//	}
 
 	/**
 	 * Overridden to regenerate the feature definition. Perhaps its should be

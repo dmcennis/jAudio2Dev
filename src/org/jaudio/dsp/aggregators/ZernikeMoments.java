@@ -9,6 +9,8 @@ package org.jaudio.dsp.aggregators;
 import org.dynamicfactory.descriptors.BasicParameter;
 import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 
 import java.util.LinkedList;
@@ -47,6 +49,7 @@ public class ZernikeMoments extends Aggregator {
         ResourceBundle bundle = ResourceBundle.getBundle("Translations");
         BasicParameter order = new BasicParameter("MaxOrder",Integer.class);
         order.setDescription("The largest 'order' to calculate. This is different from the number of features, but the number of features is calculated from it.");
+        order.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
         LinkedList<Parameter> list = new LinkedList<Parameter>();
         list.add(order);
 		metadata = new AggregatorDefinition("Zernike Moments", bundle.getString("calculates.the.first.39.2d.zernike.moments.for.the.given.features"),false, list);

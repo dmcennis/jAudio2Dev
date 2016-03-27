@@ -1,6 +1,10 @@
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -18,7 +22,7 @@ import java.util.ResourceBundle;
  */
 public class TraditionalAreaMoments extends FeatureExtractor {
 
-	int lengthOfWindow = 10;
+//	int lengthOfWindow = 10;
 
 	double x;
 
@@ -57,11 +61,17 @@ public class TraditionalAreaMoments extends FeatureExtractor {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = " Traditional Area Method of Moments";
 		String description = bundle.getString("2d.statistical.method.of.moments");
+		ParameterInternal param = ParameterFactory.newInstance().create("WindowLength",Integer.class,"The number of windows to calculate a mean across.");
+		param.setLongDescription("");
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+		param.set(10);
+
 		String[] attributes = new String[] {bundle.getString("area.method.of.moments.window.length") };
 
 		definition = new FeatureDefinition(name, description, true, 10,
 				attributes);
-definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
+		definition.add(param);
+definition.setDependency("Magnitude Spectrum",0,(int)quickGet("WindowLength"));
 	}
 
 	/**
@@ -140,8 +150,8 @@ definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
 			throw new Exception(
 					bundle.getString("area.method.of.moment.s.window.length.must.be.two.or.greater"));
 		} else {
-			lengthOfWindow = n;
-			definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
+			set("WindowLength",n);
+			definition.setDependency("Magnitude Spectrum",0,(int)quickGet("WindowLength"));
 		}
 	}
 
@@ -158,7 +168,7 @@ definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.getelement3"),index));
 		} else {
-			return Integer.toString(lengthOfWindow);
+			return Integer.toString((int)quickGet("WindowLength"));
 		}
 	}
 
@@ -196,7 +206,7 @@ definition.setDependency("Magnitude Spectrum",0,lengthOfWindow);
 	 */
 	public Object clone() {
 		TraditionalAreaMoments ret = new TraditionalAreaMoments();
-		ret.lengthOfWindow = lengthOfWindow;
+		ret.set("WindowLength",(int)quickGet("WindowLength"));
 		return ret;
 	}
 

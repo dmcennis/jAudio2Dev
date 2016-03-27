@@ -3,9 +3,11 @@ package org.jaudio.dsp.features.modules;
 import cern.colt.matrix.DoubleMatrix2D;
 import cern.colt.matrix.impl.DenseDoubleMatrix2D;
 import cern.colt.matrix.linalg.Algebra;
-import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.*;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
+import org.jaudio.dsp.features.MetaFeatureFactory;
 
 import java.util.ResourceBundle;
 
@@ -19,25 +21,43 @@ import java.util.ResourceBundle;
  * 
  * @author Daniel McEnnis
  */
-public class AreaPolynomialApproximation extends FeatureExtractor {
-	@Override
-	public FeatureExtractor prototype() {
-		return new AreaPolynomialApproximation();
-	}
+public class AreaPolynomialApproximation extends MetaFeatureFactory {
 
-	@Override
-	public FeatureExtractor prototype(Properties props) {
-		return prototype();
-	}
+    FeatureExtractor child;
 
+    @Override
+    public FeatureExtractor prototype() {
+        return this;
+    }
 
-	int windowLength=50;
+    @Override
+    public FeatureExtractor prototype(Properties props) {
+        if(quickCheck("Feature",FeatureExtractor.class)){
+            AreaPolynomialApproximation m = new AreaPolynomialApproximation();
+            m.child = buildChild(props);
+            for(Parameter p: this.definition.getParameters()){
+                if(props.quickCheck(p.getType(),p.getParameterClass())){
+                    m.definition.set(p.getType(),p.getValue());
+                }
+            }
+            return m;
+        }else{
+            return this;
+        }
+    }
+
+    @Override
+    public MetaFeatureFactory defineFeature(FeatureExtractor fe) {
+        return null;
+    }
+
+//    int windowLength=50;
 	
-	int featureLength=512;
+//	int featureLength=512;
 	
-	int k=5;
+//	int k=5;
 	
-	int l=20;
+//	int l=20;
 	
 	DenseDoubleMatrix2D terms;
 	
@@ -51,19 +71,39 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
         ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "2D Polynomial Approximation";
 		String description = bundle.getString("coeffecients.of.2d.polynomial.best.describing.the.input.matrtix");
-		String[] attributes = new String[] {bundle.getString("horizontal.size.window.length"),
-                bundle.getString("vertical.size.number.of.feature.dimensions"),
-                bundle.getString("number.of.x.horizontal.terms"),
-                bundle.getString("number.of.y.vertical.terms") };
+        definition = new FeatureDefinition(name, description, true, 0);
 
-		definition = new FeatureDefinition(name, description, true, 0,
-				attributes);
-		definition.setDependency("Magnitude Spectrum",0,windowLength);
+        ParameterInternal horizontalWindowLength = ParameterFactory.newInstance().create("HorizontalWindowLength",Integer.class,bundle.getString("horizontal.size.window.length"));
+        horizontalWindowLength.setLongDescription("");
+        horizontalWindowLength.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+        horizontalWindowLength.set(512);
+        definition.add(horizontalWindowLength);
 
-		terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
-		z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
+        ParameterInternal verticalWindowLength = ParameterFactory.newInstance().create("VerticalWindowLength",Integer.class,bundle.getString("vertical.size.number.of.feature.dimensions"));
+        verticalWindowLength.setLongDescription("");
+        verticalWindowLength.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+        verticalWindowLength.set(50);
+        definition.add(verticalWindowLength);
+
+        ParameterInternal k = ParameterFactory.newInstance().create("HorizontalOrder",Integer.class,bundle.getString("number.of.x.horizontal.terms"));
+        k.setLongDescription("");
+        k.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+        k.set(20);
+        definition.add(k);
+
+        ParameterInternal l = ParameterFactory.newInstance().create("VerticalOrder",Integer.class,bundle.getString("number.of.y.vertical.terms"));
+        l.setLongDescription("");
+        l.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+        l.set(5);
+        definition.add(l);
+
+		definition.setDependency("Magnitude Spectrum",0,(int)quickGet("HorizontalWindowLength"));
+
+		terms = new DenseDoubleMatrix2D((int)quickGet("HorizontalOrder")*(int)quickGet("VerticalOrder"),(int)quickGet("HorizontalWindowLength")*(int)quickGet("VerticalWindowLength"));
+		z = new DenseDoubleMatrix2D(1,(int)quickGet("HorizontalWindowLength")*(int)quickGet("VerticalWindowLength"));
 		calcTerms(terms);
 	}
+
 
 	/**
 	 * Calculates based on windows of magnitude spectrum. Encompasses portion of
@@ -88,14 +128,14 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
 	 */
 	public double[] extractFeature(double[] samples, double sampling_rate,
 			double[][] other_feature_values) throws Exception {
-		if((featureLength != other_feature_values[0].length)||(windowLength != other_feature_values.length)){
-			terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
-			z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
+		if(((int)quickGet("") != other_feature_values[0].length)||((int)quickGet("HorizontalWindowLength") != other_feature_values.length)){
+			terms = new DenseDoubleMatrix2D((int)quickGet("HorizontalOrder")*(int)quickGet("VerticalOrder"),(int)quickGet("HorizontalWindowLength")*(int)quickGet("VerticalWindowLength"));
+			z = new DenseDoubleMatrix2D(1,(int)quickGet("VerticalWindowLength")*(int)quickGet("HorizontalWindowLength"));
 			calcTerms(terms);
 		}
-		for(int i=0;i<windowLength;++i){
-			for(int j=0;j<featureLength;++j){
-				z.set(0,featureLength*i+j,other_feature_values[i][j]);
+		for(int i=0;i<(int)quickGet("HorizontalWindowLength");++i){
+			for(int j=0;j<(int)quickGet("VerticalWindowLength");++j){
+				z.set(0,(int)quickGet("VerticalWindowLength")*i+j,other_feature_values[i][j]);
 			}
 		}
 		DoubleMatrix2D retMatrix = (new Algebra()).solve(terms,z);
@@ -116,10 +156,10 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
 			throw new Exception(
                     bundle.getString("area.polynomial.approximation.window.length.must.be.positive"));
 		} else {
-			windowLength = n;
-			definition.setDependency("Magnitude Spectrum",0,windowLength);
-			terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
-			z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
+            set("HorizontalWindowLength",n);
+			definition.setDependency("Magnitude Spectrum",0,(int)quickGet("HorizontalWindowLength"));
+			terms = new DenseDoubleMatrix2D((int)quickGet("HorizontalOrder")*(int)quickGet("VerticalOrder"),(int)quickGet("HorizontalWindowLength")*(int)quickGet("VerticalWindowLength"));
+			z = new DenseDoubleMatrix2D(1,(int)quickGet("VerticalWindowLength")*(int)quickGet("HorizontalWindowLength"));
 			calcTerms(terms);
 		}
 	}
@@ -136,19 +176,19 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
 		switch (index){
 			case 0:
 				// get windowLength
-				return Integer.toString(windowLength);
+				return Integer.toString((int)quickGet("HorizontalWindowLength"));
 			
 			case 1:
 				// get featureLength
-				return Integer.toString(featureLength);
+				return Integer.toString((int)quickGet("VerticalWindowLength"));
 				
 			case 2:
 				// get number of x terms
-				return Integer.toString(k);
+				return Integer.toString((int)quickGet("HorizontalOrder"));
 				
 			case 3:
 				// get number of y terms
-				return Integer.toString(k);
+				return Integer.toString((int)quickGet("VerticalOrder"));
 				
 			default:
 				// get number of y terms
@@ -178,10 +218,10 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
 					throw new Exception(
 						"Area Polynomial Approximation window length must be positive");
 				} else {
-					windowLength = val;
-					definition.setDependency("Magnitude Spectrum",0,windowLength);
-					terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
-					z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
+                    set("HorizontalWindowLength",val);
+					definition.setDependency("Magnitude Spectrum",0,(int)quickGet("HorizontalWindowLength"));
+					terms = new DenseDoubleMatrix2D((int)quickGet("HorizontalOrder")*(int)quickGet("VerticalOrder"),(int)quickGet("HorizontalWindowLength")*(int)quickGet("VerticalWindowLength"));
+					z = new DenseDoubleMatrix2D(1,(int)quickGet("VerticalWindowLength")*(int)quickGet("HorizontalWindowLength"));
 					calcTerms(terms);
 				}
 			} catch (Exception e) {
@@ -198,9 +238,9 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
 					throw new Exception(
 						"Area Polynomial Approximation feature dimension length must be positive");
 				} else {
-					featureLength = val;
-					terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
-					z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
+                    set("VerticalWindowLength",val);
+					terms = new DenseDoubleMatrix2D((int)quickGet("HorizontalOrder")*(int)quickGet("VerticalOrder"),(int)quickGet("HorizontalWindowLength")*(int)quickGet("VerticalWindowLength"));
+					z = new DenseDoubleMatrix2D(1,(int)quickGet("VerticalWindowLength")*(int)quickGet("HorizontalWindowLength"));
 					calcTerms(terms);
 				}
 			} catch (Exception e) {
@@ -217,9 +257,9 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
 					throw new Exception(
 						"Number of x terms in Area Polynomial Approximation must be positive");
 				} else {
-					k = val;
-					terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
-					z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
+                    set("HorizontalOrder",val);
+					terms = new DenseDoubleMatrix2D((int)quickGet("HorizontalOrder")*(int)quickGet("VerticalOrder"),(int)quickGet("HorizontalWindowLength")*(int)quickGet("VerticalWindowLength"));
+					z = new DenseDoubleMatrix2D(1,(int)quickGet("VerticalWindowLength")*(int)quickGet("HorizontalWindowLength"));
 					calcTerms(terms);
 				}
 			} catch (Exception e) {
@@ -236,9 +276,9 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
 					throw new Exception(
 						"Number of y terms in Area Polynomial Approximation must be positive");
 				} else {
-					l = val;
-					terms = new DenseDoubleMatrix2D(k*l,windowLength*featureLength);
-					z = new DenseDoubleMatrix2D(1,featureLength*windowLength);
+                    set("VerticalOrder",val);
+					terms = new DenseDoubleMatrix2D((int)quickGet("HorizontalOrder")*(int)quickGet("VerticalOrder"),(int)quickGet("HorizontalWindowLength")*(int)quickGet("VerticalWindowLength"));
+					z = new DenseDoubleMatrix2D(1,(int)quickGet("VerticalWindowLength")*(int)quickGet("HorizontalWindowLength"));
 					calcTerms(terms);
 				}
 			} catch (Exception e) {
@@ -265,11 +305,11 @@ public class AreaPolynomialApproximation extends FeatureExtractor {
 	
 	private void calcTerms(DoubleMatrix2D terms){
 		terms.assign(0.0);
-		for(int x=0;x<windowLength;++x){
-			for(int y=0;y<featureLength;++y){
-				for(int i=0;i<k;++i){
-					for(int j=0;j<l;++j){
-						terms.set(l*i+j,featureLength*x+y,Math.pow(x,i)*Math.pow(y,j));
+		for(int x=0;x<(int)quickGet("HorizontalWindowLength");++x){
+			for(int y=0;y<(int)quickGet("VerticalWindowLength");++y){
+				for(int i=0;i<(int)quickGet("HorizontalOrder");++i){
+					for(int j=0;j<(int)quickGet("VerticalOrder");++j){
+						terms.set((int)quickGet("VerticalOrder")*i+j,(int)quickGet("VerticalWindowLength")*x+y,Math.pow(x,i)*Math.pow(y,j));
 					}
 				}
 			}

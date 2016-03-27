@@ -1,6 +1,10 @@
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 import org.jaudio.dsp.features.MetaFeatureFactory;
@@ -15,7 +19,7 @@ import java.util.ResourceBundle;
  */
 public class StandardDeviation extends MetaFeatureFactory {
 
-	int sampleWidth = 100;
+//	int sampleWidth = 100;
 
     FeatureExtractor child;
     @Override
@@ -41,6 +45,11 @@ public class StandardDeviation extends MetaFeatureFactory {
 	 */
 	public StandardDeviation() {
 		super();
+        ParameterInternal param = ParameterFactory.newInstance().create("WindowLength",Integer.class,"The number of windows to calculate a mean across.");
+        param.setLongDescription("");
+        param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+        param.set(10);
+		definition.add(param);
 	}
 
 	/**
@@ -84,7 +93,7 @@ public class StandardDeviation extends MetaFeatureFactory {
 
 		ret.definition = new FeatureDefinition(name, description, true, ret.fe_
 				.getFeatureDefinition().getDimensions(), myAttributes);
-        ret.definition.setDependency(ret.fe_.getFeatureDefinition().getName(),0,sampleWidth);
+        ret.definition.setDependency(ret.fe_.getFeatureDefinition().getName(),0,(int)quickGet("WindowLength"));
 		return ret;
 	}
 
@@ -133,11 +142,11 @@ public class StandardDeviation extends MetaFeatureFactory {
             ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(bundle.getString("width.must.be.2.or.greater"));
 		} else {
-			sampleWidth = n;
+			set("WindowLength",n);
 			String tmp;
 			if (fe_ != null) {
 				tmp = fe_.getFeatureDefinition().getName();
-                definition.setDependency(tmp,0,sampleWidth);
+                definition.setDependency(tmp,0,(int)quickGet("WindowLength"));
 			}
 		}
 	}
@@ -155,7 +164,7 @@ public class StandardDeviation extends MetaFeatureFactory {
             ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(String.format(bundle.getString("internal.error.request.for.an.invalid.index.d1"),index));
 		} else if (index == definition.getAttributes().length - 1) {
-			return Integer.toString(sampleWidth);
+			return Integer.toString((int)quickGet("WindowLength"));
 		} else if (fe_ != null) {
 			return fe_.getElement(index);
 		} else {
@@ -203,29 +212,29 @@ public class StandardDeviation extends MetaFeatureFactory {
 	 * to use the prototype pattern to create new composite features using
 	 * metafeatures.
 	 */
-	public Object clone() {
-		if(fe_ == null){
-			return new StandardDeviation();
-		}else if (fe_ instanceof MetaFeatureFactory) {
-			StandardDeviation ret = new StandardDeviation();
-			ret.fe_ = (FeatureExtractor)fe_.clone();
-			ret.definition = new FeatureDefinition(definition.getName(),definition.getDescription(),true,definition.getDimensions(),definition.getAttributes().clone());
-			try {
-				ret.setWindow(sampleWidth);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return ret;
-		} else {
-			StandardDeviation ret = (StandardDeviation)defineFeature((FeatureExtractor)fe_.clone());
-			try {
-				ret.setWindow(sampleWidth);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return ret;
-		}
-	}
+//	public Object clone() {
+//		if(fe_ == null){
+//			return new StandardDeviation();
+//		}else if (fe_ instanceof MetaFeatureFactory) {
+//			StandardDeviation ret = new StandardDeviation();
+//			ret.fe_ = (FeatureExtractor)fe_.clone();
+//			ret.definition = new FeatureDefinition(definition.getName(),definition.getDescription(),true,definition.getDimensions(),definition.getAttributes().clone());
+//			try {
+//				ret.setWindow(sampleWidth);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			return ret;
+//		} else {
+//			StandardDeviation ret = (StandardDeviation)defineFeature((FeatureExtractor)fe_.clone());
+//			try {
+//				ret.setWindow(sampleWidth);
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//			return ret;
+//		}
+//	}
 
 	/**
 	 * Overridden to regenerate the feature definition. Perhaps its should be

@@ -3,7 +3,11 @@
  */
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -33,9 +37,9 @@ public class LPC extends FeatureExtractor {
 	}
 
 
-	double lambda = 0.0;
+//	double lambda = 0.0;
 
-	int numDimensions = 10;
+//	int numDimensions = 10;
 
 	/**
 	 * Basic constructor for LPC that sets definition, dependencies, and offsets
@@ -45,10 +49,19 @@ public class LPC extends FeatureExtractor {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "LPC";
 		String description = bundle.getString("linear.prediction.coeffecients.calculated.using.autocorrelation.and.levinson.durbin.recursion");
-		String[] attributes = new String[] {bundle.getString("lambda.for.frequency.warping"),
-				bundle.getString("number.of.coeffecients.to.calculate") };
-		definition = new FeatureDefinition(name, description, true, 10,
-				attributes);
+		ParameterInternal param = ParameterFactory.newInstance().create("Lambda",Double.class,bundle.getString("lambda.for.frequency.warping"));
+		param.setLongDescription("");
+		param.set(0.0);
+		ParameterInternal param2 = ParameterFactory.newInstance().create("Dimensions",Integer.class,bundle.getString("number.of.coeffecients.to.calculate"));
+		param2.setLongDescription("");
+		param2.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+		param2.set(10);
+
+		String[] attributes = new String[] {,
+				 };
+		definition = new FeatureDefinition(name, description, true, 10);
+        definition.add(param);
+        definition.add(param2);
 	}
 
 	/**
@@ -82,9 +95,9 @@ public class LPC extends FeatureExtractor {
 		// length L and warping of lambda
 		// wAutocorrelate(&pfSrc[stIndex],siglen,R,P,0);
 
-		double[] R = new double[numDimensions + 1];
-		double K[] = new double[numDimensions];
-		double A[] = new double[numDimensions];
+		double[] R = new double[(int)quickGet("Dimensions") + 1];
+		double K[] = new double[(int)quickGet("Dimensions")];
+		double A[] = new double[(int)quickGet("Dimensions")];
 		double[] dl = new double[samples.length];
 		double[] Rt = new double[samples.length];
 		double r1, r2, r1t;
@@ -96,7 +109,7 @@ public class LPC extends FeatureExtractor {
 		for (int k = 0; k < samples.length; k++) {
 			Rt[0] += samples[k] * samples[k];
 
-			dl[k] = r1 - lambda * (samples[k] - r2);
+			dl[k] = r1 - (double)quickGet("Lambda") * (samples[k] - r2);
 			r1 = samples[k];
 			r2 = dl[k];
 		}
@@ -108,7 +121,7 @@ public class LPC extends FeatureExtractor {
 				Rt[i] += dl[k] * samples[k];
 
 				r1t = dl[k];
-				dl[k] = r1 - lambda * (r1t - r2);
+				dl[k] = r1 - (double)quickGet("Lambda") * (r1t - r2);
 				r1 = r1t;
 				r2 = dl[k];
 			}
@@ -121,14 +134,14 @@ public class LPC extends FeatureExtractor {
 		;
 
 		if (R[0] == 0.0) {
-			for (int i = 1; i < numDimensions; i++) {
+			for (int i = 1; i < (int)quickGet("Dimensions"); i++) {
 				K[i] = 0.0;
 				A[i] = 0.0;
 			}
 		} else {
 			double km, Em1, Em;
 			int k, s, m;
-			for (k = 0; k < numDimensions; k++) {
+			for (k = 0; k < (int)quickGet("Dimensions"); k++) {
 				A[0] = 0;
 				Am1[0] = 0;
 			}
@@ -136,7 +149,7 @@ public class LPC extends FeatureExtractor {
 			Am1[0] = 1;
 			km = 0;
 			Em1 = R[0];
-			for (m = 1; m < numDimensions; m++) // m=2:N+1
+			for (m = 1; m < (int)quickGet("Dimensions"); m++) // m=2:N+1
 			{
 				double err = 0.0f; // err = 0;
 				for (k = 1; k <= m - 1; k++)
@@ -149,7 +162,7 @@ public class LPC extends FeatureExtractor {
 					// for k=2:m-1
 					A[k] = Am1[k] - km * Am1[m - k]; // am(k)=am1(k)-km*am1(m-k+1);
 				Em = (1 - km * km) * Em1; // Em=(1-km*km)*Em1;
-				for (s = 0; s < numDimensions; s++)
+				for (s = 0; s < (int)quickGet("Dimensions"); s++)
 					// for s=1:N+1
 					Am1[s] = A[s]; // am1(s) = am(s)
 				Em1 = Em; // Em1 = Em;
@@ -164,9 +177,9 @@ public class LPC extends FeatureExtractor {
 	 */
 	public Object clone() {
 		LPC ret = new LPC();
-		ret.lambda = this.lambda;
+        ret.set("Lambda",quickGet("Lambda"));
 		try {
-			ret.setNumDimensions(numDimensions);
+			ret.setNumDimensions((int)quickGet("Dimensions"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -185,9 +198,9 @@ public class LPC extends FeatureExtractor {
 	public String getElement(int index) throws Exception {
 		switch (index) {
 		case 0:
-			return Double.toString(lambda);
+			return Double.toString((double)quickGet("Lambda"));
 		case 1:
-			return Integer.toString(numDimensions);
+			return Integer.toString((int)quickGet("Dimensions"));
 		default:
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(bundle.getString("internal.error.invalid.index.d.passed.to.lpc.getelement2"));
@@ -246,12 +259,12 @@ public class LPC extends FeatureExtractor {
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(String.format(bundle.getString("must.have.at.least.1.lpc.coeffecient.d.provided"),n));
 		} else {
-			numDimensions = n;
+			set("Dimensions",n);
 			String name = definition.getName();
 			String description = definition.getDescription();
 			String[] attributes = definition.getAttributes();
 			definition = new FeatureDefinition(name, description, true,
-					numDimensions, attributes);
+                    (int)quickGet("Dimensions"), attributes);
 			if (parent != null) {
 				parent.updateTable();
 			}
@@ -272,7 +285,8 @@ public class LPC extends FeatureExtractor {
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(bundle.getString("lambda.must.be.a.real.number"));
 		} else {
-			lambda = l;
+			set("Lambda", l);
+
 		}
 	}
 
