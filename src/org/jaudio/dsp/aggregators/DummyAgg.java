@@ -5,11 +5,14 @@
  */
 package org.jaudio.dsp.aggregators;
 
+import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
 import org.jaudio.dsp.features.FeatureDefinition;
+import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;
 
 import java.io.DataOutputStream;
+import java.util.Collection;
 
 /**
  * <h2>DummyAgg</h2>
@@ -45,12 +48,29 @@ public class DummyAgg extends Aggregator {
 
 	@Override
 	public Aggregator prototype(Properties props) {
-		return new DummyAgg();
+
+		DummyAgg polynomial = new DummyAgg();
+		if(props.quickCheck("Dependency", FeatureDependency.class)){
+			for(FeatureExtractor fe : (Collection<FeatureExtractor>)props.get("Dependency").getValue()){
+				polynomial.addSource(fe);
+			}
+			for(Parameter p: this.definition.getParameters()){
+				if(props.quickCheck(p.getType(),p.getParameterClass())){
+					polynomial.definition.set(p.getType(),p.getValue());
+				}
+			}
+		}
+		return polynomial;
+
 	}
 
 	@Override
-	public void aggregate(double[][][] values) {
+	public double[] aggregate(double[][][] values) {
 		data = values;
+        if((values.length>0)&&(values[0].length>0)){
+            return values[0][0];
+        }
+		return null;
 	}
 
 	@Override
@@ -63,11 +83,11 @@ public class DummyAgg extends Aggregator {
 		return definition;
 	}
 
-	@Override
-	public void init(int[] featureIndecis)
-			throws Exception {
-		featureIndex = featureIndecis;
-	}
+//	@Override
+//	public void init(int[] featureIndecis)
+//			throws Exception {
+//		featureIndex = featureIndecis;
+//	}
 
 	@Override
 	public void setSource(FeatureExtractor feature) {

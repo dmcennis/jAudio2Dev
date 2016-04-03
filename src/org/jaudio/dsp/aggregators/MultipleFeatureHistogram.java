@@ -15,8 +15,9 @@ import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;
 
-import java.util.LinkedList;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <h2>Multiple Fetaure Histogram</h2>
@@ -98,15 +99,15 @@ public class MultipleFeatureHistogram extends Aggregator {
 	@Override
 	public Aggregator prototype(Properties props) {
 		MultipleFeatureHistogram mfcc = new MultipleFeatureHistogram();
-		int dimensions = 1;
-        if(props.quickCheck("BinsPerDimension",Integer.class)){
-            mfcc.metadata.replace(props.get("BinsPerDimension"));
-        }else{
-            mfcc.metadata.set("BinsPerDimension",Integer.class,1);
-        }
-
 		if(props.quickCheck("Dependency", FeatureDependency.class)){
-			mfcc.metadata.replace(props.get("Dependency"));
+			for(FeatureExtractor fe : (Collection<FeatureExtractor>)props.get("Dependency").getValue()){
+				mfcc.addSource(fe);
+			}
+			for(Parameter p: this.definition.getParameters()){
+				if(props.quickCheck(p.getType(),p.getParameterClass())){
+					mfcc.definition.set(p.getType(),p.getValue());
+				}
+			}
 		}
 		return mfcc;
 	}
@@ -119,46 +120,54 @@ public class MultipleFeatureHistogram extends Aggregator {
 //		return new String[]{Integer.toString(binsPerDimension)};
 //	}
 
-	@Override
-	public void setParameters(String[] features, String[] params)
-			throws Exception {
-		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-		if (features == null) {
-			throw new Exception(
-					bundle.getString("multiplefeaturehistogram.requires.a.list.of.features.to.aggregate"));
-		}
-		if (params.length == 1) {
-			try {
-				binsPerDimension = Integer.parseInt(params[0]);
-				base = features;
-				String name = "Histogram:";
-				String description = bundle.getString("histogram.of.concurrent.changes.in");
-				int dimensions = 0;
-				for (int i = 0; i < features.length; ++i) {
-					name += " " + features[i];
-					description += " " + features[i];
-					// dimensions +=
-					// features[i].getFeatureDefinition().dimensions;
-				}
-				// dimensions = (int) Math.pow(binsPerDimension, dimensions);
-				definition = new FeatureDefinition(name, description, true,
-						dimensions);
+//	@Override
+//	public void setParameters(String[] features, String[] params)
+//			throws Exception {
+//		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
+//		if (features == null) {
+//			throw new Exception(
+//					bundle.getString("multiplefeaturehistogram.requires.a.list.of.features.to.aggregate"));
+//		}
+//		if (params.length == 1) {
+//			try {
+//				binsPerDimension = Integer.parseInt(params[0]);
+//				base = features;
+//				String name = "Histogram:";
+//				String description = bundle.getString("histogram.of.concurrent.changes.in");
+//				int dimensions = 0;
+//				for (int i = 0; i < features.length; ++i) {
+//					name += " " + features[i];
+//					description += " " + features[i];
+//					// dimensions +=
+//					// features[i].getFeatureDefinition().dimensions;
+//				}
+//				// dimensions = (int) Math.pow(binsPerDimension, dimensions);
+//				definition = new FeatureDefinition(name, description, true,
+//						dimensions);
+//
+//			} catch (NumberFormatException e) {
+//				throw new Exception(
+//						bundle.getString("parameters.to.multiplefeaturehistogram.must.be.an.integer"));
+//			}
+//		} else {
+//			throw new Exception(
+//					bundle.getString("multiplefeaturehistogram.takes.exactly.one.argument.of.type.integer"));
+//		}
+//	}
 
-			} catch (NumberFormatException e) {
-				throw new Exception(
-						bundle.getString("parameters.to.multiplefeaturehistogram.must.be.an.integer"));
-			}
-		} else {
-			throw new Exception(
-					bundle.getString("multiplefeaturehistogram.takes.exactly.one.argument.of.type.integer"));
-		}
-	}
-
 	@Override
-	public void aggregate(double[][][] values) throws Exception{
+	public double[] aggregate(double[][][] values) throws Exception{
+		if(!quickCheck("FeatureMap", TreeMap.class)){
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"INTERNAL: aggregate() called before the aggregator was initialized with a map from features to their indeci");
+			return null;
+		}
+		if(!quickCheck("Feature", FeatureExtractor.class)){
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"aggregate() called before the aggregator was initialized with a feature");
+			return null;
+		}
 
 		// flatten features/dimensions into a single array
-		int[][] featureList = super.collapseFeatures(values, indecis);
+		int[][] featureList = super.collapseFeatures(values, (List<FeatureExtractor>)get("Feature"));
 
 		// now we know how precisely how many dimensions have values, adjust the
 		// FeatureDefinition accordingly
@@ -171,7 +180,7 @@ public class MultipleFeatureHistogram extends Aggregator {
 		
 		// calculate earliest window that has values for all features to be
 		// included
-		int offset = super.calculateOffset(values, indecis);
+		int offset = super.calculateOffset(values, (List<FeatureExtractor>)get("Feature"));
 
 		// transform the arrays of values into arrays of bins
 		// The dimensions are [dimension][windows]
@@ -182,23 +191,23 @@ public class MultipleFeatureHistogram extends Aggregator {
 
 		// combine these bins into a single histogram
 		result = combineBins(bins, offset);
-
+		return result;
 	}
 
-	@Override
-	public Object clone() {
-		MultipleFeatureHistogram ret = new MultipleFeatureHistogram();
-		if (base != null) {
-			try {
-				ret.setParameters(base, new String[] { Integer
-						.toString(binsPerDimension) });
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		return ret;
-	}
+//	@Override
+//	public Object clone() {
+//		MultipleFeatureHistogram ret = new MultipleFeatureHistogram();
+//		if (base != null) {
+//			try {
+//				ret.setParameters(base, new String[] { Integer
+//						.toString(binsPerDimension) });
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//				return null;
+//			}
+//		}
+//		return ret;
+//	}
 
 	@Override
 	public FeatureDefinition getFeatureDefinition() {
@@ -211,10 +220,10 @@ public class MultipleFeatureHistogram extends Aggregator {
 //		return base;
 //	}
 
-	@Override
-	public void init(int[] featureIndecis) throws Exception {
-		indecis = featureIndecis;
-	}
+//	@Override
+//	public void init(int[] featureIndecis) throws Exception {
+//		indecis = featureIndecis;
+//	}
 
 	/**
 	 * Takes a particular dimension of a particular feature and divides the

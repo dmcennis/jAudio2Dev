@@ -32,6 +32,8 @@ public class AggregatorContainer {
 
 	Vector<Integer> featureIndecis2FeatureListMapping;
 
+    TreeMap<FeatureExtractor,Integer> indeciMap = new TreeMap<FeatureExtractor,Integer>();
+
 	/**
 	 * Construct a new, empty container.
 	 */
@@ -221,38 +223,48 @@ public class AggregatorContainer {
 
     void buildAggregatorList() throws Exception{
 		aggregatorList.clear();
+        indeciMap.clear();
+        for(int i=0;i<featureList.size();++i){
+            indeciMap.put(featureList.get(i),featureIndecis2FeatureListMapping.get(i));
+        }
 		for(int i=0;i<aggregatorTemplate.size();++i){
 			List<FeatureExtractor> list = aggregatorTemplate.get(i).getFeaturesToApply();
 			if(list == null){
 				for(int j=0; j<featureList.size();++j){
 					Aggregator entry = ((Aggregator)aggregatorTemplate.get(i).prototype(aggregatorTemplate.get(i).getAggregatorDefinition()));
-					entry.setSource(featureList.get(j));
-					entry.init(new int[]{featureIndecis2FeatureListMapping.get(j)});
+//					entry.setSource(featureList.get(j));
+//					entry.init(new int[]{featureIndecis2FeatureListMapping.get(j)});
 					aggregatorList.add(entry);
 				}
 			}else{
 				boolean good = false;
-				int[] indeci = new int[list.size()];
+//				int[] indeci = new int[list.size()];
 				Aggregator entry = ((Aggregator)aggregatorTemplate.get(i).prototype(aggregatorTemplate.get(i).getAggregatorDefinition()));
-				List<FeatureExtractor> features = entry.getFeaturesToApply();
                 int j=0;
 				for(FeatureExtractor f : list){
-					good = false;
-					for(int k=0;k<featureList.size();++k){
-						if(featureList.get(k).compareTo(f.getFeatureDefinition())==0){
-							good = true;
-							indeci[j] = featureIndecis2FeatureListMapping.get(k);
-							break;
-						}
+					if(!indeciMap.containsKey(f)) {
+						good = false;
 					}
-					if(!good){
-						break;
-					}
-                    ++j;
+//					}else{
+//						good = false;
+//					}
+//					good = false;
+//					for(int k=0;k<featureList.size();++k){
+//						if(featureList.get(k).compareTo(f.getFeatureDefinition())==0){
+//							good = true;
+////							indeci[j] = featureIndecis2FeatureListMapping.get(k);
+//							break;
+//						}
+//					}
+//					if(!good){
+//						break;
+//					}
+//                    ++j;
 				}
 				if(good){
-					aggregatorTemplate.get(i).init(indeci);
-					aggregatorList.add(aggregatorTemplate.get(i));
+//					aggregatorTemplate.get(i).init(indeci);
+                    entry.set("FeatureMap",TreeMap.class,indeciMap,"Mapping between feature extractors and their indeci in the array of output (value parameter)");
+					aggregatorList.add(entry);
 				}
 			}
 		}

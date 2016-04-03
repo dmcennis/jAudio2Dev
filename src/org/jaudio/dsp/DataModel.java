@@ -403,33 +403,33 @@ public class DataModel {
 //		populateMetaFeatures(metaExtractors, extractors, def);
 	}
 
-	void populateMetaFeatures(LinkedList<MetaFeatureFactory> listMFF,
-			LinkedList<FeatureExtractor> listFE, LinkedList<Boolean> def) {
-		LinkedList<Boolean> tmpDefaults = new LinkedList<Boolean>();
-		LinkedList<FeatureExtractor> tmpFeatures = new LinkedList<FeatureExtractor>();
-		LinkedList<Boolean> isPrimaryList = new LinkedList<Boolean>();
-		Iterator<FeatureExtractor> lFE = listFE.iterator();
-		Iterator<Boolean> lD = def.iterator();
-		while (lFE.hasNext()) {
-			FeatureExtractor tmpF = lFE.next();
-			Boolean tmpB = lD.next();
-			tmpFeatures.add(tmpF);
-			tmpDefaults.add(tmpB);
-			isPrimaryList.add(new Boolean(true));
-			tmpF.setParent(this);
-			if (tmpF.getFeatureDefinition().getDimensions() != 0) {
-				Iterator<MetaFeatureFactory> lM = listMFF.iterator();
-				while (lM.hasNext()) {
-					MetaFeatureFactory tmpMFF = lM.next();
-					FeatureExtractor tmp = tmpMFF
-							.defineFeature((FeatureExtractor) tmpF.clone());
-					tmp.setParent(this);
-					tmpFeatures.add(tmp);
-					tmpDefaults.add(new Boolean(false));
-					isPrimaryList.add(new Boolean(false));
-				}
-			}
-		}
+//	void populateMetaFeatures(LinkedList<MetaFeatureFactory> listMFF,
+//			LinkedList<FeatureExtractor> listFE, LinkedList<Boolean> def) {
+//		LinkedList<Boolean> tmpDefaults = new LinkedList<Boolean>();
+//		LinkedList<FeatureExtractor> tmpFeatures = new LinkedList<FeatureExtractor>();
+//		LinkedList<Boolean> isPrimaryList = new LinkedList<Boolean>();
+//		Iterator<FeatureExtractor> lFE = listFE.iterator();
+//		Iterator<Boolean> lD = def.iterator();
+//		while (lFE.hasNext()) {
+//			FeatureExtractor tmpF = lFE.next();
+//			Boolean tmpB = lD.next();
+//			tmpFeatures.add(tmpF);
+//			tmpDefaults.add(tmpB);
+//			isPrimaryList.add(new Boolean(true));
+//			tmpF.setParent(this);
+//			if (tmpF.getFeatureDefinition().getDimensions() != 0) {
+//				Iterator<MetaFeatureFactory> lM = listMFF.iterator();
+//				while (lM.hasNext()) {
+//					MetaFeatureFactory tmpMFF = lM.next();
+//					FeatureExtractor tmp = tmpMFF
+//							.defineFeature((FeatureExtractor) tmpF.clone());
+//					tmp.setParent(this);
+//					tmpFeatures.add(tmp);
+//					tmpDefaults.add(new Boolean(false));
+//					isPrimaryList.add(new Boolean(false));
+//				}
+//			}
+//		}
 //		this.features = tmpFeatures.toArray(new FeatureExtractor[1]);
 //		Boolean[] defaults_temp = tmpDefaults.toArray(new Boolean[1]);
 //		Boolean[] is_primary_temp = isPrimaryList.toArray(new Boolean[] {});
@@ -443,8 +443,8 @@ public class DataModel {
 //		for (int i = 0; i < this.featureDefinitions.length; ++i) {
 //			this.featureDefinitions[i] = features[i].getFeatureDefinition();
 //		}
-
-	}
+//
+//	}
 
 	/**
 	 * This is the function called when features change in such a way as the
@@ -540,6 +540,7 @@ public class DataModel {
                 for(int i=0;i<window_size;++i){
                     window[i]=samples[current_index+i];
                 }
+                double[][] channels = rec.samples.getSamplesChannelSegregated(current_index,current_index+window_size);
                 int outputIndex=0;
                 for(int i=0;i<list.length;++i){
                     if(offsets.get(list[i])>=current_index) {
@@ -553,7 +554,7 @@ public class DataModel {
                         }
 
                         // process this feature
-                        double[] ret = list[i].extractFeature(window,sampling_rate,dependecies);
+                        double[] ret = list[i].extractFeature(window,channels,sampling_rate,dependecies);
                         allData[windowIndex][i] = ret;
                         if(featuresToExtract.contains(list[i])){
                             windowResults[outputIndex] = ret;

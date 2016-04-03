@@ -6,6 +6,7 @@
 package org.jaudio.dsp.aggregators;
 
 import jAudioFeatureExtractor.GeneralTools.Statistics;
+import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
@@ -13,7 +14,11 @@ import org.jaudio.dsp.features.FeatureExtractor;
 import org.oc.ocvolume.dsp.featureExtraction;
 import org.oc.ocvolume.dsp.fft;
 
+import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * MFCC Aggregator
@@ -46,15 +51,33 @@ public class MFCC extends Aggregator {
 
 	@Override
 	public Aggregator prototype(Properties props) {
-		MFCC mfcc = new MFCC();
+		MFCC polynomial = new MFCC();
 		if(props.quickCheck("Dependency", FeatureDependency.class)){
-			mfcc.setSource((FeatureExtractor)props.quickGet("Dependency"));
+			for(FeatureExtractor fe : (Collection<FeatureExtractor>)props.get("Dependency").getValue()){
+				polynomial.addSource(fe);
+			}
+			for(Parameter p: this.definition.getParameters()){
+				if(props.quickCheck(p.getType(),p.getParameterClass())){
+					polynomial.definition.set(p.getType(),p.getValue());
+				}
+			}
 		}
-		return mfcc;
+		return polynomial;
 	}
 
 	@Override
-	public void aggregate(double[][][] values) {
+	public double[] aggregate(double[][][] values) {
+        if(!quickCheck("FeatureMap", TreeMap.class)){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"INTERNAL: aggregate() called before the aggregator was initialized with a map from features to their indeci");
+            return null;
+        }
+        if(!quickCheck("Feature", FeatureExtractor.class)){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"aggregate() called before the aggregator was initialized with a feature");
+            return null;
+        }
+
+        index = ((TreeMap<FeatureExtractor,Integer>)quickGet("FeatureMap")).get((FeatureExtractor)quickGet("Feature"));
+
 		fe.numCepstra = 4;
 		int valuesOffset = 0;
 		while((valuesOffset<values.length)&&(values[valuesOffset][index]==null)){
@@ -67,6 +90,7 @@ public class MFCC extends Aggregator {
 			for(int i=0;i<result.length;++i){
 				result[i] = 0.0;
 			}
+			return null;
 		}else{
 			result = new double[values[values.length-1][index].length*4];
 			definition.setDimensions(result.length);
@@ -104,7 +128,7 @@ public class MFCC extends Aggregator {
 				}
 
 			}
-
+			return result;
 		}
 	}
 
@@ -118,10 +142,10 @@ public class MFCC extends Aggregator {
 //		return null;
 //	}
 
-	@Override
-	public void init(int[] featureIndecis) throws Exception {
-		index = featureIndecis[0];
-	}
+//	@Override
+//	public void init(int[] featureIndecis) throws Exception {
+//		index = featureIndecis[0];
+//	}
 
 	@Override
 	public void setSource(FeatureExtractor feature) {

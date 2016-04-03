@@ -32,10 +32,6 @@ public class AreaMoments extends MetaFeatureFactory {
 
     @Override
     public FeatureExtractor prototype(Properties props) {
-        ParameterInternal param = ParameterFactory.newInstance().create("RunningAverage",Integer.class,"The number of windows to calculate a mean across.");
-        param.setLongDescription("");
-        param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
-        param.set(100);
         if(quickCheck("Feature",FeatureExtractor.class)){
             AreaMoments m = new AreaMoments();
             m.child = buildChild(props);
@@ -64,10 +60,8 @@ public class AreaMoments extends MetaFeatureFactory {
 
 		String name = "Area Method of Moments";
 		String description = bundle.getString("2d.statistical.method.of.moments");
-		String[] attributes = new String[] {bundle.getString("area.method.of.moments.window.length"), bundle.getString("area.method.of.moments.max.order") };
 		int order = 10;
-		definition = new FeatureDefinition(name, description, true, 50,
-				attributes);
+		definition = new FeatureDefinition(name, description, true, 50);
 		definition.set("xOrder",Integer.class,order,"Largest degree (deepest statistical moment) of the exponent describing the horizontal direction","");
 		PropertyQuery onePositiveInteger = (new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT);
         SyntaxObject syntax = SyntaxCheckerFactory.newInstance().create(1,1,onePositiveInteger,Integer.class);
@@ -76,7 +70,7 @@ public class AreaMoments extends MetaFeatureFactory {
 		definition.set("yOrder",Integer.class,order,"Largest degree (deepest statistical moment) of the exponent describing the vertical direction","");
         definition.get("yOrder").set(syntax);
         definition.set("yOrder",5);
-		definition.set("WindowLength",Integer.class,100);
+		definition.set("WindowLength",Integer.class,100,"");
         definition.get("WindowLength").setRestrictions(SyntaxCheckerFactory.newInstance().create(1,Integer.MAX_VALUE,onePositiveInteger,Integer.class));
 		definition.setDependency("Magnitude Spectrum",0,(int)definition.quickGet("WindowLength"));
 	}

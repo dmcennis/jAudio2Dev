@@ -12,9 +12,12 @@ import org.dynamicfactory.descriptors.Properties;
 import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
 import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
+import org.jaudio.dsp.features.FeatureDependency;
+import org.jaudio.dsp.features.FeatureExtractor;
 
-import java.util.LinkedList;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <h2>Area Method of Moments Aggregator</h2>
@@ -39,15 +42,15 @@ import java.util.ResourceBundle;
  */
 public class ZernikeMoments extends Aggregator {
 
-	String[] featureNames = null;
-	int[] featureNameIndecis = null;
-    int order=10;
+//	String[] featureNames = null;
+//	int[] featureNameIndecis = null;
+//    int order=10;
 	/**
 	 * Constructs an AreaMoments aggregator.  This isn't valid until specific features are adde to the system (in a particular order).
 	 */
 	public ZernikeMoments(){
         ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-        BasicParameter order = new BasicParameter("MaxOrder",Integer.class);
+        BasicParameter order = new BasicParameter("Order",Integer.class);
         order.setDescription("The largest 'order' to calculate. This is different from the number of features, but the number of features is calculated from it.");
         order.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
         LinkedList<Parameter> list = new LinkedList<Parameter>();
@@ -63,22 +66,39 @@ public class ZernikeMoments extends Aggregator {
     @Override
     public Aggregator prototype(Properties props) {
         ZernikeMoments ret = new ZernikeMoments();
-        if(props.quickCheck("MaxOrder",Integer.class)){
-            ret.metadata.replace(props.get("MaxOrder"));
+        if(props.quickCheck("Dependency", FeatureDependency.class)){
+            for(FeatureExtractor fe : (Collection<FeatureExtractor>)props.get("Dependency").getValue()){
+                ret.addSource(fe);
+            }
+            for(Parameter p: this.definition.getParameters()){
+                if(props.quickCheck(p.getType(),p.getParameterClass())){
+                    ret.definition.set(p.getType(),p.getValue());
+                }
+            }
         }
         return ret;
     }
 
     @Override
-	public void aggregate(double[][][] values) {
-		result = new double[zernikeCount(order)];
-        int offset = super.calculateOffset(values,featureNameIndecis);
-        int[][] featureIndecis = super.collapseFeatures(values,featureNameIndecis);
+	public double[] aggregate(double[][][] values) {
+        if(!quickCheck("FeatureMap", TreeMap.class)){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"INTERNAL: aggregate() called before the aggregator was initialized with a map from features to their indeci");
+            return null;
+        }
+        if(!quickCheck("Feature", FeatureExtractor.class)){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"aggregate() called before the aggregator was initialized with a feature");
+            return null;
+        }
+
+        result = new double[zernikeCount((int)quickGet("Order"))];
+        int offset = super.calculateOffset(values,(List<FeatureExtractor>)get("Feature").getValue());
+        int[][] featureIndecis = super.collapseFeatures(values,(List<FeatureExtractor>)get("Feature").getValue());
+        int featureCount = ((List<FeatureExtractor>)get("Feature").getValue()).size();
         int index=0;
         double[] powersOfP = new double[8];
         for(int i=offset;i<values.length;++i){
-            for(int j=0;j<featureNameIndecis.length;++j){
-                double base = Math.sqrt(Math.pow((2*((double)(i-offset))/((double)(values.length)))-1.0,2.0)+Math.pow((2*((double)j)/((double)(featureNameIndecis.length)))-1.0,2.0));
+            for(int j=0;j<featureCount;++j){
+                double base = Math.sqrt(Math.pow((2*((double)(i-offset))/((double)(values.length)))-1.0,2.0)+Math.pow((2*((double)j)/((double)(featureCount)))-1.0,2.0));
                 double value=values[i][featureIndecis[j][0]][featureIndecis[j][1]];
                 for(int p=0;p<powersOfP.length;++p){
                     powersOfP[p] += value;
@@ -147,7 +167,7 @@ public class ZernikeMoments extends Aggregator {
                     break;
             }
         }
-        for(int n=8;n<order;n+=1){
+        for(int n=8;n<(int)quickGet("Order");n+=1){
             for(int m=n;m>=0;m-=2){
                 result[index]=0.0;
                 for(int k=0;k<(n-m)/2;++k){
@@ -162,6 +182,7 @@ public class ZernikeMoments extends Aggregator {
                 index++;
             }
         }
+        return result;
 	}
 
     protected double factorial(int order){
@@ -183,16 +204,16 @@ public class ZernikeMoments extends Aggregator {
 //		return featureNames;
 //	}
 
-	@Override
-	public void init(int[] featureIndecis) throws Exception {
-		if(featureIndecis.length != featureNames.length){
-            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(bundle.getString("internal.error.agggregator.zernikemoments.number.of.feature.indeci.does.not.match.number.of.features1"));
-		}
-		this.featureNameIndecis = featureIndecis;
-	}
+//	@Override
+//	public void init(int[] featureIndecis) throws Exception {
+//		if(featureIndecis.length != featureNames.length){
+//            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
+//			throw new Exception(bundle.getString("internal.error.agggregator.zernikemoments.number.of.feature.indeci.does.not.match.number.of.features1"));
+//		}
+//		this.featureNameIndecis = featureIndecis;
+//	}
 
-    public int zernikeCount(int order){
+    protected int zernikeCount(int order){
         int ret = 0;
         for(int i=1;i<order;i+=1){
             ret += (i/2) + 1;
@@ -200,19 +221,19 @@ public class ZernikeMoments extends Aggregator {
         return ret;
     }
 
-    @Override
-	public void setParameters(String[] featureNames, String[] params) throws Exception {
-		this.featureNames = featureNames;
-		String names = featureNames[0];
-		for(int i=1;i<featureNames.length;++i){
-			names += " " + featureNames[i];
-		}
-        if((params != null) && (params.length > 0)){
-            order = Integer.parseInt(params[0]);
-        }
-        ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-		definition = new FeatureDefinition("Zernike Moments: "+names,String.format(bundle.getString("2d.moments.constructed.from.features.s"),names),true,zernikeCount(order));
-	}
+//    @Override
+//	public void setParameters(String[] featureNames, String[] params) throws Exception {
+//		this.featureNames = featureNames;
+//		String names = featureNames[0];
+//		for(int i=1;i<featureNames.length;++i){
+//			names += " " + featureNames[i];
+//		}
+//        if((params != null) && (params.length > 0)){
+//            order = Integer.parseInt(params[0]);
+//        }
+//        ResourceBundle bundle = ResourceBundle.getBundle("Translations");
+//		definition = new FeatureDefinition("Zernike Moments: "+names,String.format(bundle.getString("2d.moments.constructed.from.features.s"),names),true,zernikeCount(order));
+//	}
 
     /**
      * Provide a list of the values of all parameters this aggregator uses.
@@ -225,22 +246,22 @@ public class ZernikeMoments extends Aggregator {
 //        return new String[]{Integer.toString(order)};
 //    }
 
-    @Override
-    public Object clone() {
-        ZernikeMoments ret = new ZernikeMoments();
-        if(featureNameIndecis != null){
-            ret.featureNameIndecis = featureNameIndecis.clone();
-        }
-        if (featureNames != null) {
-            try {
-                ret.setParameters(featureNames, new String[] { Integer
-                        .toString(order) });
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
-        return ret;
-    }
+//    @Override
+//    public Object clone() {
+//        ZernikeMoments ret = new ZernikeMoments();
+//        if(featureNameIndecis != null){
+//            ret.featureNameIndecis = featureNameIndecis.clone();
+//        }
+//        if (featureNames != null) {
+//            try {
+//                ret.setParameters(featureNames, new String[] { Integer
+//                        .toString(order) });
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                return null;
+//            }
+//        }
+//        return ret;
+//    }
 
 }

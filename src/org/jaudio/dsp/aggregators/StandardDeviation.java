@@ -7,11 +7,17 @@
 package org.jaudio.dsp.aggregators;
 
 
+import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
 import org.jaudio.dsp.features.FeatureDefinition;
+import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;
 
+import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
 <h2>Standard Deviation</h2>
@@ -39,11 +45,33 @@ public class StandardDeviation extends Aggregator {
 
 	@Override
 	public Aggregator prototype(Properties props) {
-		return new StandardDeviation();
+
+		StandardDeviation polynomial = new StandardDeviation();
+		if(props.quickCheck("Dependency", FeatureDependency.class)){
+			for(FeatureExtractor fe : (Collection<FeatureExtractor>)props.get("Dependency").getValue()){
+				polynomial.addSource(fe);
+			}
+			for(Parameter p: this.definition.getParameters()){
+				if(props.quickCheck(p.getType(),p.getParameterClass())){
+					polynomial.definition.set(p.getType(),p.getValue());
+				}
+			}
+		}
+		return polynomial;
+
 	}
 
 	@Override
-	public void aggregate(double[][][] values) {
+	public double[] aggregate(double[][][] values) {
+		if(!quickCheck("FeatureMap", TreeMap.class)){
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"INTERNAL: aggregate() called before the aggregator was initialized with a map from features to their indeci");
+			return null;
+		}
+		if(!quickCheck("Feature", FeatureExtractor.class)){
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"aggregate() called before the aggregator was initialized with a feature");
+			return null;
+		}
+		feature = ((TreeMap<FeatureExtractor,Integer>)quickGet("FeatureMap")).get((FeatureExtractor)quickGet("Feature"));
 		if (values[values.length-1][feature] == null) {
 			definition.setDimensions(1);
 			result = new double[] { 0.0 };
@@ -77,6 +105,7 @@ public class StandardDeviation extends Aggregator {
 				}
 			}
 		}
+		return result;
 	}
 
 	@Override
@@ -93,11 +122,6 @@ public class StandardDeviation extends Aggregator {
 //	public String[] getFeaturesToApply() {
 //		return null;
 //	}
-
-	@Override
-	public void init(int[] featureIndecis) throws Exception {
-		feature = featureIndecis[0];
-	}
 
 	@Override
 	public void setSource(FeatureExtractor feature) {

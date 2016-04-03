@@ -5,12 +5,17 @@
  */
 package org.jaudio.dsp.aggregators;
 
+import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;
 
+import java.util.Collection;
 import java.util.ResourceBundle;
+import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Calculates the mean of a feature accross all windows where it is defined.
@@ -24,7 +29,7 @@ import java.util.ResourceBundle;
  */
 public class Mean extends Aggregator {
 	
-	int feature;
+	FeatureExtractor feature = null;
 	
 	public Mean(){
         ResourceBundle bundle = ResourceBundle.getBundle("Translations");
@@ -39,11 +44,18 @@ public class Mean extends Aggregator {
 
 	@Override
 	public Aggregator prototype(Properties props) {
-		Mean mfcc = new Mean();
+		Mean polynomial = new Mean();
 		if(props.quickCheck("Dependency", FeatureDependency.class)){
-			mfcc.setSource((FeatureExtractor)props.quickGet("Dependency"));
+			for(FeatureExtractor fe : (Collection<FeatureExtractor>)props.get("Dependency").getValue()){
+				polynomial.addSource(fe);
+			}
+			for(Parameter p: this.definition.getParameters()){
+				if(props.quickCheck(p.getType(),p.getParameterClass())){
+					polynomial.definition.set(p.getType(),p.getValue());
+				}
+			}
 		}
-		return mfcc;
+		return polynomial;
 	}
 
 	/**
@@ -65,15 +77,15 @@ public class Mean extends Aggregator {
 		return definition;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see jAudioFeatureExtractor.Aggregators.Aggregator#init(jAudioFeatureExtractor.AudioFeatures.FeatureExtractor[])
-	 */
-	public void init(int[] featureIndeci)
-			throws Exception {
-		feature = featureIndeci[0];
-	}
+//	/*
+//	 * (non-Javadoc)
+//	 *
+//	 * @see jAudioFeatureExtractor.Aggregators.Aggregator#init(jAudioFeatureExtractor.AudioFeatures.FeatureExtractor[])
+//	 */
+//	public void init(int[] featureIndeci)
+//			throws Exception {
+//		feature = featureIndeci[0];
+//	}
 	
 	
 
@@ -98,12 +110,22 @@ public class Mean extends Aggregator {
 	 * 
 	 * @see jAudioFeatureExtractor.Aggregators.Aggregator#aggregate(double[][][])
 	 */
-	public void aggregate(double[][][] values) {
+	public double[] aggregate(double[][][] values) {
 		if ((values == null) || (values.length == 0)) {
 			result = new double[1];
 			result[0] = Double.NaN;
 			definition.setDimensions(1);
+            return null;
 		} else {
+			if(!quickCheck("FeatureMap", TreeMap.class)){
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"INTERNAL: aggregate() called before the aggregator was initialized with a map from features to their indeci");
+				return null;
+			}
+			if(!quickCheck("Feature", FeatureExtractor.class)){
+				Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"aggregate() called before the aggregator was initialized with a feature");
+				return null;
+			}
+			int feature = ((TreeMap<FeatureExtractor,Integer>)quickGet("FeatureMap")).get((FeatureExtractor)quickGet("Feature"));
 			// find the max number of dimensions
 			int max = -1;
 			for (int i = 0; i < values.length; ++i) {
@@ -136,6 +158,7 @@ public class Mean extends Aggregator {
 					}
 				}
 			}
+            return result;
 		}
 	}
 
