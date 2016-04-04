@@ -46,16 +46,13 @@ public class AreaMoments extends MetaFeatureFactory {
         }
     }
 
-	@Override
-	public MetaFeatureFactory defineFeature(FeatureExtractor fe) {
-		return null;
-	}
 
 	/**
 	 * Constructor that sets description, dependencies, and offsets from
 	 * FeatureExtractor
 	 */
 	public AreaMoments() {
+		super();
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 
 		String name = "Area Method of Moments";
@@ -138,72 +135,5 @@ public class AreaMoments extends MetaFeatureFactory {
             definition.setDependency("Magnitude Spectrum",0,n);
 		}
 	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		if (index > 1) {
-            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-            throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.getelement2"),index));
-		} else if (index == 1){
-			return "";//Integer.toString(order);
-		} else{
-			return "";//Integer.toString(lengthOfWindow);
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (i.e. EditFeatures
-	 * frame) to set the default values used to populate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if (index > 1) {
-            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-            throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.setelement2"),index));
-		} else if(index == 1){
-			try {
-				int type = Integer.parseInt(value);
-				//order = type;
-			} catch (Exception e) {
-                ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-                throw new Exception(
-                        bundle.getString("order.of.area.method.of.moments.must.be.an.integer"));
-			}
-		} else {
-			try {
-				int type = Integer.parseInt(value);
-				setWindow(type);
-			} catch (Exception e) {
-                ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-                throw new Exception(
-                        bundle.getString("length.of.area.method.of.moments.must.be.an.integer"));
-			}
-		}
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-//	public Object clone() {
-//		AreaMoments ret = new AreaMoments();
-//		ret.lengthOfWindow = lengthOfWindow;
-//        ret.order = order;
-//		return ret;
-//	}
 
 }

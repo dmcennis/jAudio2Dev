@@ -37,9 +37,10 @@ public class Mean extends MetaFeatureFactory {
                     m.definition.set(p.getType(),p.getValue());
                 }
             }
-
+            definition.add(param);
             return m;
 		}else{
+            definition.add(param);
 			return this;
 		}
 	}
@@ -52,50 +53,6 @@ public class Mean extends MetaFeatureFactory {
 	public Mean() {
 		super();
 
-	}
-
-	/**
-	 * Convenience constructor to create a new factory object with the given
-	 * dependant metafeature
-	 *
-	 * @param mff
-	 *            metafeature factory that this newly created object should
-	 *            depend upon.
-	 */
-	public Mean(MetaFeatureFactory mff) {
-		super();
-		this.chainMetaFeatureFactory(mff);
-	}
-
-	/**
-	 * Factory method for this class which generates a fully usable MetaFeature
-	 * object. Using the structure stored in this Mean object, create a new
-	 * FeatureExtractor with the given specific FeatureExtraction as a base. If
-	 * we are calulating the mean of another meta-feature, recursively create
-	 * the underlying meta feature first.
-	 */
-	public MetaFeatureFactory defineFeature(FeatureExtractor fe) {
-		Mean tmp = new Mean();
-		if ((fe_ != null) & (fe_ instanceof MetaFeatureFactory)) {
-			tmp.fe_ = ((MetaFeatureFactory) fe_).defineFeature(fe);
-		} else {
-			tmp.fe_ = fe;
-		}
-		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			String name = "Running Mean of " + fe.getFeatureDefinition().getName();
-			String description = String.format(bundle.getString("running.mean.of.s.s"),fe.getFeatureDefinition().getName(),fe.getFeatureDefinition().getDescription());
-
-			String[] oldAttributes = fe.getFeatureDefinition().getAttributes();
-			String[] myAttributes = new String[oldAttributes.length + 1];
-			for (int i = 0; i < oldAttributes.length; ++i) {
-				myAttributes[i] = oldAttributes[i];
-			}
-			myAttributes[myAttributes.length - 1] = bundle.getString("size.of.window.to.average.accross");
-
-			tmp.definition = new FeatureDefinition(name, description, true, fe
-					.getFeatureDefinition().getDimensions(), myAttributes);
-            tmp.definition.setDependency(getDependencies());
-			return tmp;
 	}
 
 	/**
@@ -145,110 +102,6 @@ public class Mean extends MetaFeatureFactory {
 		}
 		super.setWindow(n);
 	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * <p>
-	 * As a metafeature, recursively calls children for the feature requested.
-	 *
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-		if ((index >= definition.getAttributes().length) || (index < 0)) {
-			throw new Exception(String.format(bundle.getString("internal.error.request.for.an.invalid.index.d3"),index));
-		} else if (index == definition.getAttributes().length - 1) {
-			return Integer.toString((int)quickGet("RunningAverage"));
-		} else if (fe_ != null) {
-			return fe_.getElement(index);
-		} else {
-			throw new Exception(bundle.getString("internal.error.non.existant.index.for.mean.getelement.claims.to.have.children.but.child.is.null"));
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * <p>
-	 * As a metafeature, recursively calls children to set the feature
-	 * requested.
-	 *
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if ((index >= definition.getAttributes().length) || (index < 0)) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.request.for.an.invalid.index.d4"),index));
-		} else if (index == definition.getAttributes().length - 1) {
-			try {
-				int type = Integer.parseInt(value);
-				if (type <= 1) {
-					ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-					throw new Exception(
-							bundle.getString("width.of.the.window.must.be.greater.than.1"));
-				} else {
-					setWindow(type);
-				}
-			} catch (NumberFormatException e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(bundle.getString("width.of.window.must.be.an.integer"));
-			}
-		} else if (fe_ != null) {
-			fe_.setElement(index, value);
-		} else {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(bundle.getString("internal.error.non.existant.index.for.mean.getelement.claims.to.have.children.but.child.is.null1"));
-		}
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-//	public Object clone() {
-//		if(fe_ == null){
-//			return new Mean();
-//		}
-//		if (this.fe_ instanceof MetaFeatureFactory) {
-//			Mean ret = new Mean();
-//			ret.fe_ = fe_.prototype();
-//			try {
-//				ret.setWindow(runningAverage);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			String name = definition.getName();
-//			String description = definition.getDescription();
-//			String[] attributes = definition.getAttributes();
-//			int dim = definition.getDimensions();
-//			ret.definition = new FeatureDefinition(name,description,true,dim,attributes);
-//			ret.definition.setDependency(definition.getDependency());
-//
-//			try{
-//				ret.setWindow(runningAverage);
-//			}catch(Exception e){
-//				e.printStackTrace();
-//			}
-//			return ret;
-//		} else {
-//			Mean ret = (Mean)defineFeature(fe_.prototype());
-//			try {
-//				ret.setWindow(runningAverage);
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//			return ret;
-//		}
-//	}
 
 	/**
 	 * Overridden to regenerate the feature definition. Perhaps its should be

@@ -96,13 +96,4 @@ public class HarmonicSpectralCentroid extends FeatureExtractor {
 		if(total == 0) result[0] = 0;
 		return result;
 	}
-
-	/**
-	 * Proviede a complete copy of this feature. Used to implement the prottype
-	 * pattern
-	 */
-	public Object clone() {
-		return new HarmonicSpectralCentroid();
-	}
-
 }

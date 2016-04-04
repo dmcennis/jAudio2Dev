@@ -40,23 +40,6 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 	protected FeatureDefinition definition;
 
 	/**
-	 * The names of other features that are needed in order for a feature to be
-	 * calculated. Will be null if there are no dependencies.
-	 */
-//	protected String[] dependencies;
-
-	/**
-	 * The offset in windows of each of the features named in the dependencies
-	 * field. An offset of -1, for example, means that the feature in
-	 * dependencies with the same indice should be provided to this class's
-	 * extractFeature method with a value that corresponds to the window prior
-	 * to the window corresponding to this feature. Will be null if there are no
-	 * dependencies. This must be null, 0 or a negative number. Positive numbers
-	 * are not allowed.
-	 */
-//	protected int[] offsets;
-
-	/**
 	 * If a feature alters its number of dimensions, it needs to be able to
 	 * notify the holding object that a visible change has occured.
 	 */
@@ -90,10 +73,6 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 
 	public String getName() {
 		return definition.getName();
-	}
-
-	public void setAttributes(String[] attributes) {
-		definition.setAttributes(attributes);
 	}
 
 	public void addDependency(List<FeatureDependency> dsp) {
@@ -138,10 +117,6 @@ public abstract class FeatureExtractor implements Creatable<FeatureExtractor>{
 
 	public void addDependency(String name) {
 		definition.addDependency(name);
-	}
-
-	public String[] getAttributes() {
-		return definition.getAttributes();
 	}
 
 	public void setDependency(String name, int start, int length) {

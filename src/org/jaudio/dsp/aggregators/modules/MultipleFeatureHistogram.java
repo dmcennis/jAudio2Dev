@@ -4,13 +4,15 @@
  * created by Daniel McEnnis for the 2006 ISMIR jAUdio release
  * 
  */
-package org.jaudio.dsp.aggregators;
+package org.jaudio.dsp.aggregators.modules;
 
 import org.dynamicfactory.descriptors.BasicParameter;
 import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
 import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
 import org.dynamicfactory.propertyQuery.NumericQuery;
+import org.jaudio.dsp.aggregators.Aggregator;
+import org.jaudio.dsp.aggregators.AggregatorDefinition;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;

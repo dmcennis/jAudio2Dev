@@ -22,8 +22,6 @@ import java.util.ResourceBundle;
  */
 public class TraditionalAreaMoments extends FeatureExtractor {
 
-//	int lengthOfWindow = 10;
-
 	double x;
 
 	double y;
@@ -71,7 +69,7 @@ public class TraditionalAreaMoments extends FeatureExtractor {
 		definition = new FeatureDefinition(name, description, true, 10,
 				attributes);
 		definition.add(param);
-definition.setDependency("Magnitude Spectrum",0,(int)quickGet("WindowLength"));
+		definition.setDependency("Magnitude Spectrum",0,(int)quickGet("WindowLength"));
 	}
 
 	/**
@@ -154,60 +152,4 @@ definition.setDependency("Magnitude Spectrum",0,(int)quickGet("WindowLength"));
 			definition.setDependency("Magnitude Spectrum",0,(int)quickGet("WindowLength"));
 		}
 	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.getelement3"),index));
-		} else {
-			return Integer.toString((int)quickGet("WindowLength"));
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (i.e. EditFeatures
-	 * frame) to set the default values used to populate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.setelement3"),index));
-		} else {
-			try {
-				int type = Integer.parseInt(value);
-				setWindow(type);
-			} catch (Exception e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(
-						bundle.getString("length.of.area.method.of.moments.must.be.an.integer"));
-			}
-		}
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone() {
-		TraditionalAreaMoments ret = new TraditionalAreaMoments();
-		ret.set("WindowLength",(int)quickGet("WindowLength"));
-		return ret;
-	}
-
 }

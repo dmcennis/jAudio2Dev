@@ -34,12 +34,10 @@ public class Chroma extends FeatureExtractor {
         String description = bundle.getString("basic.chroma.feature.derived.from.constant.q.function.output");
         boolean is_sequential = true;
         int dimensions = 12;
-        String[] attributes = new String[]{};
         definition = new FeatureDefinition( name,
                 description,
                 is_sequential,
-                dimensions,
-                attributes );
+                dimensions);
 
         definition.addDependency("ConstantQ");
 
@@ -85,13 +83,4 @@ public class Chroma extends FeatureExtractor {
         super.setParent(parent);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    /**
-     * Create an identical copy of this feature. This permits FeatureExtractor
-     * to use the prototype pattern to create new composite features using
-     * metafeatures.
-     */
-    @Override
-    public Object clone() {
-        return new Chroma();  //To change body of implemented methods use File | Settings | File Templates.
-    }
 }

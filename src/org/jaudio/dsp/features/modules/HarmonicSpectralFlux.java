@@ -106,13 +106,4 @@ public class HarmonicSpectralFlux extends FeatureExtractor {
 		result[0] = top / bottom;
 		return result;
 	}
-
-	/**
-	 * Proviede a complete copy of this feature. Used to implement the prottype
-	 * pattern
-	 */
-	public Object clone() {
-		return new HarmonicSpectralFlux();
-	}
-
 }

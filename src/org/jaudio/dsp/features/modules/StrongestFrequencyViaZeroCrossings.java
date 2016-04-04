@@ -94,13 +94,4 @@ public class StrongestFrequencyViaZeroCrossings
 		result[0] = (zero_crossings / 2.0) * (sampling_rate / (double) samples.length);
 		return result;
 	}
-	
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone(){
-		return new StrongestFrequencyViaZeroCrossings();
-	}
 }

@@ -95,12 +95,4 @@ public class HarmonicSpectralSmoothness extends FeatureExtractor {
 		}
 		return result;
 	}
-
-	/**
-	 * Proviede a complete copy of this feature. Used to implement the prottype
-	 * pattern
-	 */
-	public Object clone() {
-		return new HarmonicSpectralSmoothness();
-	}
 }

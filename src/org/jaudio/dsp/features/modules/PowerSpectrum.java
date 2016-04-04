@@ -47,8 +47,8 @@ public class PowerSpectrum
 
 
 	/* CONSTRUCTOR **************************************************************/
-	
-	
+
+
 	/**
 	 * Basic constructor that sets the definition and dependencies (and their
 	 * offsets) of this feature.
@@ -64,7 +64,6 @@ public class PowerSpectrum
 		                                    description,
 		                                    is_sequential,
 		                                    dimensions );
-
 	}
 
 
@@ -100,14 +99,5 @@ public class PowerSpectrum
 	{
 		FFT fft = new FFT(samples, null, false, true);
 		return fft.getPowerSpectrum();
-	}
-	
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone(){
-		return new PowerSpectrum();
 	}
 }

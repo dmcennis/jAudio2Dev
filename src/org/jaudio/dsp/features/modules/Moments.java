@@ -93,14 +93,4 @@ public class Moments extends FeatureExtractor {
 				* mom[1] * mom[3] + mom[4];// kurtosis
 		return ret;
 	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone() {
-		return new Moments();
-	}
-
 }

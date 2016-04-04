@@ -49,19 +49,21 @@ public class LPC extends FeatureExtractor {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "LPC";
 		String description = bundle.getString("linear.prediction.coeffecients.calculated.using.autocorrelation.and.levinson.durbin.recursion");
-		ParameterInternal param = ParameterFactory.newInstance().create("Lambda",Double.class,bundle.getString("lambda.for.frequency.warping"));
-		param.setLongDescription("");
-		param.set(0.0);
-		ParameterInternal param2 = ParameterFactory.newInstance().create("Dimensions",Integer.class,bundle.getString("number.of.coeffecients.to.calculate"));
-		param2.setLongDescription("");
-		param2.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
-		param2.set(10);
 
 		String[] attributes = new String[] {,
 				 };
 		definition = new FeatureDefinition(name, description, true, 10);
-        definition.add(param);
-        definition.add(param2);
+
+		ParameterInternal param = ParameterFactory.newInstance().create("Lambda",Double.class,bundle.getString("lambda.for.frequency.warping"));
+		param.setLongDescription("");
+		param.set(0.0);
+		definition.add(param);
+
+		ParameterInternal param2 = ParameterFactory.newInstance().create("Dimensions",Integer.class,bundle.getString("number.of.coeffecients.to.calculate"));
+		param2.setLongDescription("");
+		param2.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+		param2.set(10);
+		definition.add(param2);
 	}
 
 	/**
@@ -171,77 +173,6 @@ public class LPC extends FeatureExtractor {
 		return K;
 	}
 
-	/**
-	 * Provide a complete copy of this feature. Used to implement the prottype
-	 * pattern
-	 */
-	public Object clone() {
-		LPC ret = new LPC();
-        ret.set("Lambda",quickGet("Lambda"));
-		try {
-			ret.setNumDimensions((int)quickGet("Dimensions"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		ret.parent = this.parent;
-		return ret;
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		switch (index) {
-		case 0:
-			return Double.toString((double)quickGet("Lambda"));
-		case 1:
-			return Integer.toString((int)quickGet("Dimensions"));
-		default:
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(bundle.getString("internal.error.invalid.index.d.passed.to.lpc.getelement2"));
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		switch (index) {
-		case 0:
-			try {
-				setLambda(Double.parseDouble(value));
-			} catch (NumberFormatException e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(bundle.getString("lambda.value.must.be.a.double"));
-			}
-			break;
-		case 1:
-			try {
-				setNumDimensions(Integer.parseInt(value));
-			} catch (NumberFormatException e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(bundle.getString("number.of.dimensions.must.be.an.integer"));
-			}
-			break;
-		default:
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(
-					bundle.getString("internal.error.invalid.index.passed.to.lpc.setelement"));
-		}
-	}
 
 	/**
 	 * Edits the number of LPC coeffecients to be calculated. This is a unique
@@ -259,7 +190,7 @@ public class LPC extends FeatureExtractor {
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(String.format(bundle.getString("must.have.at.least.1.lpc.coeffecient.d.provided"),n));
 		} else {
-			set("Dimensions",n);
+			set("Dimensions",Integer.class,n);
 			String name = definition.getName();
 			String description = definition.getDescription();
 			String[] attributes = definition.getAttributes();

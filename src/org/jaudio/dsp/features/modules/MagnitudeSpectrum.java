@@ -102,13 +102,4 @@ public class MagnitudeSpectrum
 		FFT fft = new FFT(samples, null, false, true);
 		return fft.getMagnitudeSpectrum();
 	}
-	
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone(){
-		return new MagnitudeSpectrum();
-	}
 }

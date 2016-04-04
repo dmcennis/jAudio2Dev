@@ -45,9 +45,9 @@ public class PeakFinder extends FeatureExtractor {
 		String description = bundle.getString("all.peaks.that.are.within.an.order.of.magnitude.of.the.highest.point");
 		ParameterInternal param = ParameterFactory.newInstance().create("PeakThreshold",Double.class,description);
 		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Double.class));
+		definition.add(param);
 
 		definition = new FeatureDefinition(name, description, true, 0);
-        definition.add(param);
 		definition.setDependency("Magnitude Spectrum");
 	}
 
@@ -98,25 +98,6 @@ public class PeakFinder extends FeatureExtractor {
 	}
 
 	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * <p>
-	 * As a metafeature, recursively calls children for the feature requested.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.peakfinder.index.0.d"),index));
-		} else {
-			return Integer.toString(peakThreshold);
-		}
-	}
-
-	/**
 	 * Sets the minumum fraction of the max point that will register as a peak. The value is interpreted as 1/N of the maximum.
 	 * @param peak			sets 1/N as threshold for peak detection.
 	 * @throws Exception	thrown if a non-positive threshold is set.
@@ -130,49 +111,4 @@ public class PeakFinder extends FeatureExtractor {
 			peakThreshold = peak;
 		}
 	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * <p>
-	 * As a metafeature, recursively calls children to set the feature
-	 * requested.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.peakfinder.index.0.d1"),index));
-		} else {
-			try {
-				setPeakThreshold(Integer.parseInt(value));
-			} catch (NumberFormatException e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(bundle.getString("peak.threshold.must.be.an.integer"));
-			}
-
-		}
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone() {
-		PeakFinder ret = new PeakFinder();
-		try {
-			ret.setPeakThreshold(peakThreshold);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ret;
-	}
-
 }

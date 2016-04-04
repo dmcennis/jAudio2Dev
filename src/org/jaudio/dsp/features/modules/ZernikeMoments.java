@@ -12,11 +12,6 @@ import java.util.logging.Logger;
 
 public class ZernikeMoments extends MetaFeatureFactory {
 
-
-//	int count=7;
-	
-//	int lengthOfWindow=25;
-
 	FeatureExtractor child;
 
 	@Override
@@ -60,13 +55,9 @@ public class ZernikeMoments extends MetaFeatureFactory {
 		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(2.0,false, NumericQuery.Operation.GTE),Integer.class));
 		param.set(25);
         definition.add(param);
-definition.setDependency("MFCC",0,(int)quickGet("WindowLength"));		return definition;
+		definition.setDependency("MFCC",0,(int)quickGet("WindowLength"));
+		return definition;
 	}
-
-    @Override
-    public MetaFeatureFactory defineFeature(FeatureExtractor fe) {
-        return null;
-    }
 
     @Override
 	public void setWindow(int n) throws Exception {
@@ -77,43 +68,6 @@ definition.setDependency("MFCC",0,(int)quickGet("WindowLength"));		return defini
 		} else {
             set("WindowLength",n);
             definition.setDependency("MFCC",0,(int)quickGet("WindowLength"));
-		}
-	}
-	
-
-	@Override
-	public String getElement(int index) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.zernikemoments.getelement"),index));
-		} else {
-			return Integer.toString((int)quickGet("WindowLength"));
-		}
-	}
-
-	@Override
-	public void setElement(int index, String value) throws Exception {
-		if (index > 1) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.ernikemoments.setelement"),index));
-		} else if(index == 1){
-			try {
-				int type = Integer.parseInt(value);
-                set("Order",type);
-			} catch (Exception e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(
-						bundle.getString("order.of.zernike.moments.must.be.an.integer"));
-			}
-		} else {
-			try {
-				int type = Integer.parseInt(value);
-				setWindow(type);
-			} catch (Exception e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(
-						bundle.getString("window.length.of.zernike.moments.must.be.an.integer"));
-			}
 		}
 	}
 
@@ -227,16 +181,4 @@ definition.setDependency("MFCC",0,(int)quickGet("WindowLength"));		return defini
 		}
 		return ret;
 	}
-	
-	@Override
-	public Object clone() {
-		ZernikeMoments ret = new ZernikeMoments();
-        ret.set("Order",(int)quickGet("Order"));
-        ret.set("WindowLength",(int)quickGet("WindowLength"));
-        try{
-            ret.setWindow((int)quickGet("WindowLength"));
-        }catch(Exception e){}
-        return ret;
-	}
-
 }

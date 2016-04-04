@@ -39,8 +39,6 @@ import java.util.ResourceBundle;
  */
 public class BeatHistogram extends FeatureExtractor {
 
-	private int number_windows = 256;
-
     @Override
     public FeatureExtractor prototype() {
         return new BeatHistogram();
@@ -65,12 +63,12 @@ public class BeatHistogram extends FeatureExtractor {
 		int dimensions = 0;
 		ParameterInternal param = ParameterFactory.newInstance().create("NumberOfWindows",Integer.class,bundle.getString("a.histogram.showing.the.relative.strength.of.different.rhythmic.periodicities.tempi.in.a.signal.found.by.calculating.the.auto.correlation.of.the.rms"));
 		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+		param.set(256);
 		definition = new FeatureDefinition(name, description, is_sequential,
 				dimensions);
 		definition.add(param);
-		// int number_windows = 256;
 
-		definition.setDependency("Root Mean Square",0,number_windows);
+		definition.setDependency("Root Mean Square",0,(int)param.get());
 	}
 
 	/* PUBLIC METHODS ********************************************************* */
@@ -129,64 +127,8 @@ public class BeatHistogram extends FeatureExtractor {
 			throw new Exception(
 					bundle.getString("beathistogram.window.length.must.be.greater.than.1"));
 		} else {
-			number_windows = n;
-			definition.setDependency("Root Mean Square",0,number_windows);
+			set("NumberOfWindows",n);
+			definition.setDependency("Root Mean Square",0,(int)quickGet("NumberOfWindows"));
 		}
 	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of Beat Histograms's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.getelement"),index));
-		} else {
-			return Integer.toString(number_windows);
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (i.e. EditFeatures
-	 * frame) to set the default values used to populate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.setelement"),index));
-		} else {
-			try {
-				int type = Integer.parseInt(value);
-				setWindowLength(type);
-			} catch (Exception e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(
-						bundle.getString("length.of.area.method.of.moments.must.be.an.integer"));
-			}
-		}
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone() {
-		BeatHistogram ret = new BeatHistogram();
-		ret.number_windows = number_windows;
-		return ret;
-	}
-
 }

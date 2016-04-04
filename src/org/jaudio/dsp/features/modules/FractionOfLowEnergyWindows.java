@@ -59,13 +59,15 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "Fraction Of Low Energy Windows";
 		String description = bundle.getString("the.fraction.of.the.last.100.windows.that.has.an.rms.less.than.the.mean.rms.in.the.last.100.windows.this.can.indicate.how.much.of.a.signal.is.quiet.relative.to.the.rest.of.the.signal");
-		ParameterInternal param = ParameterFactory.newInstance().create("FractionOfLowEnergyWindows",Double.class,description);
-		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
-		param.set(100);
 		boolean is_sequential = true;
 		int dimensions = 1;
 		definition = new FeatureDefinition(name, description, is_sequential,
 				dimensions);
+
+        ParameterInternal param = ParameterFactory.newInstance().create("FractionOfLowEnergyWindows",Double.class,description);
+        param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+        param.set(100);
+		definition.add(param);
 
 		definition.setDependency("Root Mean Square",0,(int)quickGet("FractionOfLowEnergyWindows"));
 	}
@@ -130,60 +132,4 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
             definition.setDependency("Root Mean Square",0,(int)quickGet("FractionOfLowEnergyWindows"));
 		}
 	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.fractionoflowenergyframes.getelement"),index));
-		} else {
-			return Integer.toString((int)quickGet("FractionOfLowEnergyWindows"));
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.fractionoflowenergyframes.setelement"),index));
-		} else {
-			try {
-				int type = Integer.parseInt(value);
-				setWindow(type);
-			} catch (Exception e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(
-						bundle.getString("length.of.fraction.of.low.energy.frames.s.window.must.be.an.integer"));
-			}
-		}
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone() {
-		FractionOfLowEnergyWindows ret = new FractionOfLowEnergyWindows();
-		ret.set("FractionOfLowEnergyWindows",(int)quickGet("FractionOfLowEnergyWindows"));
-		return ret;
-	}
-
 }

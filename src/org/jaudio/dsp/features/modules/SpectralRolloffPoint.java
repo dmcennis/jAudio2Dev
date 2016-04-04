@@ -64,10 +64,10 @@ public class SpectralRolloffPoint extends FeatureExtractor {
         list.add((new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT));
         list.add((new NumericQuery()).buildQuery(1.0,false, NumericQuery.Operation.LT));
 		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new AndQuery()).build(list),Double.class));
+		definition.add(param);
 
 		definition = new FeatureDefinition(name, description, is_sequential,
 				dimensions);
-        definition.add(param);
 		definition.setDependency("Power Spectrum");
 	}
 
@@ -117,61 +117,6 @@ public class SpectralRolloffPoint extends FeatureExtractor {
 		double[] result = new double[1];
 		result[0] = ((double) point) / ((double) pow_spectrum.length);
 		return result;
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone() {
-		SpectralRolloffPoint ret = new SpectralRolloffPoint();
-		ret.cutoff = cutoff;
-		return ret;
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format("INTERNAL ERROR: invalid index %d sent to AreaMoments:getElement",index));
-		} else {
-			return Double.toString(cutoff);
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format("INTERNAL ERROR: invalid index %d sent to AreaMoments:setElement",index));
-		} else {
-			try {
-				double type = Double.parseDouble(value);
-				setCutoff(type);
-			} catch (Exception e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(
-						bundle.getString("length.of.area.method.of.moments.must.be.an.integer"));
-			}
-		}
 	}
 
 	/**

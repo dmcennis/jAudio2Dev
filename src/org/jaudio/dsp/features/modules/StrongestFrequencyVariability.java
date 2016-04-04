@@ -100,8 +100,4 @@ public class StrongestFrequencyVariability
 		result[0] = std_dev;
 		return result;
 	}
-	
-	public Object clone(){
-		return new StrongestFrequencyVariability();
-	}
 }

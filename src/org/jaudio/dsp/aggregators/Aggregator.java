@@ -32,11 +32,11 @@ import java.util.TreeMap;
  */
 public abstract class Aggregator implements Creatable<Aggregator>{
 
-	double[] result = null;
+	protected double[] result = null;
 
-	AggregatorDefinition metadata;
+	protected AggregatorDefinition metadata;
 
-	FeatureDefinition definition;
+	protected FeatureDefinition definition;
 
     public void setName(String name) {
         metadata.setName(name);

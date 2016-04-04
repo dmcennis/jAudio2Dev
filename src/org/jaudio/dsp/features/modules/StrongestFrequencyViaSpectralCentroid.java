@@ -96,13 +96,4 @@ public class StrongestFrequencyViaSpectralCentroid
 		result[0] = (spectral_centroid / pow_spectrum.length) * (sampling_rate / 2.0);
 		return result;
 	}
-	
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone(){
-		return new StrongestFrequencyViaSpectralCentroid();
-	}
 }

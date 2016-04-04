@@ -9,11 +9,14 @@
 
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
 import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
 import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
+import org.jaudio.dsp.features.MetaFeatureFactory;
 
 import java.util.ResourceBundle;
 
@@ -28,11 +31,10 @@ import java.util.ResourceBundle;
  * 
  * @author Daniel McEnnis
  */
-public class ConstantQ extends FeatureExtractor
+public class ConstantQ extends MetaFeatureFactory
 {
 
 	int n;
-	double alpha = 1.0;
 	int nk[];
 	int windowLength;
 	double[] freq;
@@ -50,10 +52,9 @@ public class ConstantQ extends FeatureExtractor
 		return prototype();
 	}
 
+/* CONSTRUCTOR **************************************************************/
+	
 
-	/* CONSTRUCTOR **************************************************************/
-	
-	
 	/**
 	 * Basic constructor that sets the definition and dependencies (and their
 	 * offsets) of this feature.
@@ -71,12 +72,12 @@ public class ConstantQ extends FeatureExtractor
 		                                    is_sequential,
 		                                    dimensions,
 											attributes );
-		definition.set("SizeOfBins",Double.class,1.0,"Percent of a semitone (where 1.0 is 100%) for each bin of the output",
-                "ConstantQ provides a vector (ordered list of fixed length) numbers. Each number represents a 'bin'. Inside each bin, all frequencies in that range in this windows of the signal are collected into a single number. This parameter describes how 'wide' this 'band' of frequencies is on a logarithimic scale. For example, 12.0 represents bands of all frequencies of one octave, collecting together for instance middle c (c) to the next c (c1) or 261Hz to 522Hz, while 1.0 collects frequencies corresponding to a single semitone like c to d (261 to 294 ~Hz).");
-		definition.get("SizeOfBins").setDescription("Percent of a semitone (where 1.0 is 100%) for each bin of the output");
-		definition.get("SizeOfBins").setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Double.class));
-
-		alpha=1.0;
+        ParameterInternal sizeOfBins = ParameterFactory.newInstance().create("SizeOfBins",Double.class,"Percent of a semitone (where 1.0 is 100%) for each bin of the output");
+        sizeOfBins.set(1.0);
+        sizeOfBins.setStructural(true);
+        sizeOfBins.setLongDescription("ConstantQ provides a vector (ordered list of fixed length) numbers. Each number represents a 'bin'. Inside each bin, all frequencies in that range in this windows of the signal are collected into a single number. This parameter describes how 'wide' this 'band' of frequencies is on a logarithimic scale. For example, 12.0 represents bands of all frequencies of one octave, collecting together for instance middle c (c) to the next c (c1) or 261Hz to 522Hz, while 1.0 collects frequencies corresponding to a single semitone like c to d (261 to 294 ~Hz).");
+		sizeOfBins.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Double.class));
+        definition.add(sizeOfBins);
 
 		calculated = false;
 		
@@ -134,36 +135,24 @@ public class ConstantQ extends FeatureExtractor
         // FIXED: requires a scaling factor ((passband width ret[0]) / (passband width bin[i]))
 		for(int i=0;i<nk.length;++i){
             // Scale results so that pure white noise has a flat chroma
-			returnValue[i] = Math.sqrt(ret[i]*ret[i]+ret[i+nk.length]*ret[i+nk.length])/Math.pow(2,((double)i)*alpha/12);
+			returnValue[i] = Math.sqrt(ret[i]*ret[i]+ret[i+nk.length]*ret[i+nk.length])/Math.pow(2,((double)i)*((double)quickGet("SizeOfBins"))/12);
 		}
 		return returnValue;
 	}
 	
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone(){
-		ConstantQ ret = new ConstantQ();
-		ret.alpha = alpha;
-		ret.calculated = false;
-		return ret;
-	}
-
 	private void calcFreq(double[] samples, double samplerate){
 		double maxFreq = samplerate/2.0;
 		double minFreq = samplerate/((double)samples.length);
 		double carry = Math.log(maxFreq/minFreq);
-		carry /= Math.log(2);
-		carry *= 12/alpha;
+		carry /= Math.log(2.0);
+		carry *= 12.0/((double)quickGet("SizeOfBins"));
 		int numFields = (int)(Math.floor(carry));
 		
 		freq = new double[numFields];
 		double currentFreq = minFreq;
 		for(int i=0;i<numFields;++i){
 			freq[i]=currentFreq;
-			currentFreq = Math.pow(2,alpha/12.0);
+			currentFreq = Math.pow(2.0,((double)quickGet("SizeOfBins"))/12.0);
 		}
 	}
 	
@@ -171,7 +160,7 @@ public class ConstantQ extends FeatureExtractor
 		nk = new int[freq.length];
 		double windowLength=samples.length;
 		for(int i=0;i<nk.length;++i){
-			nk[i] = (int)Math.ceil(windowLength/(Math.pow(2,((double)i)*alpha/12)));
+			nk[i] = (int)Math.ceil(windowLength/(Math.pow(2.0,((double)i)*((double)quickGet("SizeOfBins"))/12.0)));
 		}
 	}
 
@@ -181,7 +170,7 @@ public class ConstantQ extends FeatureExtractor
 	private void calcKernels(){
 		kernelReal = new double[nk.length][];
 		kernelImaginary = new double[nk.length][];
-		double q = Math.pow(2,alpha/12)-1;
+		double q = Math.pow(2.0,((double)quickGet("SizeOfBins"))/12.0)-1.0;
 		double hammingFactor = 25.0/46.0;
 		for(int i=0;i<kernelReal.length;++i){
 			kernelReal[i] = new double[nk[i]];
@@ -199,56 +188,4 @@ public class ConstantQ extends FeatureExtractor
 			}
 		}
 	}
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		switch (index) {
-		case 0:
-			return Double.toString(alpha);
-		default:
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.passed.to.lpc.getelement"),index));
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		switch (index) {
-		case 0:
-			try {
-				double val = Double.parseDouble(value);
-				if(val <= 0.0){
-					ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-					throw new Exception(bundle.getString("alpha.must.be.a.positive.value"));
-				}else{
-					alpha = val;
-				}
-			} catch (NumberFormatException e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(bundle.getString("alpha.value.must.be.a.double"));
-			}
-			break;
-		default:
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(
-					bundle.getString("internal.error.invalid.index.passed.to.constantq.setelement"));
-		}
-	}
-
 }

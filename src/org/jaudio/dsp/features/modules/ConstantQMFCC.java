@@ -98,67 +98,6 @@ public class ConstantQMFCC extends FeatureExtractor
 	{
 		return cepCoefficients(other_feature_values[0]);
 	}
-	
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone(){
-		return new ConstantQ();
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		switch (index) {
-		case 0:
-			return Integer.toString(numCepstra);
-		default:
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.passed.to.lpc.getelement1"),index));
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		switch (index) {
-		case 0:
-			try {
-				int val = Integer.parseInt(value);
-				if(val <= 0.0){
-					ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-					throw new Exception(bundle.getString("alpha.must.be.a.positive.value"));
-				}else{
-					numCepstra = val;
-				}
-			} catch (NumberFormatException e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(bundle.getString("lambda.value.must.be.a.double"));
-			}
-			break;
-		default:
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(
-					bundle.getString("internal.error.invalid.index.passed.to.constantq.setelement1"));
-		}
-	}
 
     /**
 	 * Borrowed from Orange Cow MFCC implementation (BSD)

@@ -3,11 +3,13 @@
  * Created for the 2006 ISMIR jAudio release
  * Created by Daniel McEnnis
  */
-package org.jaudio.dsp.aggregators;
+package org.jaudio.dsp.aggregators.modules;
 
 import jAudioFeatureExtractor.GeneralTools.Statistics;
 import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
+import org.jaudio.dsp.aggregators.Aggregator;
+import org.jaudio.dsp.aggregators.AggregatorDefinition;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;

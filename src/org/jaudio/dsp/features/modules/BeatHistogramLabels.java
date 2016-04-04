@@ -45,7 +45,7 @@ public class BeatHistogramLabels
 	}
 
 
-	private int binNumber = 256;
+//	private int binNumber = 256;
 	/* CONSTRUCTOR **************************************************************/
 	
 	
@@ -62,6 +62,7 @@ public class BeatHistogramLabels
 		int dimensions = 0;
 		ParameterInternal param = ParameterFactory.newInstance().create("NumberOfBins",Integer.class,description);
         param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+		param.set(256);
 		definition = new FeatureDefinition( name,
 		                                    description,
 		                                    is_sequential,
@@ -105,7 +106,7 @@ public class BeatHistogramLabels
 
 		if (beat_histogram != null)
 		{
-			double effective_sampling_rate = sampling_rate / ((double)binNumber);
+			double effective_sampling_rate = sampling_rate / ((double)quickGet("NumberOfBins"));
 
 			int min_lag = (int) (0.286 * effective_sampling_rate);
 			int max_lag = (int) (3.0 * effective_sampling_rate);
@@ -133,60 +134,7 @@ public class BeatHistogramLabels
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(bundle.getString("there.must.be.at.least.2.bins.in.beat.histogram.labels"));
 		}else{
-			binNumber = n;
+			set("NumberOfBins",n);
 		}
-	}
-	
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.beathistogramlabels.getelement"),index));
-		} else {
-			return Integer.toString(binNumber);
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if (index != 0) {
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.beathistogramlabels.setelement"),index));
-		} else {
-			try {
-				int type = Integer.parseInt(value);
-				setBinNumber(type);
-			} catch (Exception e) {
-				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(
-						bundle.getString("length.of.area.method.of.moments.must.be.an.integer"));
-			}
-		}
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */	
-	public Object clone(){
-		return new BeatHistogramLabels();
 	}
 }

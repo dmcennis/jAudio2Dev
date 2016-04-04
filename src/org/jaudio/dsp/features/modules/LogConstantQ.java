@@ -52,7 +52,6 @@ public class LogConstantQ extends FeatureExtractor
 		String description = bundle.getString("logarithm.of.each.bin.of.exponentially.spaced.frequency.bins");
 		boolean is_sequential = true;
 		int dimensions = 0;
-//		String[] attributes = new String[]{"Percent of a semitone per bin"};
 		definition = new FeatureDefinition( name,
 		                                    description,
 		                                    is_sequential,
@@ -106,13 +105,4 @@ public class LogConstantQ extends FeatureExtractor
 		return ret;
 	}
 	
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone(){
-		return new LogConstantQ();
-	}
-
 }

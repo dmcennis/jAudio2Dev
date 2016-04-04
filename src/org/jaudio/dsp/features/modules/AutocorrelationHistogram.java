@@ -57,10 +57,6 @@ public class AutocorrelationHistogram
         }
     }
 
- //   int rmsWindowLength=256;
-
- //   int windowLength=256*256;
-
 	/* CONSTRUCTOR **************************************************************/
 
     public AutocorrelationHistogram()
@@ -78,18 +74,6 @@ public class AutocorrelationHistogram
         add(param);
 
     }
-
-	/**
-	 * Basic constructor that sets the definition and dependencies (and their
-	 * offsets) of this feature.
-	 */
-	public AutocorrelationHistogram(MetaFeatureFactory mff)
-	{
-        super();
-        this.chainMetaFeatureFactory(mff);
-
-    }
-
 
 	/* PUBLIC METHODS **********************************************************/
 
@@ -146,84 +130,6 @@ public class AutocorrelationHistogram
 		return result;
 	}
 
-    /**
-     * Function permitting an unintelligent outside function (ie. EditFeatures
-     * frame) to set the default values used to popylate the table's entries.
-     * Like getElement, the correct index values are inferred from the
-     * definition.getAttributes() value.
-     * <p>
-     * As a metafeature, recursively calls children to set the feature
-     * requested.
-     *
-     * @param index
-     *            attribute to be set
-     * @param value
-     *            new value of the attribute
-     */
-    public void setElement(int index, String value) throws Exception {
-        if ((index >= definition.getAttributes().length) || (index < 0)) {
-            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-            throw new Exception(String.format(bundle.getString("internal.error.request.for.an.invalid.index.d4"),index));
-        } else if (index == definition.getAttributes().length - 2) {
-            try {
-                int type = Integer.parseInt(value);
-                if (type <= (int)quickGet("RMSWindowLength")) {
-                    ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-                    throw new Exception( String.format(bundle.getString("the.new.window.length.must.be.greater.than.one.and.less.than.the.window.length.d"),(int)quickGet("RMSWindowLength")));
-                } else {
-                    setWindow(type);
-                }
-            } catch (NumberFormatException e) {
-                ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-                throw new Exception(bundle.getString("width.of.window.must.be.an.integer"));
-            }
-        } else if (index == definition.getAttributes().length - 1) {
-            try {
-                int type = Integer.parseInt(value);
-                if (type <= (int)quickGet("WindowLength")) {
-                    ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-                    throw new Exception( String.format(bundle.getString("the.new.window.length.must.be.greater.than.the.rms.window.length.d"),(int)quickGet("RMSWindowLength")));
-                } else {
-                    setWindow(type);
-                }
-            } catch (NumberFormatException e) {
-                ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-                throw new Exception(bundle.getString("width.of.window.must.be.an.integer"));
-            }
-        } else if (fe_ != null) {
-            fe_.setElement(index, value);
-        } else {
-            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-            throw new Exception(bundle.getString("internal.error.non.existant.index.for.mean.getelement.claims.to.have.children.but.child.is.null1"));
-        }
-    }
-
-    @Override
-    public MetaFeatureFactory defineFeature(FeatureExtractor fe) {
-        ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-        AutocorrelationHistogram tmp = new AutocorrelationHistogram();
-        String name = String.format(bundle.getString("multidimensional.auto.correlation.of.s"),fe);
-        String description = "";
-        boolean is_sequential = true;
-        int dimensions = 0;
-        definition = new FeatureDefinition( name,
-                description,
-                is_sequential,
-                dimensions );
-
-        String[] oldAttributes = fe.getFeatureDefinition().getAttributes();
-        String[] myAttributes = new String[oldAttributes.length + 2];
-        for (int i = 0; i < oldAttributes.length; ++i) {
-            myAttributes[i] = oldAttributes[i];
-        }
-        myAttributes[myAttributes.length - 2] = bundle.getString("the.number.of.windows.of.samples.across.time.to.calculate.root.mean.square.across.this.implicitly.defines.the.granularity.in.time.of.the.autocorrelation.of.each.dimension");
-        myAttributes[myAttributes.length - 1] = bundle.getString("the.number.of.windows.of.samples.across.time.to.calculate.correlations.across.this.with.rms.window.implicitly.defines.the.maximum.distance.in.time.auto.correlation.is.calculated.for");
-
-        tmp.definition = new FeatureDefinition(name, description, true, fe
-                .getFeatureDefinition().getDimensions(), myAttributes);
-        tmp.definition.setDependency(fe.getFeatureDefinition().getName(),0,(int)quickGet("RMSWindowLength"));
-        return tmp;
-    }
 
     /**
      * Changes the number of dependant samples extracted for each object.
@@ -274,50 +180,4 @@ public class AutocorrelationHistogram
             throw new Exception(bundle.getString("internal.error.non.existant.index.for.mean.getelement.claims.to.have.children.but.child.is.null"));
         }
     }
-
-    /**
-     * Create an identical copy of this feature. This permits FeatureExtractor
-     * to use the prototype pattern to create new composite features using
-     * metafeatures.
-     */
-//    public Object clone() {
-//        if(fe_ == null){
-//            return new Mean();
-//        }
-//        if (this.fe_ instanceof MetaFeatureFactory) {
-//            AutocorrelationHistogram ret = new AutocorrelationHistogram();
-//            ret.fe_ = (FeatureExtractor)fe_.prototype();
-//            try {
-//                ret.setWindow(windowLength);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            ret.rmsWindowLength = rmsWindowLength;
-//            ret.windowLength = windowLength;
-//            String name = definition.getName();
-//            String description = definition.getDescription();
-//            String[] attributes = definition.getAttributes();
-//            int dim = definition.getDimensions();
-//            ret.definition = new FeatureDefinition(name,description,true,dim,attributes);
-//
-//            ret.definition.setDependency(definition.getDependency());
-//
-//            try{
-//                ret.setWindow(windowLength);
-//            }catch(Exception e){
-//                e.printStackTrace();
-//            }
-//            return ret;
-//        } else {
-//            AutocorrelationHistogram ret = (AutocorrelationHistogram) defineFeature((FeatureExtractor) fe_.clone());
-//            try {
-//                ret.setWindow(windowLength);
-//                ret.rmsWindowLength = rmsWindowLength;
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return ret;
-//        }
-//    }
-
 }

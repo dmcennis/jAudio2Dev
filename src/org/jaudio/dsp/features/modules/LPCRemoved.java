@@ -42,8 +42,8 @@ public class LPCRemoved extends FeatureExtractor {
 		param.set(10);
 
 		definition = new FeatureDefinition(name, description, true,
-				(int)quickGet("Dimensions"),
-				new String[] {bundle.getString("number.of.lpc.coeffecients.to.calculate") });
+				(int)quickGet("Dimensions"));
+		definition.set(param);
 	}
 
 	/**
@@ -122,59 +122,4 @@ public class LPCRemoved extends FeatureExtractor {
 			// System.out.println("Updating Table");
 		}
 	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to get the default values used to populate the table's entries.
-	 * The correct index values are inferred from definition.attribute value.
-	 * 
-	 * @param index
-	 *            which of AreaMoment's attributes should be edited.
-	 */
-	public String getElement(int index) throws Exception {
-		if (index != 0) {
-            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.getelement1"),index));
-		} else {
-			return Integer.toString((int)quickGet("Dimensions"));
-		}
-	}
-
-	/**
-	 * Function permitting an unintelligent outside function (ie. EditFeatures
-	 * frame) to set the default values used to popylate the table's entries.
-	 * Like getElement, the correct index values are inferred from the
-	 * definition.getAttributes() value.
-	 * 
-	 * @param index
-	 *            attribute to be set
-	 * @param value
-	 *            new value of the attribute
-	 */
-	public void setElement(int index, String value) throws Exception {
-		if (index != 0) {
-            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.areamoments.setelement1"),index));
-		} else {
-			try {
-				int type = Integer.parseInt(value);
-				setNumberDimensions(type);
-			} catch (NumberFormatException e) {
-                ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-				throw new Exception(bundle.getString("number.of.coeffecients.must.be.an.integer"));
-			} catch (Exception e) {
-				throw e;
-			}
-		}
-	}
-
-	/**
-	 * Create an identical copy of this feature. This permits FeatureExtractor
-	 * to use the prototype pattern to create new composite features using
-	 * metafeatures.
-	 */
-	public Object clone() {
-		return new LPCRemoved();
-	}
-
 }

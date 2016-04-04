@@ -4,11 +4,13 @@
  * Created by Daniel McEnnis for ISMIR 2006 jAUdio release.
  * Published under the LGPL see license.txt or at http://www.fsf.org
  */
-package org.jaudio.dsp.aggregators;
+package org.jaudio.dsp.aggregators.modules;
 
 import org.dynamicfactory.descriptors.BasicParameter;
 import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
+import org.jaudio.dsp.aggregators.Aggregator;
+import org.jaudio.dsp.aggregators.AggregatorDefinition;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureDependency;
 import org.jaudio.dsp.features.FeatureExtractor;
