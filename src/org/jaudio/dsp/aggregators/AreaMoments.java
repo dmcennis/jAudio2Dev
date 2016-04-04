@@ -10,9 +10,12 @@ import org.dynamicfactory.descriptors.BasicParameter;
 import org.dynamicfactory.descriptors.Parameter;
 import org.dynamicfactory.descriptors.Properties;
 import org.jaudio.dsp.features.FeatureDefinition;
+import org.jaudio.dsp.features.FeatureDependency;
+import org.jaudio.dsp.features.FeatureExtractor;
 
-import java.util.LinkedList;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <h2>Area Method of Moments Aggregator</h2>
@@ -37,8 +40,8 @@ import java.util.ResourceBundle;
  */
 public class AreaMoments extends Aggregator {
 
-	String[] featureNames = null;
-	int[] featureNameIndecis = null;
+//	String[] featureNames = null;
+//	int[] featureNameIndecis = null;
 
     int order = 7;
 	
@@ -62,15 +65,30 @@ public class AreaMoments extends Aggregator {
 
 	@Override
 	public Aggregator prototype(Properties props) {
-		return null;
+		AreaMoments polynomial = new AreaMoments();
+		if(props.quickCheck("Dependency", FeatureDependency.class)){
+			for(FeatureExtractor fe : (Collection<FeatureExtractor>)props.get("Dependency").getValue()){
+				polynomial.addSource(fe);
+			}
+			for(Parameter p: this.definition.getParameters()){
+				if(props.quickCheck(p.getType(),p.getParameterClass())){
+					polynomial.definition.set(p.getType(),p.getValue());
+				}
+			}
+		}
+		return polynomial;
 	}
 
 	@Override
-	public void aggregate(double[][][] values) {
+	public double[] aggregate(double[][][] values) {
+		if(!quickCheck("Feature", FeatureExtractor.class)){
+            Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"INTERNAL: aggregate() called before the aggregator was initialized with features to calculate over");
+            return null;
+        }
 		result = new double[order*order];
 		java.util.Arrays.fill(result,0.0);
-		int offset = super.calculateOffset(values,featureNameIndecis);
-		int[][] featureIndecis = super.collapseFeatures(values,featureNameIndecis);
+		int offset = super.calculateOffset(values,(List<FeatureExtractor>)get("Feature").getValue());
+		int[][] featureIndecis = super.collapseFeatures(values,(List<FeatureExtractor>)get("Feature").getValue());
         for (int i=offset; i < values.length; ++i) {
             double row = (2.0*((double)(i-offset))/((double)(values.length - offset))) - 1.0;
             for (int j = 0; j < featureIndecis.length; ++j) {
@@ -86,19 +104,20 @@ public class AreaMoments extends Aggregator {
                 }
             }
         }
+        return result;
 	}
 
-	@Override
-	public Object clone() {
-		AreaMoments ret = new AreaMoments();
-		if(featureNames != null){
-			ret.featureNames = featureNames.clone();
-		}
-		if(featureNameIndecis != null){
-			ret.featureNameIndecis = featureNameIndecis.clone();
-		}
-		return new AreaMoments();
-	}
+//	@Override
+//	public Object clone() {
+//		AreaMoments ret = new AreaMoments();
+//		if(featureNames != null){
+//			ret.featureNames = featureNames.clone();
+//		}
+//		if(featureNameIndecis != null){
+//			ret.featureNameIndecis = featureNameIndecis.clone();
+//		}
+//		return new AreaMoments();
+//	}
 
 	@Override
 	public FeatureDefinition getFeatureDefinition() {
@@ -110,30 +129,30 @@ public class AreaMoments extends Aggregator {
 //		return featureNames;
 //	}
 
-	@Override
-	public void init(int[] featureIndecis) throws Exception {
-		if(featureIndecis.length != featureNames.length){
-            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
+//	@Override
+//	public void init(int[] featureIndecis) throws Exception {
+//		if(featureIndecis.length != featureNames.length){
+//            ResourceBundle bundle = ResourceBundle.getBundle("Translations");
+//
+//            throw new Exception(bundle.getString("internal.error.agggregator.areamoments.number.of.feature.indeci.does.not.match.number.of.features1"));
+//		}
+//		this.featureNameIndecis = featureIndecis;
+//	}
 
-            throw new Exception(bundle.getString("internal.error.agggregator.areamoments.number.of.feature.indeci.does.not.match.number.of.features1"));
-		}
-		this.featureNameIndecis = featureIndecis;
-	}
-
-	@Override
-	public void setParameters(String[] featureNames, String[] params) throws Exception {
-		this.featureNames = featureNames;
-		String names = featureNames[0];
-		for(int i=1;i<featureNames.length;++i){
-			names += " " + featureNames[i];
-		}
-        if((params != null) && (params.length > 0)){
-            order = Integer.parseInt(params[0]);
-        }
-        ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-
-        definition = new FeatureDefinition("Area Moments: "+names,String.format(bundle.getString("2d.moments.constructed.from.features.s"),names),true,order*order);
-	}
+//	@Override
+//	public void setParameters(String[] featureNames, String[] params) throws Exception {
+//		this.featureNames = featureNames;
+//		String names = featureNames[0];
+//		for(int i=1;i<featureNames.length;++i){
+//			names += " " + featureNames[i];
+//		}
+//        if((params != null) && (params.length > 0)){
+//            order = Integer.parseInt(params[0]);
+//        }
+//        ResourceBundle bundle = ResourceBundle.getBundle("Translations");
+//
+//        definition = new FeatureDefinition("Area Moments: "+names,String.format(bundle.getString("2d.moments.constructed.from.features.s"),names),true,order*order);
+//	}
 
     /**
      * Provide a list of the values of all parameters this aggregator uses.

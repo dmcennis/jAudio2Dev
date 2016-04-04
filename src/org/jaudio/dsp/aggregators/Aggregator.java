@@ -12,8 +12,10 @@ import org.jaudio.dsp.features.FeatureFactory;
 
 import java.io.DataOutputStream;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * Aggregator is an interface for specifying the mechanism for collapsing
@@ -204,16 +206,8 @@ public abstract class Aggregator implements Creatable<Aggregator>{
 	 * 
 	 * @return list of the values of parmeters or null.
 	 */
-	public List<Parameter> getParamaters() {
+	public List<Parameter> getParameters() {
 		return getAggregatorDefinition().getParameters();
-	}
-
-	/**
-	 * Create a new aggregator of the same class
-	 * 
-	 */
-	public Object clone() {
-		return null;
 	}
 
 	/**
@@ -235,26 +229,12 @@ public abstract class Aggregator implements Creatable<Aggregator>{
 		return metadata;
 	}
 
-	/**
-	 * Specifies which Features are to be extracted and the index of these
-	 * features in the values array that will passed into the aggregate function
-	 * 
-	 * @param featureIndecis
-	 *            Indecis of these features in the array passed in aggregate
-	 * @throws Exception
-	 *             if either parameter is null, of dicffering lengths, or
-	 *             contain invalid index values.
-	 */
-	public void init(int[] featureIndecis) throws Exception {
-
-	}
-
 	public void setSource(FeatureExtractor feature) {
-        set("Features",FeatureDefinition.class,feature.getFeatureDefinition());
+        set("Features",FeatureExtractor.class,feature);
 	}
 
     public void addSource(FeatureExtractor feature) {
-        add("Features",FeatureDefinition.class,feature.getFeatureDefinition());
+        add("Features",FeatureExtractor.class,feature);
     }
 
     /**
@@ -265,9 +245,7 @@ public abstract class Aggregator implements Creatable<Aggregator>{
 	 *            complete array of the extracted features. Indecis are window,
 	 *            feature, and then feature value.
 	 */
-	public void aggregate(double[][][] values) throws Exception {
-
-	}
+	public abstract double[] aggregate(double[][][] values) throws Exception ;
 
 	/**
 	 * Output the feature definition entry (for an ACE feature definition file)
@@ -360,31 +338,32 @@ public abstract class Aggregator implements Creatable<Aggregator>{
         output.write("\t\t]");
     }
 
-    /**
-	 * Set parameters of the aggregator to the given values.  For specific aggregators, the feature list
-	 * is non-null and references currently loaded features.
-	 * Throws exception if the feature list is null or contains invalid entries only if the aggregator is specific.
-	 * Otherwise it is ignored.
-	 * If the number of given parameters
-	 * is greater (but not neccessarily less) than the number of actual paramaters, or
-	 * if the parameters are in the wrong format, an aggregator that uses parameters may throw an exception.
-	 * Both null and zero length array imply no parameters, but only null guarantees an exception if a parameter
-	 * is present.
-	 *
-	 * @param featureNames strings matching features for specific aggregation.
-	 * @param params strings that can be cast by toString to the appropriate parameter types.
-	 * @throws Exception for a number of format or null entry conditions (see above).
-	 */
-	public void setParameters(String[] featureNames, String[] params)
-			throws Exception {
+//    /**
+//	 * Set parameters of the aggregator to the given values.  For specific aggregators, the feature list
+//	 * is non-null and references currently loaded features.
+//	 * Throws exception if the feature list is null or contains invalid entries only if the aggregator is specific.
+//	 * Otherwise it is ignored.
+//	 * If the number of given parameters
+//	 * is greater (but not neccessarily less) than the number of actual paramaters, or
+//	 * if the parameters are in the wrong format, an aggregator that uses parameters may throw an exception.
+//	 * Both null and zero length array imply no parameters, but only null guarantees an exception if a parameter
+//	 * is present.
+//	 *
+//	 * @param non strings matching features for specific aggregation.
+//	 * @param params strings that can be cast by toString to the appropriate parameter types.
+//	 * @throws Exception for a number of format or null entry conditions (see above).
+//	 */
+//	public void setParameters(String[] featureNames, String[] params)
+//			throws Exception {
+//
+//	}
 
-	}
-
-	protected int calculateOffset(double[][][] values, int[] featureList) {
+	protected int calculateOffset(double[][][] values, List<FeatureExtractor> featureList) {
+		TreeMap<FeatureExtractor,Integer> map = (TreeMap<FeatureExtractor,Integer>)quickGet("FeatureMap");
 		int ret = 0;
-		for (int i = 0; i < featureList.length; ++i) {
+		for (FeatureExtractor fe : featureList) {
 			int offset = 0;
-			while (values[offset][featureList[i]] == null) {
+			while (values[offset][map.get(fe)] == null) {
 				offset++;
 			}
 			if (offset > ret) {
@@ -394,19 +373,20 @@ public abstract class Aggregator implements Creatable<Aggregator>{
 		return ret;
 	}
 
-	protected int[][] collapseFeatures(double[][][] values, int[] indecis) {
+	protected int[][] collapseFeatures(double[][][] values, List<FeatureExtractor> indecis) {
+		TreeMap<FeatureExtractor,Integer> map = (TreeMap<FeatureExtractor,Integer>)quickGet("FeatureMap");
 		int count = 0;
-		for (int i = 0; i < indecis.length; ++i) {
-			if (values[values.length - 1][indecis[i]] != null) {
-				count += values[values.length - 1][indecis[i]].length;
+		for (FeatureExtractor fe : indecis) {
+			if (values[values.length - 1][map.get(fe)] != null) {
+				count += values[values.length - 1][map.get(fe)].length;
 			}
 		}
 		int[][] ret = new int[count][2];
 		count = 0;
-		for (int i = 0; i < indecis.length; ++i) {
-			if (values[values.length - 1][indecis[i]] != null) {
-				for (int j = 0; j < values[values.length - 1][indecis[i]].length; ++j) {
-					ret[count][0] = indecis[i];
+		for (FeatureExtractor fe : indecis) {
+			if (values[values.length - 1][map.get(fe)] != null) {
+				for (int j = 0; j < values[values.length - 1][map.get(fe)].length; ++j) {
+					ret[count][0] = map.get(fe);
 					ret[count][1] = j;
 					count++;
 				}

@@ -6,7 +6,11 @@
 
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -43,7 +47,7 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 
 
 
-	private int number_windows = 100;
+	//private int number_windows = 100;
 
 	/* CONSTRUCTOR ************************************************************* */
 
@@ -55,12 +59,15 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "Fraction Of Low Energy Windows";
 		String description = bundle.getString("the.fraction.of.the.last.100.windows.that.has.an.rms.less.than.the.mean.rms.in.the.last.100.windows.this.can.indicate.how.much.of.a.signal.is.quiet.relative.to.the.rest.of.the.signal");
+		ParameterInternal param = ParameterFactory.newInstance().create("FractionOfLowEnergyWindows",Double.class,description);
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+		param.set(100);
 		boolean is_sequential = true;
 		int dimensions = 1;
 		definition = new FeatureDefinition(name, description, is_sequential,
 				dimensions);
 
-		definition.setDependency("Root Mean Square",0,number_windows);
+		definition.setDependency("Root Mean Square",0,(int)quickGet("FractionOfLowEnergyWindows"));
 	}
 
 	/* PUBLIC METHODS ********************************************************* */
@@ -119,8 +126,8 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 			throw new Exception(
 					bundle.getString("fraction.of.low.energy.frames.s.window.length.must.be.2.or.greater"));
 		} else {
-			number_windows = n;
-            definition.setDependency("Root Mean Square",0,number_windows);
+			set("FractionOfLowEnergyWindows",n);
+            definition.setDependency("Root Mean Square",0,(int)quickGet("FractionOfLowEnergyWindows"));
 		}
 	}
 
@@ -137,7 +144,7 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.fractionoflowenergyframes.getelement"),index));
 		} else {
-			return Integer.toString(number_windows);
+			return Integer.toString((int)quickGet("FractionOfLowEnergyWindows"));
 		}
 	}
 
@@ -175,7 +182,7 @@ public class FractionOfLowEnergyWindows extends FeatureExtractor {
 	 */
 	public Object clone() {
 		FractionOfLowEnergyWindows ret = new FractionOfLowEnergyWindows();
-		ret.number_windows = number_windows;
+		ret.set("FractionOfLowEnergyWindows",(int)quickGet("FractionOfLowEnergyWindows"));
 		return ret;
 	}
 

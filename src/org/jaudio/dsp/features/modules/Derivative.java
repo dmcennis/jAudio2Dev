@@ -42,6 +42,7 @@ public class Derivative extends MetaFeatureFactory {
 	 */
 	public Derivative() {
 		super();
+
 	}
 
 	/**
@@ -153,22 +154,23 @@ public class Derivative extends MetaFeatureFactory {
 	 * metafeatures.
 	 */
 public Object clone() {
-		if(fe_ == null){
-			return new Derivative();
-		}else if(fe_ instanceof MetaFeatureFactory){
-			Derivative ret = new Derivative();
-			ret.fe_ = (FeatureExtractor)fe_.clone();
-			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
-			String name = "Derivative of " + ret.fe_.getFeatureDefinition().getName();
-			String description = String.format(bundle.getString("derivative.of.s.s"), ret.fe_.getFeatureDefinition().getName(), ret.fe_.getFeatureDefinition().getDescription());
-			String[] oldAttributes = ret.fe_.getFeatureDefinition().getAttributes();
-			ret.definition = new FeatureDefinition(name, description, true, ret.fe_
-					.getFeatureDefinition().getDimensions(), oldAttributes);
-			ret.definition.setDependency(ret.fe_.getFeatureDefinition().getName(),0,2);
-			return ret;
-		}else{
-			return (new Derivative()).defineFeature((FeatureExtractor)fe_.clone());
-		}
+    return prototype();
+//		if(fe_ == null){
+//			return new Derivative();
+//		}else if(fe_ instanceof MetaFeatureFactory){
+//			Derivative ret = new Derivative();
+//			ret.fe_ = fe_.prototype();
+//			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
+//			String name = "Derivative of " + ret.fe_.getFeatureDefinition().getName();
+//			String description = String.format(bundle.getString("derivative.of.s.s"), ret.fe_.getFeatureDefinition().getName(), ret.fe_.getFeatureDefinition().getDescription());
+//			String[] oldAttributes = ret.fe_.getFeatureDefinition().getAttributes();
+//			ret.definition = new FeatureDefinition(name, description, true, ret.fe_
+//					.getFeatureDefinition().getDimensions(), oldAttributes);
+//			ret.definition.setDependency(ret.fe_.getFeatureDefinition().getName(),0,2);
+//			return ret;
+//		}else{
+//			return (new Derivative()).defineFeature((FeatureExtractor)fe_.clone());
+//		}
 	}
 	/**
 	 * Overridden to regenerate the feature definition. Perhaps its should be

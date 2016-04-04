@@ -6,10 +6,17 @@
 
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.AndQuery;
+import org.dynamicfactory.propertyQuery.NumericQuery;
+import org.dynamicfactory.propertyQuery.PropertyQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
+import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 /**
@@ -48,10 +55,19 @@ public class SpectralRolloffPoint extends FeatureExtractor {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "Spectral Rolloff Point";
 		String description = bundle.getString("the.fraction.of.bins.in.the.power.spectrum.at.which.85.of.the.power.is.at.lower.frequencies.this.is.a.measure.of.the.right.skewedness.of.the.power.spectrum");
+
 		boolean is_sequential = true;
 		int dimensions = 1;
+		ParameterInternal param = ParameterFactory.newInstance().create("CutoffPoint",Double.class,description);
+
+        LinkedList<PropertyQuery> list = new LinkedList<PropertyQuery>();
+        list.add((new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT));
+        list.add((new NumericQuery()).buildQuery(1.0,false, NumericQuery.Operation.LT));
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new AndQuery()).build(list),Double.class));
+
 		definition = new FeatureDefinition(name, description, is_sequential,
-				dimensions, new String[] {bundle.getString("cutoff.point.0.1") });
+				dimensions);
+        definition.add(param);
 		definition.setDependency("Power Spectrum");
 	}
 

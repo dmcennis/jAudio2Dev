@@ -10,6 +10,8 @@
 package org.jaudio.dsp.features.modules;
 
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -59,6 +61,8 @@ public class ConstantQMFCC extends FeatureExtractor
 		                                    dimensions,
 											attributes );
 		definition.setDependency("Log of ConstantQ");
+		definition.set("NumberOfCepstra",Integer.class,13,description);
+		definition.get("NumberOfCepstra").setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
 	}
 
 

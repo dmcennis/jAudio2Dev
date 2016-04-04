@@ -1,6 +1,10 @@
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 import org.oc.ocvolume.dsp.featureExtraction;
@@ -28,7 +32,7 @@ public class MFCC extends FeatureExtractor {
 	}
 
 
-	featureExtraction fe;
+	 featureExtraction fe;
 	
 	/**
 	 * Construct a MFCC object, setting definition, dependencies, and offsets.
@@ -37,9 +41,12 @@ public class MFCC extends FeatureExtractor {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "MFCC";
 		String description = bundle.getString("mfcc.calculations.based.upon.orange.cow.code");
-		String[] attributes = new String[]{bundle.getString("number.of.coeffecients")};
-		definition = new FeatureDefinition(name, description, true, 13,attributes);
+		ParameterInternal param = ParameterFactory.newInstance().create("NumberOfCoeffecients",Integer.class,description);
+        param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+        param.set(13);
+		definition = new FeatureDefinition(name, description, true, 13);
 		definition.setDependency("Magnitude Spectrum");
+        definition.add(param);
 		fe = new featureExtraction();
 	}
 

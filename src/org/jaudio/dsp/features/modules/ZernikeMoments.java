@@ -1,49 +1,82 @@
 package org.jaudio.dsp.features.modules;
 
-import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.*;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
+import org.jaudio.dsp.features.MetaFeatureFactory;
 
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class ZernikeMoments extends FeatureExtractor {
+public class ZernikeMoments extends MetaFeatureFactory {
 
 
-	int count=7;
+//	int count=7;
 	
-	int lengthOfWindow=25;
+//	int lengthOfWindow=25;
+
+	FeatureExtractor child;
 
 	@Override
 	public FeatureExtractor prototype() {
-		return new ZernikeMoments();
+		return this;
 	}
 
 	@Override
 	public FeatureExtractor prototype(Properties props) {
-		return prototype();
+		if(quickCheck("Feature",FeatureExtractor.class)){
+			ZernikeMoments m = new ZernikeMoments();
+			m.child = buildChild(props);
+			for(Parameter p: this.definition.getParameters()){
+				if(props.quickCheck(p.getType(),p.getParameterClass())){
+					m.definition.set(p.getType(),p.getValue());
+				}
+			}
+
+			return m;
+		}else{
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE,"Attempting to create AutocorrelationHistogram without providing a child feature");
+			return null;
+		}
 	}
 
 	@Override
 	public FeatureDefinition getFeatureDefinition() {
 		ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 		String name = "Zernike Moments";
-		String description = bundle.getString("2d.moments.of.matrix.data");
-		String[] attributes = new String[] {bundle.getString("zernike.moments.window.length") };
+        String description = bundle.getString("2d.moments.of.matrix.data");
+        definition = new FeatureDefinition(name, description, true, 0);
 
-		definition = new FeatureDefinition(name, description, true, 0,
-				attributes);
-definition.setDependency("MFCC",0,lengthOfWindow);		return definition;
+		ParameterInternal param = ParameterFactory.newInstance().create("Order",Integer.class,"Maximum order to calculate");
+		param.setLongDescription("");
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Integer.class));
+		param.set(7);
+        definition.add(param);
+
+		param = ParameterFactory.newInstance().create("WindowLength",Integer.class,bundle.getString("zernike.moments.window.length"));
+		param.setLongDescription("");
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(2.0,false, NumericQuery.Operation.GTE),Integer.class));
+		param.set(25);
+        definition.add(param);
+definition.setDependency("MFCC",0,(int)quickGet("WindowLength"));		return definition;
 	}
 
-	@Override
+    @Override
+    public MetaFeatureFactory defineFeature(FeatureExtractor fe) {
+        return null;
+    }
+
+    @Override
 	public void setWindow(int n) throws Exception {
 		if (n < 2) {
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(
 					bundle.getString("zernike.moment.s.window.length.must.be.two.or.greater"));
 		} else {
-			lengthOfWindow = n;
-            definition.setDependency("MFCC",0,lengthOfWindow);
+            set("WindowLength",n);
+            definition.setDependency("MFCC",0,(int)quickGet("WindowLength"));
 		}
 	}
 	
@@ -54,7 +87,7 @@ definition.setDependency("MFCC",0,lengthOfWindow);		return definition;
 			ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 			throw new Exception(String.format(bundle.getString("internal.error.invalid.index.d.sent.to.zernikemoments.getelement"),index));
 		} else {
-			return Integer.toString(lengthOfWindow);
+			return Integer.toString((int)quickGet("WindowLength"));
 		}
 	}
 
@@ -66,7 +99,7 @@ definition.setDependency("MFCC",0,lengthOfWindow);		return definition;
 		} else if(index == 1){
 			try {
 				int type = Integer.parseInt(value);
-				count = type;
+                set("Order",type);
 			} catch (Exception e) {
 				ResourceBundle bundle = ResourceBundle.getBundle("Translations");
 				throw new Exception(
@@ -87,7 +120,7 @@ definition.setDependency("MFCC",0,lengthOfWindow);		return definition;
 	@Override
 	public double[] extractFeature(double[] samples, double sampling_rate,
 			double[][] other_feature_values) throws Exception {
-		double[] ret = new double[zernikeCount(count)];
+		double[] ret = new double[zernikeCount((int)quickGet("Order"))];
 		int index=0;
 		double[] powersOfP = new double[8];
 		for(int i=0;i<other_feature_values.length;++i){
@@ -161,7 +194,7 @@ definition.setDependency("MFCC",0,lengthOfWindow);		return definition;
 					break;
 			}
 		}
-		for(int n=8;n<count;n+=1){
+		for(int n=8;n<(int)quickGet("Order");n+=1){
 			for(int m=n;m>=0;m-=2){
 				ret[index]=0.0;
 				for(int k=0;k<(n-m)/2;++k){
@@ -198,10 +231,10 @@ definition.setDependency("MFCC",0,lengthOfWindow);		return definition;
 	@Override
 	public Object clone() {
 		ZernikeMoments ret = new ZernikeMoments();
-        ret.count = count;
-        ret.lengthOfWindow = lengthOfWindow;
+        ret.set("Order",(int)quickGet("Order"));
+        ret.set("WindowLength",(int)quickGet("WindowLength"));
         try{
-            ret.setWindow(lengthOfWindow);
+            ret.setWindow((int)quickGet("WindowLength"));
         }catch(Exception e){}
         return ret;
 	}

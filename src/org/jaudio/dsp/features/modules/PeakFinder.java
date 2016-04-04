@@ -1,6 +1,10 @@
 package org.jaudio.dsp.features.modules;
 
+import org.dynamicfactory.descriptors.ParameterFactory;
+import org.dynamicfactory.descriptors.ParameterInternal;
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -39,8 +43,11 @@ public class PeakFinder extends FeatureExtractor {
 
 		String name = "Peak Detection";
 		String description = bundle.getString("all.peaks.that.are.within.an.order.of.magnitude.of.the.highest.point");
-		definition = new FeatureDefinition(name, description, true, 0,
-				new String[] {bundle.getString("threshold.for.peak.detection") });
+		ParameterInternal param = ParameterFactory.newInstance().create("PeakThreshold",Double.class,description);
+		param.setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Double.class));
+
+		definition = new FeatureDefinition(name, description, true, 0);
+        definition.add(param);
 		definition.setDependency("Magnitude Spectrum");
 	}
 

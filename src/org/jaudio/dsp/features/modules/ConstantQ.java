@@ -10,6 +10,8 @@
 package org.jaudio.dsp.features.modules;
 
 import org.dynamicfactory.descriptors.Properties;
+import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
+import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
 
@@ -72,6 +74,7 @@ public class ConstantQ extends FeatureExtractor
 		definition.set("SizeOfBins",Double.class,1.0,"Percent of a semitone (where 1.0 is 100%) for each bin of the output",
                 "ConstantQ provides a vector (ordered list of fixed length) numbers. Each number represents a 'bin'. Inside each bin, all frequencies in that range in this windows of the signal are collected into a single number. This parameter describes how 'wide' this 'band' of frequencies is on a logarithimic scale. For example, 12.0 represents bands of all frequencies of one octave, collecting together for instance middle c (c) to the next c (c1) or 261Hz to 522Hz, while 1.0 collects frequencies corresponding to a single semitone like c to d (261 to 294 ~Hz).");
 		definition.get("SizeOfBins").setDescription("Percent of a semitone (where 1.0 is 100%) for each bin of the output");
+		definition.get("SizeOfBins").setRestrictions(SyntaxCheckerFactory.newInstance().create(1,1,(new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT),Double.class));
 
 		alpha=1.0;
 

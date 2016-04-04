@@ -1,15 +1,13 @@
 package org.jaudio.dsp.features.modules;
 
-import org.dynamicfactory.descriptors.Properties;
-import org.dynamicfactory.descriptors.SyntaxChecker;
-import org.dynamicfactory.descriptors.SyntaxCheckerFactory;
-import org.dynamicfactory.descriptors.SyntaxObject;
+import org.dynamicfactory.descriptors.*;
 import org.dynamicfactory.property.PropertyFactory;
 import org.dynamicfactory.propertyQuery.NumericQuery;
 import org.dynamicfactory.propertyQuery.PropertyQuery;
 import org.dynamicfactory.propertyQuery.PropertyQueryFactory;
 import org.jaudio.dsp.features.FeatureDefinition;
 import org.jaudio.dsp.features.FeatureExtractor;
+import org.jaudio.dsp.features.MetaFeatureFactory;
 
 import java.util.ResourceBundle;
 
@@ -23,16 +21,34 @@ import java.util.ResourceBundle;
  * University, 1997.
  * 
  */
-public class AreaMoments extends FeatureExtractor {
+public class AreaMoments extends MetaFeatureFactory {
+
+
+    FeatureExtractor child;
+    @Override
+    public FeatureExtractor prototype() {
+        return this;
+    }
+
+    @Override
+    public FeatureExtractor prototype(Properties props) {
+        if(quickCheck("Feature",FeatureExtractor.class)){
+            AreaMoments m = new AreaMoments();
+            m.child = buildChild(props);
+            for(Parameter p: this.definition.getParameters()){
+                if(props.quickCheck(p.getType(),p.getParameterClass())){
+                    m.definition.set(p.getType(),p.getValue());
+                }
+            }
+            return m;
+        }else{
+            return this;
+        }
+    }
 
 	@Override
-	public FeatureExtractor prototype() {
-		return new AreaMoments();
-	}
-
-	@Override
-	public FeatureExtractor prototype(Properties props) {
-		return prototype();
+	public MetaFeatureFactory defineFeature(FeatureExtractor fe) {
+		return null;
 	}
 
 	/**
@@ -44,17 +60,17 @@ public class AreaMoments extends FeatureExtractor {
 
 		String name = "Area Method of Moments";
 		String description = bundle.getString("2d.statistical.method.of.moments");
-		String[] attributes = new String[] {bundle.getString("area.method.of.moments.window.length"), bundle.getString("area.method.of.moments.max.order") };
 		int order = 10;
-		definition = new FeatureDefinition(name, description, true, 50,
-				attributes);
+		definition = new FeatureDefinition(name, description, true, 50);
 		definition.set("xOrder",Integer.class,order,"Largest degree (deepest statistical moment) of the exponent describing the horizontal direction","");
 		PropertyQuery onePositiveInteger = (new NumericQuery()).buildQuery(0.0,false, NumericQuery.Operation.GT);
         SyntaxObject syntax = SyntaxCheckerFactory.newInstance().create(1,1,onePositiveInteger,Integer.class);
 		definition.get("xOrder").setRestrictions(syntax);
+        definition.set("xOrder",10);
 		definition.set("yOrder",Integer.class,order,"Largest degree (deepest statistical moment) of the exponent describing the vertical direction","");
         definition.get("yOrder").set(syntax);
-		definition.set("WindowLength",Integer.class,100);
+        definition.set("yOrder",5);
+		definition.set("WindowLength",Integer.class,100,"");
         definition.get("WindowLength").setRestrictions(SyntaxCheckerFactory.newInstance().create(1,Integer.MAX_VALUE,onePositiveInteger,Integer.class));
 		definition.setDependency("Magnitude Spectrum",0,(int)definition.quickGet("WindowLength"));
 	}
