@@ -1,26 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java" line="541" />
+    <bookmark url="file://$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java" line="426" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cf562adc-773b-401d-b576-12fdc18a9f9a" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/Smp.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/test/SmpBlas.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jAudioAndroid/jAudioAndroid.iml" afterPath="$PROJECT_DIR$/jAudioAndroid/jAudioAndroid.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/jAudioGIT.iml" afterPath="$PROJECT_DIR$/jAudioGIT.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/Aggregator.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/Aggregator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AggregatorContainer.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AggregatorContainer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaMoments.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaMoments.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaPolynomialApproximation.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaPolynomialApproximation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/DummyAgg.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/DummyAgg.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/MFCC.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/MFCC.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/Mean.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/Mean.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/MultipleFeatureHistogram.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/MultipleFeatureHistogram.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/StandardDeviation.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/StandardDeviation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/ZernikeMoments.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/ZernikeMoments.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/org/jaudio/dsp/features/modules/AreaMoments.java" afterPath="$PROJECT_DIR$/src/org/jaudio/dsp/features/modules/AreaMoments.java" />
     </list>
     <ignored path="jAudioGIT.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -83,81 +72,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MultipleFeatureHistogram.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/MultipleFeatureHistogram.java">
+      <file leaf-file-name="DataModel.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="226" column="0" selection-start-line="222" selection-start-column="0" selection-end-line="226" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StandardDeviation.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/StandardDeviation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="379">
-              <caret line="125" column="0" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Mean.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/Mean.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="387">
-              <caret line="127" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MFCC.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/MFCC.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="217">
-              <caret line="77" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AreaMoments.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaMoments.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="353">
-              <caret line="90" column="112" selection-start-line="90" selection-start-column="112" selection-end-line="90" selection-end-column="112" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AreaPolynomialApproximation.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaPolynomialApproximation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="147" column="0" selection-start-line="139" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DummyAgg.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/DummyAgg.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="245">
-              <caret line="90" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AggregatorContainer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AggregatorContainer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="634">
-              <caret line="262" column="17" selection-start-line="262" selection-start-column="17" selection-end-line="262" selection-end-column="17" />
+            <state relative-caret-position="124">
+              <caret line="341" column="57" selection-start-line="341" selection-start-column="57" selection-end-line="341" selection-end-column="57" />
               <folding />
             </state>
           </provider>
@@ -204,7 +123,6 @@
         <option value="$PROJECT_DIR$/src/org/jaudio/dsp/features/modules/ZernikeMoments.java" />
         <option value="$PROJECT_DIR$/DynamicFactory/DynamicFactory/src/org/dynamicfactory/descriptors/Properties.java" />
         <option value="$PROJECT_DIR$/DynamicFactory/DynamicFactory/src/org/dynamicfactory/descriptors/PropertiesImplementation.java" />
-        <option value="$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java" />
         <option value="$PROJECT_DIR$/src/org/jaudio/dsp/features/modules/AreaMoments.java" />
         <option value="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AggregatorContainer.java" />
         <option value="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/Mean.java" />
@@ -216,6 +134,7 @@
         <option value="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaPolynomialApproximation.java" />
         <option value="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/DummyAgg.java" />
         <option value="$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/MultipleFeatureHistogram.java" />
+        <option value="$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java" />
       </list>
     </option>
   </component>
@@ -224,10 +143,17 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
   </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Bundled (Maven 3)" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="70" />
-    <option name="width" value="1252" />
-    <option name="height" value="788" />
+    <option name="width" value="1388" />
+    <option name="height" value="898" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -257,8 +183,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -287,20 +211,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jAudioGIT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jAudio2Dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -355,108 +265,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="dsp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jAudioGIT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jAudio2Dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jaudio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dsp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="features" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jAudioGIT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jAudio2Dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jaudio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dsp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="features" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jAudioGIT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jAudio2Dev" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="org" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="jaudio" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dsp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="features" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="modules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AreaMomentsBeatHistogram" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ClassTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -506,6 +314,8 @@
         </subPane>
       </pane>
       <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -519,10 +329,10 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/jAudioAndroid" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
@@ -1083,7 +893,9 @@
       <workItem from="1459453484913" duration="1664000" />
       <workItem from="1459474663091" duration="218000" />
       <workItem from="1459474896883" duration="268000" />
-      <workItem from="1459719645349" duration="2539000" />
+      <workItem from="1459719645349" duration="2736000" />
+      <workItem from="1459817640248" duration="92000" />
+      <workItem from="1459817774030" duration="457000" />
     </task>
     <task id="LOCAL-00001" summary="Fixes that should improve the experience ;-).&#10;&#10;Default is now a Zernike moment aggregator over ConstantQ feature&#10;&#10;Zernike Moments added (2 features and 1 aggregator)&#10;AreaMoments original version added">
       <created>1403060225548</created>
@@ -1106,49 +918,56 @@
       <option name="project" value="LOCAL" />
       <updated>1459107534379</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Aggregators now refactored - code cleanup still remaining">
+      <created>1459722216308</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1459722216308</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31679000" />
+    <option name="totallyTimeSpent" value="32425000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="70" y="0" width="1252" height="788" extended-state="0" />
+    <frame x="70" y="0" width="1388" height="898" extended-state="0" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25184095" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" show_stripe_button="true" weight="0.3298969" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" x="-1560" y="647" width="1236" height="383" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3283767" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32695138" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36731392" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="FLOATING" visible="true" show_stripe_button="true" weight="0.36731392" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" x="-1493" y="57" width="765" height="599" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991454" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24956521" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31452993" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991454" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1167,7 +986,8 @@
     <MESSAGE value="Fixes that should improve the experience ;-).&#10;&#10;Default is now a Zernike moment aggregator over ConstantQ feature&#10;&#10;Zernike Moments added (2 features and 1 aggregator)&#10;AreaMoments original version added" />
     <MESSAGE value="Added compound property query entries&#10;Minor fixes to usability in Properties" />
     <MESSAGE value="Aggregators improvements - still cleanup work to be done&#10;MetaFeatures - about to be refactored out of exsistence, but not quite yet&#10;Features - many fixes, but still some cleanup work to perform&#10;&#10;TODO&#10;upgrade DataModel extractFeature to new interface&#10;finish refactoring aggregators and features/metafeatures&#10;&#10;same gui work" />
-    <option name="LAST_COMMIT_MESSAGE" value="Aggregators improvements - still cleanup work to be done&#10;MetaFeatures - about to be refactored out of exsistence, but not quite yet&#10;Features - many fixes, but still some cleanup work to perform&#10;&#10;TODO&#10;upgrade DataModel extractFeature to new interface&#10;finish refactoring aggregators and features/metafeatures&#10;&#10;same gui work" />
+    <MESSAGE value="Aggregators now refactored - code cleanup still remaining" />
+    <option name="LAST_COMMIT_MESSAGE" value="Aggregators now refactored - code cleanup still remaining" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1190,7 +1010,7 @@
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="5" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1452,18 +1272,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="617">
-          <caret line="447" column="0" selection-start-line="447" selection-start-column="0" selection-end-line="447" selection-end-column="0" />
-          <folding>
-            <marker date="1459127782570" expanded="false" signature="11396:11405" placeholder="&lt;~&gt;" />
-            <marker date="1459127782570" expanded="false" signature="11470:11488" placeholder="&lt;~&gt;" />
-            <marker date="1459127782570" expanded="false" signature="11546:11555" placeholder="&lt;~&gt;" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/jAudioFeatureExtractor/Aggregators/Aggregator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="617">
@@ -1479,15 +1287,13 @@
             <element signature="imports" expanded="false" />
             <element signature="e#1019#1020#0" expanded="false" />
             <element signature="e#1046#1047#0" expanded="false" />
-            <element signature="e#1651#1652#0" expanded="false" />
-            <element signature="e#1669#1670#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AggregatorContainer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="634">
+        <state relative-caret-position="446">
           <caret line="262" column="17" selection-start-line="262" selection-start-column="17" selection-end-line="262" selection-end-column="17" />
           <folding />
         </state>
@@ -1495,7 +1301,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/Mean.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="387">
+        <state relative-caret-position="1819">
           <caret line="127" column="0" selection-start-line="119" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
           <folding />
         </state>
@@ -1503,7 +1309,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/MFCC.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="217">
+        <state relative-caret-position="986">
           <caret line="77" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
           <folding />
         </state>
@@ -1514,10 +1320,10 @@
         <state relative-caret-position="238">
           <caret line="34" column="4" selection-start-line="34" selection-start-column="4" selection-end-line="34" selection-end-column="4" />
           <folding>
-            <element signature="e#6007#6008#0" expanded="true" />
-            <element signature="e#6066#6067#0" expanded="true" />
-            <element signature="e#6121#6122#0" expanded="true" />
-            <element signature="e#6183#6184#0" expanded="true" />
+            <element signature="e#6037#6038#0" expanded="true" />
+            <element signature="e#6096#6097#0" expanded="true" />
+            <element signature="e#6151#6152#0" expanded="true" />
+            <element signature="e#6213#6214#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1532,7 +1338,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/StandardDeviation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="379">
+        <state relative-caret-position="1768">
           <caret line="125" column="0" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
           <folding />
         </state>
@@ -1540,7 +1346,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaMoments.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="353">
+        <state relative-caret-position="1258">
           <caret line="90" column="112" selection-start-line="90" selection-start-column="112" selection-end-line="90" selection-end-column="112" />
           <folding />
         </state>
@@ -1548,7 +1354,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/AreaPolynomialApproximation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
+        <state relative-caret-position="2125">
           <caret line="147" column="0" selection-start-line="139" selection-start-column="0" selection-end-line="147" selection-end-column="0" />
           <folding />
         </state>
@@ -1556,7 +1362,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/aggregators/DummyAgg.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
+        <state relative-caret-position="1173">
           <caret line="90" column="0" selection-start-line="85" selection-start-column="0" selection-end-line="90" selection-end-column="0" />
           <folding />
         </state>
@@ -1570,10 +1376,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/Smp.java">
+    <entry file="file://$PROJECT_DIR$/test/Smp.java" />
+    <entry file="file://$PROJECT_DIR$/src/org/jaudio/dsp/DataModel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="22" column="16" selection-start-line="22" selection-start-column="16" selection-end-line="22" selection-end-column="17" />
+        <state relative-caret-position="124">
+          <caret line="341" column="57" selection-start-line="341" selection-start-column="57" selection-end-line="341" selection-end-column="57" />
           <folding />
         </state>
       </provider>
@@ -1631,12 +1438,11 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>jAudioGIT</last-edited>
+          <last-edited>Android|jAudioAndroid</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.6" />
               </list>
             </option>
           </splitter-proportions>

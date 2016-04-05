@@ -324,127 +324,8 @@ public class DataModel {
 
 		LinkedList<FeatureExtractor> extractors = new LinkedList<FeatureExtractor>();
 		LinkedList<Boolean> def = new LinkedList<Boolean>();
-		// extractors.add(new AreaMoments());
-		// def.add(false);
-		// extractors.add(new BeatHistogram());
-		// def.add(false);
-		// extractors.add(new BeatHistogramLabels());
-		// def.add(false);
-		// extractors.add(new BeatSum());
-		// def.add(false);
-		// extractors.add(new Compactness());
-		// def.add(true);
-		// extractors.add(new FFTBinFrequencies());
-		// def.add(false);
-		// extractors.add(new FractionOfLowEnergyWindows());
-		// def.add(true);
-		// extractors.add(new HarmonicSpectralCentroid());
-		// def.add(false);
-		// extractors.add(new HarmonicSpectralFlux());
-		// def.add(false);
-		// extractors.add(new HarmonicSpectralSmoothness());
-		// def.add(false);
-		// extractors.add(new LPC());
-		// def.add(false);
-		// extractors.add(new MagnitudeSpectrum());
-		// def.add(false);
-		// extractors.add(new MFCC());
-		// def.add(true);
-		// extractors.add(new Moments());
-		// def.add(true);
-		// extractors.add(new PeakFinder());
-		// def.add(false);
-		// extractors.add(new PowerSpectrum());
-		// def.add(false);
-		// extractors.add(new RelativeDifferenceFunction());
-		// def.add(false);
-		// extractors.add(new RMS());
-		// def.add(true);
-		// extractors.add(new SpectralCentroid());
-		// def.add(true);
-		// extractors.add(new SpectralFlux());
-		// def.add(true);
-		// extractors.add(new SpectralRolloffPoint());
-		// def.add(true);
-		// extractors.add(new SpectralVariability());
-		// def.add(false);
-		// extractors.add(new StrengthOfStrongestBeat());
-		// def.add(false);
-		// extractors.add(new StrongestBeat());
-		// def.add(false);
-		// extractors.add(new StrongestFrequencyVariability());
-		// def.add(false);
-		// extractors.add(new StrongestFrequencyViaFFTMax());
-		// def.add(false);
-		// extractors.add(new StrongestFrequencyViaSpectralCentroid());
-		// def.add(false);
-		// extractors.add(new StrongestFrequencyViaZeroCrossings());
-		// def.add(false);
-		// extractors.add(new ZeroCrossings());
-		// def.add(true);
-//		try {
-//			// replaced by the Factory object...
-//			Collection<String> types = FeatureFactory.getInstance().getKnownTypes();
-//            Collection<String> metaTypes = MetaFeatureFactoryFactory.getInstance().getKnownTypes();
-//            for(String type : types){
-//                extractors.add(FeatureFactory.getInstance().create(type));
-//            }
-//            for(String type : metaTypes){
-//
-//            }
-//			Collection<String> aggArray = AggregatorFactory.getInstance().getKnownTypes();
-//            for(String type : aggArray){
-//                aggregatorMap.put(type,AggregatorFactory.getInstance().create(type));
-//		}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			System.exit(1);
-//		}
-//		populateMetaFeatures(metaExtractors, extractors, def);
 	}
 
-//	void populateMetaFeatures(LinkedList<MetaFeatureFactory> listMFF,
-//			LinkedList<FeatureExtractor> listFE, LinkedList<Boolean> def) {
-//		LinkedList<Boolean> tmpDefaults = new LinkedList<Boolean>();
-//		LinkedList<FeatureExtractor> tmpFeatures = new LinkedList<FeatureExtractor>();
-//		LinkedList<Boolean> isPrimaryList = new LinkedList<Boolean>();
-//		Iterator<FeatureExtractor> lFE = listFE.iterator();
-//		Iterator<Boolean> lD = def.iterator();
-//		while (lFE.hasNext()) {
-//			FeatureExtractor tmpF = lFE.next();
-//			Boolean tmpB = lD.next();
-//			tmpFeatures.add(tmpF);
-//			tmpDefaults.add(tmpB);
-//			isPrimaryList.add(new Boolean(true));
-//			tmpF.setParent(this);
-//			if (tmpF.getFeatureDefinition().getDimensions() != 0) {
-//				Iterator<MetaFeatureFactory> lM = listMFF.iterator();
-//				while (lM.hasNext()) {
-//					MetaFeatureFactory tmpMFF = lM.next();
-//					FeatureExtractor tmp = tmpMFF
-//							.defineFeature((FeatureExtractor) tmpF.clone());
-//					tmp.setParent(this);
-//					tmpFeatures.add(tmp);
-//					tmpDefaults.add(new Boolean(false));
-//					isPrimaryList.add(new Boolean(false));
-//				}
-//			}
-//		}
-//		this.features = tmpFeatures.toArray(new FeatureExtractor[1]);
-//		Boolean[] defaults_temp = tmpDefaults.toArray(new Boolean[1]);
-//		Boolean[] is_primary_temp = isPrimaryList.toArray(new Boolean[] {});
-//		this.defaults = new boolean[defaults_temp.length];
-//		is_primary = new boolean[defaults_temp.length];
-//		for (int i = 0; i < this.defaults.length; i++) {
-//			this.defaults[i] = defaults_temp[i].booleanValue();
-//			is_primary[i] = is_primary_temp[i].booleanValue();
-//		}
-//		this.featureDefinitions = new FeatureDefinition[this.defaults.length];
-//		for (int i = 0; i < this.featureDefinitions.length; ++i) {
-//			this.featureDefinitions[i] = features[i].getFeatureDefinition();
-//		}
-//
-//	}
 
 	/**
 	 * This is the function called when features change in such a way as the
@@ -456,6 +337,10 @@ public class DataModel {
 			ml_.updateTable();
 		}
 	}
+
+    public void extract(RecordingInfo[] info) throws Exception{
+        extract(256,0.0,44100.0,false,false,true,info,0);
+    }
 
 	/**
 	 * Function for executing the feature extraction process against a set of
