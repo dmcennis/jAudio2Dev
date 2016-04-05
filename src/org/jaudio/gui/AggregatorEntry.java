@@ -8,7 +8,9 @@ package org.jaudio.gui;
 
 import jAudioFeatureExtractor.Aggregators.Aggregator;
 
+import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import java.awt.*;
 
 /**
  * Default Description Google Interview Project
@@ -24,4 +26,32 @@ public class AggregatorEntry extends DefaultMutableTreeNode {
     public AggregatorEntry() {
 
     }
+
+    /**
+     * Provide the icon loaded in the constructor.
+     *
+     * @see org.multihelp.file.FileNode#getIcon()
+     */
+    public Icon getIcon() {
+        return null;
+    }
+
+    /**
+     * Provides the text loaded in the constructor.
+     *
+     * @see org.multihelp.file.FileNode#getText()
+     */
+    public String getText() {
+        return "Default";
+    }
+
+    /**
+     * Rendering all entries of this FileNode type.  Default returns null.
+     */
+    public Component render(JTree tree, Object value,
+                            boolean sel, boolean expanded, boolean leaf, int row,
+                            boolean hasFocus){
+        return null;
+    }
+
 }
